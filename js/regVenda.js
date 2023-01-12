@@ -20,10 +20,18 @@ var botaoProximo = document.querySelector(".btnProximoRegVenda")
 var botaoCancelar = document.querySelector(".btnCancelar")
 var botaoCancelar2 = document.querySelector(".btnCancelar2")
 var btnRegVenda = document.querySelector(".btnRegVenda")
+var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos")
+var btnAdicionarMetodo = document.querySelector(".btnAdicionarMetodo")
+var btnFecharModalVendas = document.querySelector(".btnFecharModalVendas")
+
 
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+divSelecProdutos.style.display = "block"
+divSelecMetodos.style.display = "none"
+finalizarPreVenda.style.display = "none"
 
 set(ref(db, 'produtos/selecProdutosValor/'), {
   valorTotal: 0
@@ -40,10 +48,6 @@ function regVendasNormal(){
   remove(dbRefProdSelect)
   remove(dbRefMethSelect)
   
-  divSelecProdutos.style.display = "block"
-  divSelecMetodos.style.display = "none"
-  finalizarPreVenda.style.display = "none"
-
   //window.location.href = "./dashboard.html"
 
   let divCol = document.createElement("div")
@@ -88,7 +92,13 @@ function regVendasNormal(){
   spanTotalVenda.innerHTML = "0 " + TipoMoeda
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
-  window.location.reload()
+  //window.location.reload()
+
+  divSelecProdutos.style.display = "block"
+  divSelecMetodos.style.display = "none"
+  finalizarPreVenda.style.display = "none"
+
+  btnFecharModalVendas.click()
 }
 
 function addItemToTable(nomeProd, precVenda, tipoMoeda){
@@ -207,8 +217,6 @@ function addItemToTableMetodosP(nomeMetodo){
       divCard.classList.add("cardRegVendasSelecionado")
     }
 
-
-
     const dbRef = ref(db, "metodosPagamento/metodoSelecionado")
     var dados
 
@@ -223,11 +231,13 @@ function addItemToTableMetodosP(nomeMetodo){
       if(dados == null){
         alert("Selecione um método")
       }else{
+        divSelecProdutos.style.display = "block"
         divSelecMetodos.style.display = "none"
-        finalizarPreVenda.style.display = "block"
+        finalizarPreVenda.style.display = "none"
       }
     }
-
+    alert("Fechou")
+    //btnFecharModalVendas.click()
     passarPTelaFinalizarPreVenda()
   })
 
@@ -404,6 +414,15 @@ onValue(dbRefMetodoMesa, (snapshot)=>{
 var chaveMesaString
 var chaveMesa = 0
 
+function ultimaAdicaoMesa(codigoMesa){
+  const commentsRefMesa = ref(db, 'mesas/produtos/' + codigoMesa + "/");
+  onChildAdded(commentsRefMesa, (data) => {
+    chaveMesaString = data.key
+    console.log(chaveMesaString)
+
+    chaveMesa = parseInt(chaveMesaString)
+  });
+}
 
 function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   let divCol = document.createElement("div")
@@ -417,23 +436,17 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   rotuloMesaTxt.innerHTML = "Rot." + rotulo
   tamanhoMesaTxt.innerHTML = "Tamanho " + tamanho
 
-  
+  divCard.setAttribute("data-bs-dismiss", "modal")
+
+  function getRandom(max) {
+    return Math.floor(Math.random() * max + 1)
+  }
 
   divCard.addEventListener("click", ()=>{
-    const commentsRefMesa = ref(db, 'mesas/produtos/' + codigoMesa + "/");
-    onChildAdded(commentsRefMesa, (data) => {
-      chaveMesaString = data.key
-      console.log(chaveMesaString)
-
-      chaveMesa = parseInt(chaveMesaString)
-    });
-
-    
-      console.log(chaveMesa)
-      console.log(codigoMesa)
+    ultimaAdicaoMesa(codigoMesa)
 
       console.log(chaveMesa++)
-      set(ref(db, 'mesas/produtos/' + codigoMesa + "/" + chaveMesa), {
+      set(ref(db, 'mesas/produtos/' + codigoMesa + "/" + getRandom(100)), {
         codigoMesa: codigoMesa,
         produtos: produtosSelecionadosMesa,
         metodoPagamento: metodoSelecionandoMesa
@@ -441,7 +454,8 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
 
     alert("Adicionado a mesa com sucesso")
     
-    //regVendasNormal()
+    
+    regVendasNormal()
   })
 
   divCol.classList.add("col")
@@ -543,8 +557,6 @@ onValue(dbRef, (snapshot)=>{
 
 
 botaoProximo.addEventListener("click", ()=>{
-  
-
   function passarPTelaMetodos(){
     console.log(dadosSelecProdBtnPrx)
 
@@ -552,7 +564,7 @@ botaoProximo.addEventListener("click", ()=>{
       alert("Selecione um produto")
     }else{
       divSelecProdutos.style.display = "none"
-      divSelecMetodos.style.display = "block"
+      finalizarPreVenda.style.display = "block"
 
       botaoProximo.classList.remove("btnProximoRegVenda")
       botaoProximo.classList.add("btnProximoRegVendaModalMesas")
@@ -565,31 +577,79 @@ botaoProximo.addEventListener("click", ()=>{
 })
 
 const dbRefMetPagamentoE = ref(db, "metodosPagamento/metodoSelecionado")
-let confirE = true
+let confirME = true
+const dbRefProdE = ref(db, "produtos/selecProdutos")
+let confirPE = true
+
+onValue(dbRefProdE, (snapshot)=>{
+  const data = snapshot.val()
+  console.log(data)
+  if(data == null){
+    confirPE = false
+  }else{
+    confirPE = true
+  }
+})
 
 onValue(dbRefMetPagamentoE, (snapshot)=>{
   const data = snapshot.val()
   console.log(data)
   if(data == null){
-    confirE = false
+    confirME = false
+    //if(confirME == false){
+      btnAdicionarMetodo.setAttribute("data-bs-toggle", "modal")
+      btnAdicionarMetodo.setAttribute("data-bs-target", "#modalRegistarVendas")
+      
+    //}
   }else{
-    confirE = true
+    confirME = true
+  }
+})
+
+btnAdicionarProdutos.addEventListener("click", ()=>{
+  if(confirME == true){
+    divSelecProdutos.style.display = "block"
+    finalizarPreVenda.style.display = "none"
+    divSelecMetodos.style.display = "none"
+  }else{
+    //alert("Adicione um metodo")
+  }
+})
+
+btnAdicionarMetodo.addEventListener("click", ()=>{
+  if(confirPE == true){
+    divSelecProdutos.style.display = "none"
+    finalizarPreVenda.style.display = "none"
+    divSelecMetodos.style.display = "block"
+  }else{
+    alert("Adicione um produto")
+    divSelecProdutos.style.display = "block"
+    finalizarPreVenda.style.display = "none"
+    divSelecMetodos.style.display = "none"
   }
 })
 
 botaoCancelar.addEventListener("click", ()=>{
-  if(confirE == true){
+  if(confirPE == true){
     regVendasNormal()
     alert("Cancelado com sucesso") 
+
+    divSelecProdutos.style.display = "block"
+    finalizarPreVenda.style.display = "none"
+    divSelecMetodos.style.display = "none"
   }else{
     alert("Nada seleciondo")
   }
 })
 
 botaoCancelar2.addEventListener("click", ()=>{
-  if(confirE == true){
+  if(confirME == true){
     regVendasNormal()
-    alert("Cancelado com sucesso") 
+    
+
+    divSelecProdutos.style.display = "block"
+    finalizarPreVenda.style.display = "none"
+    divSelecMetodos.style.display = "none"
   }else{
     alert("Nada seleciondo")
   }
@@ -621,16 +681,20 @@ btnRegVenda.addEventListener("click", ()=>{
 
     chaveVendas = parseInt(chaveVendasString)
 
-  if(confirE == true){
-    console.log(chaveVendas++)
-    set(ref(db, 'vendas/' + chaveVendas), {
-      produtos: produtosSelecionados,
-      metodoPagamento: metodoSelecionando
-    });
-    regVendasNormal()
-    alert("Venda cadatrada com sucesso")
+  if(confirPE == true){
+    if(confirME == true){
+      console.log(chaveVendas++)
+      set(ref(db, 'vendas/' + chaveVendas), {
+        produtos: produtosSelecionados,
+        metodoPagamento: metodoSelecionando
+      });
+      regVendasNormal()
+      alert("Venda cadatrada com sucesso")
+    }else{
+      alert("Adicione um metodo de pagamento antes")
+    }
   }else{
-    alert("Adicione produtos para venda antes")
+    alert("Adicione um produto antes")
   }
 })
 
