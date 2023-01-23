@@ -1,4 +1,4 @@
-import { firebaseConfig} from "./firebaseConfig.js";
+/*import { firebaseConfig} from "./firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 var codPedido = document.querySelector(".codPedido")
@@ -11,14 +11,14 @@ var btnAltPedido = document.querySelector(".btnAltPedido")
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-/*btnRegPedido.addEventListener("click", ()=>{
+*btnRegPedido.addEventListener("click", ()=>{
 function adicionarPedido(codPedido, prodPed, estadoPedi) {
   const db = getDatabase();
   set(ref(db, 'pedidosV/' + codPedido), {
     prodPed: prodPed,
     estadoPedi: estadoPedi
   });
-}*/
+}*
 
 btnRegPedido.addEventListener("click", ()=>{
     function adicionarPedido(codPedido, prodPed, estadoPedi) {
@@ -51,4 +51,4 @@ adicionarProd(codPedido.value, prodPed.value, estadoPedi.value)
     codPedido.value = ""
     estadoPedi.value = ""
     prodPed.value = ""
-})
+})*/

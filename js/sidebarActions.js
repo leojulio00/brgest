@@ -1,3 +1,15 @@
+let tdsSection = document.querySelectorAll(".tdsSection")
+let btnSideRegistarVenda = document.querySelector(".btnSideRegistarVenda")
+let btnSideMesas = document.querySelector(".btnSideMesas")
+let btnSidePaginaInicial = document.querySelector(".btnSidePaginaInicial")
+let btnSideCadastroProdutos = document.querySelector(".btnSideCadastroProdutos")
+let btnSideRegistoEntradaEstoque = document.querySelector(".btnSideRegistoEntradaEstoque")
+let btnSideVerEstoque = document.querySelector(".btnSideVerEstoque")
+let btnSideCadastroColaboradores = document.querySelector(".btnSideCadastroColaboradores")
+let btnSideRemocaoColaboradores = document.querySelector(".btnSideRemocaoColaboradores")
+let btnSideVerColaboradores = document.querySelector(".btnSideVerColaboradores")
+let btnSideUsuario = document.querySelector(".btnSideUsuario")
+
 let sectionDashboard = document.querySelector(".dashboard")
 let sectionVendas = document.querySelector(".vendas")
 let sectionCaixa = document.querySelector(".caixa")
@@ -13,140 +25,74 @@ let btnUsuario = document.querySelector(".btnUsuario")
 var btnSidebar = document.querySelector(".navbar-toggler")
 var menuLateral = document.querySelector(".menuLateral")
 
-btnDashboard.addEventListener("click", () =>{
-    if(sectionDashboard.style.display == "none"){
-        sectionDashboard.style.display = "block"
-        sectionVendas.style.display = "none"
-        sectionProdutos.style.display = "none"
-        sectionCaixa.style.display = "none"
-        sectionColaboradores.style.display = "none"
-        sectionUsuario.style.display = "none"
-    }else{
-        //sectionDashboard.style.display = "none"
-    }
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
+
+
+btnSidePaginaInicial.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionDashboard.style.display = "block"
 })
 
-btnVendas.addEventListener("click", () =>{
-    if(sectionVendas.style.display == "none"){
-        sectionVendas.style.display = "block"
-        sectionDashboard.style.display = "none"
-        sectionProdutos.style.display = "none"
-        sectionCaixa.style.display = "none"
-        sectionColaboradores.style.display = "none"
-        sectionUsuario.style.display = "none"
-    }else{
-        //sectionVendas.style.display = "none"
-    }
-
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
+btnSideRegistarVenda.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionVendas.style.display = "block"
 })
 
-/*btnCaixa.addEventListener("click", () =>{
-    if(sectionCaixa.style.display == "none"){
-        sectionCaixa.style.display = "block"
-        sectionDashboard.style.display = "none"
-        sectionVendas.style.display = "none"
-        sectionProdutos.style.display = "none"
-        sectionColaboradores.style.display = "none"
-        sectionUsuario.style.display = "none"
-    }else{
-        //sectionCaixa.style.display = "none"
-    }
-
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
-})*/
-
-btnProdutos.addEventListener("click", () =>{
-    if(sectionProdutos.style.display == "none"){
-        sectionProdutos.style.display = "block"
-        sectionDashboard.style.display = "none"
-        sectionVendas.style.display = "none"
-        sectionCaixa.style.display = "none"
-        sectionColaboradores.style.display = "none"
-        sectionUsuario.style.display = "none"
-    }else{
-        //sectionProdutos.style.display = "none"
-    }
-
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
+btnSideMesas.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionVendas.style.display = "block"
 })
 
-btnColaboradores.addEventListener("click", () =>{
-    if(sectionColaboradores.style.display == "none"){
-        sectionColaboradores.style.display = "block"
-        sectionDashboard.style.display = "none"
-        sectionVendas.style.display = "none"
-        sectionProdutos.style.display = "none"
-        sectionCaixa.style.display = "none"
-        sectionUsuario.style.display = "none"
-    }else{
-        //sectionColaboradores.style.display = "none"
-    }
-
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
+btnSideCadastroProdutos.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionProdutos.style.display = "block"
 })
 
-btnUsuario.addEventListener("click", () =>{
-    if(sectionUsuario.style.display == "none"){
-        sectionUsuario.style.display = "block"
-        sectionDashboard.style.display = "none"
-        sectionVendas.style.display = "none"
-        sectionProdutos.style.display = "none"
-        sectionCaixa.style.display = "none"
-        sectionColaboradores.style.display = "none"
-    }else{
-        //sectionUsuario.style.display = "none"
-    }
-
-    if(btnSidebar.ariaExpanded == "true"){
-        btnSidebar.ariaExpanded = "false"
-        btnSidebar.classList.add("collapsed")
-        menuLateral.classList.remove("show")
-    }else{
-        btnSidebar.ariaExpanded = "true"
-        btnSidebar.classList.remove("collapsed")
-        menuLateral.classList.add("show")
-    }
+btnSideRegistoEntradaEstoque.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionProdutos.style.display = "block"
 })
 
+btnSideVerEstoque.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionProdutos.style.display = "block"
+})
+
+btnSideCadastroColaboradores.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionColaboradores.style.display = "block"
+})
+
+btnSideRemocaoColaboradores.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionColaboradores.style.display = "block"
+})
+
+btnSideVerColaboradores.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionColaboradores.style.display = "block"
+})
+
+btnSideUsuario.addEventListener("click", ()=>{
+    tdsSection.forEach((val)=>{
+        val.style.display = "none"
+    })
+    sectionUsuario.style.display = "block"
+})

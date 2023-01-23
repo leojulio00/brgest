@@ -1,4 +1,4 @@
-import { firebaseConfig} from "./firebaseConfig.js";
+/*import { firebaseConfig} from "./firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
@@ -62,9 +62,9 @@ function GetAllDataRealtime(){
     })
 }
 
-/*btnRefresh.addEventListener("click", ()=>{
+*btnRefresh.addEventListener("click", ()=>{
     //GetAllDataRealtime()
     window.onload
-})*/
+})*
 
-window.onload = GetAllDataRealtime()
+window.onload = GetAllDataRealtime()*/

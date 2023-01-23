@@ -40,6 +40,7 @@
     <link href="../css/cards.css" rel="stylesheet">
     <link href="../css/chartDesempenho.css" rel="stylesheet">
     <link href="../css/cardRegistarvendas.css" rel="stylesheet">
+    <link href="../css/btnSidebar.css" rel="stylesheet">
   </head>
 
   <body>  
@@ -71,7 +72,7 @@
                 </button>
                 <div class="collapse show" id="home-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#iniDashboard" class="link-dark rounded">Página inicial</a></li>
+                    <li><a href="#iniDashboard" class="link-dark rounded"><button class="btnSidebar btnSidePaginaInicial">Página inicial</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -81,9 +82,9 @@
                 </button>
                 <div class="collapse" id="dashboard-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#sectionReg" class="link-dark rounded">Registar venda</a></li>
-                    <li><a href="#sectionPedidos" class="link-dark rounded">Pedidos</a></li>
-                    <li><a href="#sectionMesas" class="link-dark rounded">Mesas</a></li>
+                    <li><a href="#sectionReg" class="link-dark rounded"><button class="btnSidebar btnSideRegistarVenda">Registar venda</button></a></li>
+                    <!--<li><a href="#sectionPedidos" class="link-dark rounded"><button class="btnSidebar btnPedidos">Pedidos</button></a></li>-->
+                    <li><a href="#sectionMesas" class="link-dark rounded"><button class="btnSidebar btnSideMesas">Mesas</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -106,11 +107,11 @@
                 </button>
                 <div class="collapse" id="produtos-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#sectionCadas" class="link-dark rounded">Cadastro de produtos</a></li>
-                    <li><a href="#sectionEntrEst" class="link-dark rounded">Registo de entrada no estoque</a></li>
+                    <li><a href="#sectionCadas" class="link-dark rounded"><button class="btnSidebar btnSideCadastroProdutos">Cadastro de produtos</button></a></li>
+                    <li><a href="#sectionEntrEst" class="link-dark rounded"><button class="btnSidebar btnSideRegistoEntradaEstoque">Registo de entrada no estoque</button></a></li>
                     <!--<li><a href="#" class="link-dark rounded">Registo de saída no estoque</a></li>
                     <li><a href="#" class="link-dark rounded">Remoção de produtos</a></li>-->
-                    <li><a href="#sectionVerEst" class="link-dark rounded">Ver estoque</a></li>
+                    <li><a href="#sectionVerEst" class="link-dark rounded"><button class="btnSidebar btnSideVerEstoque">Ver estoque</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -120,9 +121,9 @@
                 </button>
                 <div class="collapse" id="usuarios-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#sectionCadasCol" class="link-dark rounded">Cadastro de colaboradores</a></li>
-                    <li><a href="#sectionCadasCol" class="link-dark rounded">Remoção de colaboradores</a></li>
-                    <li><a href="#sectionVerCol" class="link-dark rounded">Ver colaboradores</a></li>
+                    <li><a href="#sectionCadasCol" class="link-dark rounded"><button class="btnSidebar btnSideCadastroColaboradores">Cadastro de colaboradores</button></a></li>
+                    <li><a href="#sectionCadasCol" class="link-dark rounded"><button class="btnSidebar btnSideRemocaoColaboradores">Remoção de colaboradores</button></a></li>
+                    <li><a href="#sectionVerCol" class="link-dark rounded"><button class="btnSidebar btnSideVerColaboradores">Ver colaboradores</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -133,7 +134,7 @@
                 </button>
                 <div class="collapse" id="account-collapse">
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="#" class="link-dark rounded">Usuário</a></li>
+                    <li><a href="#sectionUsuario" class="link-dark rounded"><button class="btnSidebar btnSideUsuario">Usuário</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -142,8 +143,8 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <section class="dashboard" style="display: block;">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" name="iniDashboard">
+          <section class="dashboard tdsSection" style="display: block;">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="iniDashboard">
               <h1 class="h2">Página inicial</h1>
             </div>
             <div class="cardNumGerais">
@@ -201,7 +202,7 @@
             
           </section>
 
-          <section class="vendas" style="display: none;">
+          <section class="vendas tdsSection" style="display: none;">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 class="h2">Vendas</h1>
             </div>
@@ -331,7 +332,7 @@
               </div>
             </div>
 
-            <div class="pedidos" style="margin: 30px 0px">
+          <!--<div class="pedidos" style="margin: 30px 0px">
               <h2 id="sectionPedidos">Pedidos</h2>
 
               <div class="">
@@ -385,7 +386,7 @@
                   <tbody class="bodyPedidos"></tbody>
                 </table>
               </div>
-            </div>
+            </div>-->
 
             <div class="Mesas" style="margin: 30px 0px">
               <h2 id="sectionMesas">Mesas</h2>
@@ -428,44 +429,17 @@
               </div>
 
               <div class="" style="margin: 30px 0px">
-                <h3>Ver Pedidos</h3>
-                <table class="table table-striped">
-                  <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Pedidos feitos</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Responsavel</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>Otto</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>Otto</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td >Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td>Otto</td>
-                  </tr>
-                  </tbody>
-                </table>
+                <h3>Ver Mesas</h3>
+                <div class="divVerMesasDisponiveis row  row-cols-1 row-cols-md-1 g-4">
+
+                </div>
               </div>
             </div>
 
 
           </section>
 
-          <section class="caixa" style="display: none;">
+          <section class="caixa tdsSection" style="display: none;">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 class="h2">Caixa</h1>
             </div>
@@ -473,7 +447,7 @@
 
           </section>
 
-          <section class="produtos" style="display: none;">
+          <section class="produtos tdsSection" style="display: none;">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 class="h2">Produtos</h1>
             </div>
@@ -597,7 +571,7 @@
 
           </section>
 
-          <section class="colaboradores" style="display: none;">
+          <section class="colaboradores tdsSection" style="display: none;">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
               <h1 class="h2">Colaboradores</h1>
             </div>
@@ -684,8 +658,8 @@
               </div>
           </section>
 
-          <section class="usuario" style="display: none;">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <section class="usuario tdsSection" style="display: none;">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="sectionUsuario">
               <h1 class="h2">Usuário</h1>
             </div>
 
@@ -696,27 +670,27 @@
               <div class="listaDadosUser">
                 <div>
                   <strong>Código: </strong>
-                  <label class="userCod" for="">Leonildo Julio</label>
+                  <label class="userCod" for=""></label>
                 </div>
                 <div>
                   <strong>Nome: </strong>
-                  <label class="userNome" for="">Leonildo Julio</label>
+                  <label class="userNome" for=""></label>
                 </div>
                 <div>
                   <strong>Categoria: </strong>
-                  <label class="userCategoria" for="">Leonildo Julio</label>
+                  <label class="userCategoria" for=""></label>
                 </div>
                 <div>
                   <strong>Endereço: </strong>
-                  <label class="userEnder" for="">Leonildo Julio</label>
+                  <label class="userEnder" for=""></label>
                 </div>
                 <div>
                   <strong>Telefone: </strong>
-                  <label class="userTelefone" for="">Leonildo Julio</label>
+                  <label class="userTelefone" for=""></label>
                 </div>
                 <div>
                   <strong>E-mail: </strong>
-                  <label class="userMail" for="">Leonildo Julio</label>
+                  <label class="userMail" for=""></label>
                 </div>
 
               </div>
@@ -809,6 +783,17 @@
                             <div class="row row-cols-1 row-cols-md-1 g-4 divMesasDisponiveis"></div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="verProdutosMesa" style="display: none;">
+                      <p>Produtos da mesa selecionada</p>
+                      <div class="listarTdsProdutosMesa row  row-cols-1 row-cols-md-1 g-4">
+
+                      </div>
+                      <div class="divTotalVerProdutosMesa border-top" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin: 20px 0px;">
+                        <strong>Total</strong>
+                        <span class="spanTotalVerProdutosMesa"></span>
                       </div>
                     </div>
 

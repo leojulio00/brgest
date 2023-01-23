@@ -2,6 +2,7 @@ import { firebaseConfig} from "./firebaseConfig.js";
 import { TipoMoeda } from "./tipoMoeda.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
 
 var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinal")
 var metodoPagamentoEscolhido = document.querySelector(".metodoPagamentoEscolhido")
@@ -28,6 +29,7 @@ var btnFecharModalVendas = document.querySelector(".btnFecharModalVendas")
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const dbFt = getFirestore(app);
 
 divSelecProdutos.style.display = "block"
 divSelecMetodos.style.display = "none"
@@ -442,17 +444,31 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
     return Math.floor(Math.random() * max + 1)
   }
 
-  divCard.addEventListener("click", ()=>{
+  let numeroSorteado = getRandom(100)
+  divCard.addEventListener("click", async ()=>{
     ultimaAdicaoMesa(codigoMesa)
 
       console.log(chaveMesa++)
-      set(ref(db, 'mesas/produtos/' + codigoMesa + "/" + getRandom(100)), {
+      /*set(ref(db, 'mesas/' + codigoMesa), {
         codigoMesa: codigoMesa,
         produtos: produtosSelecionadosMesa,
         metodoPagamento: metodoSelecionandoMesa
-      });
+      });*/
 
-    alert("Adicionado a mesa com sucesso")
+      try {
+        const docRef = await addDoc(collection(dbFt, "produtosMesa"), {
+          codigoMesa: codigoMesa,
+          produtos: produtosSelecionadosMesa,
+          metodoPagamento: metodoSelecionandoMesa
+        }, { merge: true });
+        /*setDoc(doc(db, "cities", "new-city-id"), data)
+        console.log("Document written with ID: ", docRef.id);*/
+        alert("Adicionado a mesa com sucesso")
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+
+    
     
     
     regVendasNormal()
@@ -651,7 +667,7 @@ botaoCancelar2.addEventListener("click", ()=>{
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
   }else{
-    alert("Nada seleciondo")
+    //alert("Nada seleciondo")
   }
 })
 
@@ -697,6 +713,30 @@ btnRegVenda.addEventListener("click", ()=>{
     alert("Adicione um produto antes")
   }
 })
+
+const citiesRef = collection(dbFt, "produtosMesa");
+
+const q = query(citiesRef, where("codigoMesa", "==", "M-002"));
+
+const querySnapshot = await getDocs(q);
+let dadosP = []
+let dadosPP = []
+querySnapshot.forEach((doc) => {
+  // doc.data() is never undefined for query doc snapshots
+  console.log(doc.id, " => ", doc.data().produtos);
+   dadosP.push(doc.data().produtos)
+   dadosPP.push(dadosP.forEach((l)=>{
+    //console.log(l)
+   }))
+   //let arrayDados = Object.keys(dadosP).map(i => JSON.parse(dadosP[Number(i)]))
+   dadosP.forEach((val)=>{
+    console.log(val.nomeProd)
+   })
+  /*dadosP.forEach((d)=>{
+    console.log(d)
+  })*/
+  
+});
 
 
 /*import { firebaseConfig} from "./firebaseConfig.js";

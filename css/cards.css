@@ -7,8 +7,9 @@
 
 .cardSaldo{
     height: 200px;
+    width: 100%;
     min-width: 150px;
-    max-width: 350px;
+    max-width: 70vw;
     margin: 20px;
     padding: 20px;
     background: #423DCC;
