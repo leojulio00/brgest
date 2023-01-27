@@ -9,22 +9,25 @@ var btnRefresh = document.querySelector(".btnRefresh")
   const app = initializeApp(firebaseConfig);
     const db = getDatabase();
 
-function addItemToTable(codProdE, nomeProdE, quantiProd, dataModi){
+function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
     let trow = document.createElement("tr")
     let td1 = document.createElement("td")
     let td2 = document.createElement("td")
     let td3 = document.createElement("td")
     let td4 = document.createElement("td")
+    let td5 = document.createElement("td")
 
     td1.innerHTML = ++cod
     td2.innerHTML = nomeProdE
     td3.innerHTML = quantiProd
-    td4.innerHTML = dataModi
+    td4.innerHTML = dataValidade
+    td5.innerHTML = dataModi
 
     trow.appendChild(td1)  
     trow.appendChild(td2) 
     trow.appendChild(td3)  
     trow.appendChild(td4)
+    trow.appendChild(td5)
 
     bodyEstoque.appendChild(trow)
 }
@@ -32,7 +35,7 @@ function addItemToTable(codProdE, nomeProdE, quantiProd, dataModi){
 function addAllItemsToTable(produtosEstoque){
     bodyEstoque.innerHTML = ""
     produtosEstoque.forEach(element => {
-        addItemToTable(element.codProdE, element.nomeProdE, element.quantProdE, element.horaRegEst)
+        addItemToTable(element.nomeProdE, element.quantProdE, element.dataValidade, element.horaRegEst)
     });
 }
 
@@ -51,7 +54,7 @@ function GetAllDataOnce(){
 }
 
 function GetAllDataRealtime(){
-    const dbRef = ref(db, "produtosEstoque")
+    const dbRef = ref(db, "produtos/estoque/")
 
     onValue(dbRef, (snapshot) =>{
         var produtos = []

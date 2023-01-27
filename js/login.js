@@ -8,8 +8,8 @@ var inputPass = document.querySelector(".inputPass")
 var btnEntrar = document.querySelector(".btnEntrar")
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getDatabase();
+const auth = getAuth(app);
+const db = getDatabase(app);
 
 btnEntrar.addEventListener("click", ()=>{
   window.localStorage.setItem("user", inputUser.value);
@@ -22,7 +22,7 @@ btnEntrar.addEventListener("click", ()=>{
     //updateStarCount(postElement, data);
     console.log(data)
     usuarioMail = data.emailColab
-
+    console.log(usuarioMail)
     signInWithEmailAndPassword(auth, usuarioMail, inputPass.value).then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
@@ -36,4 +36,6 @@ btnEntrar.addEventListener("click", ()=>{
       alert("erro: " + errorMessage)
     });
   });
+
+  
 })

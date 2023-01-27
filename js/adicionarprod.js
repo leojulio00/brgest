@@ -54,21 +54,20 @@ btnRegProd.addEventListener("click", ()=>{
     const data = snapshot.val();
     tipoMoeda = data.tipoMoeda
 
-    function adicionarProd(nomeProd, precVenda, precCompra, lucroProd, dataValidade, tipoMoeda, horaReg,) {
+    function adicionarProd(nomeProd, precVenda, precCompra, lucroProd, tipoMoeda, horaReg,) {
       const db = getDatabase();
       set(ref(db, 'produtos/todosProdutos/' + nomeProd), {
         nomeProd: nomeProd,
         precVenda: precVenda,
         precCompra: precCompra,
         lucroProd: lucroProd,
-        dataValidade: dataValidade,
         tipoMoeda: tipoMoeda,
         horaReg: horaReg
       });
     }
     
     if(nomeProd != "" && precVendaR != "" && precCompra != ""){
-      adicionarProd(nomeProd.value, precVendaR.value, precCompra.value, lucroVenda.value, dataValidade.value, tipoMoeda, horaReg.value)
+      adicionarProd(nomeProd.value, precVendaR.value, precCompra.value, lucroVenda.value, tipoMoeda, horaReg.value)
     
       alert("Produto cadastrado com sucesso")
       nomeProd.value = ""

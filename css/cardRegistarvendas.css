@@ -13,6 +13,10 @@
     color: white;
 }
 
+.cardBodyStyle{
+    margin: 10px 0px;
+}
+
 .posicaoFlex{
     display: flex;
     flex-direction: row;

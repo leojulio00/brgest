@@ -1,5 +1,6 @@
 import { firebaseConfig} from "./firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+import { TipoMoeda } from "./tipoMoeda.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 
@@ -9,17 +10,25 @@ var codMesa = document.querySelector(".codMesa")
 var tamanhoMesa = document.querySelector(".tamanhoMesa")
 var formaMesaSelect = document.querySelector(".formaMesaSelect")
 var rotuloMesa = document.querySelector(".rotuloMesa")
-var divSelecProdutos = document.querySelector(".selecionarProdutos")
-var divSelecMetodos = document.querySelector(".selecionarMPagamento")
+var divSelecProdutosMesa = document.querySelector(".divSelecProdutosMesa")
+var selecProdutosMesa = document.querySelector(".selecProdutosMesa")
+var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinal")
 var finalizarPreVenda = document.querySelector(".finalizarPreVenda")
 var divVerMesasDisponiveis =document.querySelector(".divVerMesasDisponiveis")
-var verProdutosMesa =document.querySelector(".verProdutosMesa")
+var finalizarAdicaoMesa =document.querySelector(".finalizarAdicaoMesa")
+var DivSelecionarProdutosMesa = document.querySelector(".DivSelecionarProdutosMesa")
 var listarTdsProdutosMesa =document.querySelector(".listarTdsProdutosMesa")
 var spanTotalVerProdutosMesa = document.querySelector(".spanTotalVerProdutosMesa")
+var detalhesMesa = document.querySelector(".detalhesMesa")
 var btnCadastrarMesa = document.querySelector(".btnCadastrarMesa")
 var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos")
 var btnCancelar2 = document.querySelector(".btnCancelar2")
 var btnProximoRegVenda = document.querySelector(".btnProximoRegVenda")
+var btnAdicionarProdutosMesa = document.querySelector(".btnAdicionarProdutosMesa")
+var btnContinuarMesa = document.querySelector(".btnContinuarMesa")
+var btnProximoAddMesa = document.querySelector(".btnProximoAddMesa")
+var btnFecharContaMesa = document.querySelector(".btnFecharContaMesa")
+var spanTotalVenda = document.querySelector(".spanTotalVenda")
 
 
 btnCadastrarMesa.addEventListener("click", ()=>{
@@ -49,7 +58,7 @@ onValue(dbRefMetodoMesa, (snapshot)=>{
   metodoSelecionandoMesa = data
 })
 
-var CodigoMesaClicado
+var CodigoMesaClicado = ""
 
 function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   let divCol = document.createElement("div")
@@ -66,22 +75,25 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   divCard.setAttribute("data-bs-dismiss", "modal")
 
   divCard.addEventListener("click", ()=>{
-    btnAdicionarProdutos.click()
+    /*btnAdicionarProdutos.click()
 
-    divSelecProdutos.style.display = "none"
+    divSelecProdutosMesa.style.display = "none"
     divSelecMetodos.style.display = "none"
-    finalizarPreVenda.style.display = "none"
-    verProdutosMesa.style.display = "block"
+    finalizarPreVenda.style.display = "none"*/
+    DivSelecionarProdutosMesa.style.display = "block"
 
-    btnProximoRegVenda.classList.remove("d-none")
+    /*btnProximoRegVenda.classList.remove("d-none")
     btnProximoRegVenda.classList.add("d-block")
     btnProximoRegVenda.style.display = "block"
     btnCancelar2.classList.remove("d-none")
     btnCancelar2.classList.add("d-block")
-    btnCancelar2.style.display = "block"
+    btnCancelar2.style.display = "block"*/
 
+    
+    
     CodigoMesaClicado = codigoMesa
     console.log(CodigoMesaClicado)
+    addDetalhesMesa()
   })
 
   divCol.classList.add("col")
@@ -105,6 +117,9 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   divCardBody.appendChild(codigoMesaTxt)  
   divCardBody.appendChild(rotuloMesaTxt)
   divCardBody.appendChild(tamanhoMesaTxt)  
+
+  divCard.setAttribute("data-bs-toggle", "modal")
+  divCard.setAttribute("data-bs-target", "#modalProdutosMesa")
 
   divVerMesasDisponiveis.appendChild(divCol)
 }
@@ -132,6 +147,205 @@ function PegarTdsMesas(){
 
 window.onload = PegarTdsMesas()
 
+function addDetalhesMesa(){
+  let divCol1 = document.createElement("div")
+  let divCol2 = document.createElement("div")
+  let divCard1 = document.createElement("div")
+  let divCard2 = document.createElement("div")
+  let divCard3 = document.createElement("div")
+  let divCard4 = document.createElement("div")
+  let divCardBody1 = document.createElement("div")
+  let divCardBody2 = document.createElement("div")
+  let divCardBody3 = document.createElement("div")
+  let divCardBody4 = document.createElement("div")
+  let codigoMesaTxt = document.createElement("h5")
+  let rotuloMesaTxt = document.createElement("h5")
+  let formaMesaTxt = document.createElement("h5")
+  let tamanhoMesaTxt = document.createElement("h5")
+
+  const dbRef = ref(db, "mesas/todasMesas/" + CodigoMesaClicado)
+
+    onValue(dbRef, (snapshot) =>{
+        let dados = snapshot.val()
+        console.log(dados)
+
+        codigoMesaTxt.innerHTML = "Cdg: da mesa: " + dados.codigoMesa
+        rotuloMesaTxt.innerHTML = "Rótulo da mesa: " + dados.rotulo
+        formaMesaTxt.innerHTML = "Forma da mesa: " + dados.foma
+        tamanhoMesaTxt.innerHTML = "Tamanho da mesa: " + dados.tamanho
+    })
+
+  divCol1.classList.add("col")
+  divCol2.classList.add("col")
+  divCard1.classList.add("card")
+  divCard1.classList.add("cardRegVendasSelecionado")
+  divCard2.classList.add("card")
+  divCard2.classList.add("cardRegVendasSelecionado")
+  divCard3.classList.add("card")
+  divCard3.classList.add("cardRegVendasSelecionado")
+  divCard4.classList.add("card")
+  divCard4.classList.add("cardRegVendasSelecionado")
+  divCard1.classList.add("cardBodyStyle")
+  divCard2.classList.add("cardBodyStyle")
+  divCard3.classList.add("cardBodyStyle")
+  divCard4.classList.add("cardBodyStyle")
+  divCardBody1.classList.add("card-body")
+  //divCardBody1.classList.add("cardBodyStyle")
+  divCardBody1.style.display = "flex"
+  divCardBody1.style.flexDirection = "row"
+  divCardBody1.style.flexWrap = "nowrap"
+  divCardBody1.style.justifyContent = "space-between"
+  divCardBody2.classList.add("card-body")
+  //divCardBody2.classList.add("cardBodyStyle")
+  divCardBody2.style.display = "flex"
+  divCardBody2.style.flexDirection = "row"
+  divCardBody2.style.flexWrap = "nowrap"
+  divCardBody2.style.justifyContent = "space-between"
+  divCardBody3.classList.add("card-body")
+  //divCardBody3.classList.add("cardBodyStyle")
+  divCardBody3.style.display = "flex"
+  divCardBody3.style.flexDirection = "row"
+  divCardBody3.style.flexWrap = "nowrap"
+  divCardBody3.style.justifyContent = "space-between"
+  divCardBody4.classList.add("card-body")
+  //divCardBody4.classList.add("cardBodyStyle")
+  divCardBody4.style.display = "flex"
+  divCardBody4.style.flexDirection = "row"
+  divCardBody4.style.flexWrap = "nowrap"
+  divCardBody4.style.justifyContent = "space-between"
+  codigoMesaTxt.style.fontSize = "14px"
+  codigoMesaTxt.style.margin = "0px"
+  rotuloMesaTxt.style.fontSize = "14px"
+  rotuloMesaTxt.style.margin = "0px"
+  formaMesaTxt.style.fontSize = "14px"
+  formaMesaTxt.style.margin = "0px"
+  tamanhoMesaTxt.style.fontSize = "14px"
+  tamanhoMesaTxt.style.margin = "0px"
+
+  divCol1.appendChild(divCard1)  
+  divCol2.appendChild(divCard2) 
+  divCol1.appendChild(divCard3)  
+  divCol2.appendChild(divCard4)  
+  divCard1.appendChild(divCardBody1) 
+  divCard2.appendChild(divCardBody2) 
+  divCard3.appendChild(divCardBody3) 
+  divCard4.appendChild(divCardBody4) 
+  divCardBody1.appendChild(codigoMesaTxt)
+  divCardBody2.appendChild(rotuloMesaTxt) 
+  divCardBody3.appendChild(formaMesaTxt)
+  divCardBody4.appendChild(tamanhoMesaTxt) 
+
+  detalhesMesa.appendChild(divCol1)
+  detalhesMesa.appendChild(divCol2)
+  console.log(detalhesMesa)
+}
+
+function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
+  let divCol = document.createElement("div")
+  let divCard = document.createElement("div")
+  let divCardBody = document.createElement("div")
+  let produNome = document.createElement("h3")
+  let produQuantidade = document.createElement("h5")
+  let produPreco = document.createElement("h1")
+  let quantProduto = 1
+  //produQuantidade.innerHTML = "Qtd " + quantProduto
+
+
+  produNome.innerHTML = nomeProd
+  produPreco.innerHTML = precVenda + " " + tipoMoeda
+
+  
+
+  divCard.addEventListener("click", ()=>{
+    produQuantidade.innerHTML = "Qtd " + quantProduto++
+
+    function getRandom(max) {
+      return Math.floor(Math.random() * max + 1)
+    }
+
+    const db = getDatabase();
+    set(ref(db, 'mesas/selecProdutos/' + nomeProd), {
+      nomeProduto: nomeProd,
+      quantidadeProd: quantProduto - 1,
+      precoProduto: precVenda,
+      tipoMoeda: tipoMoeda
+    });
+
+    if(divCard.classList.contains("cardRegVendasSelecionado")){
+      //
+    }else{
+      divCard.classList.add("cardRegVendasSelecionado")
+    }
+
+    let valorActual = 0 
+    let valorSomado = 0
+    let valorProduto = precVenda
+    const dbRef = ref(db, "mesas/selecProdutosValor")
+
+    onValue(dbRef, (snapshot) => {
+      var data = snapshot.val()
+      valorActual = data.valorTotal
+      
+    })
+
+    valorSomado = parseInt(valorProduto) + parseInt(valorActual)
+      
+    set(ref(db, 'mesas/selecProdutosValor/'), {
+      valorTotal: valorSomado
+    });
+  })
+
+  divCol.classList.add("col")
+  divCard.classList.add("card")
+  divCard.classList.add("cardRegVendas")
+  divCardBody.classList.add("card-body")
+  produNome.classList.add("card-title")
+  produNome.style.fontSize = "18px"
+  produPreco.classList.add("card-title")
+  produPreco.style.fontSize = "26px"
+  produQuantidade.classList.add("card-text")
+  produQuantidade.style.fontSize = "16px"
+
+  divCol.appendChild(divCard)  
+  divCard.appendChild(divCardBody) 
+  divCardBody.appendChild(produNome)  
+  divCardBody.appendChild(produPreco)
+  divCardBody.appendChild(produQuantidade)  
+
+  selecProdutosMesa.appendChild(divCol)
+}
+
+function addTdsProdutosMesa(produtos){
+  selecProdutosMesa.innerHTML = ""
+  produtos.forEach(element => {
+      addProdutosMesa(element.nomeProd, element.precVenda, element.tipoMoeda)
+  });
+}
+
+function PegarTdsProdutosMesa(){
+  const dbRef = ref(db, "produtos/todosProdutos")
+
+  onValue(dbRef, (snapshot) =>{
+      var todosProdutos = []
+
+      snapshot.forEach(childSnapshot => {
+        todosProdutos.push(childSnapshot.val())
+      })
+
+      addTdsProdutosMesa(todosProdutos)
+  })
+}
+
+window.onload = PegarTdsProdutosMesa()
+
+btnAdicionarProdutosMesa.addEventListener("click", ()=>{
+  if(divSelecProdutosMesa.style.display = "none"){
+    divSelecProdutosMesa.style.display = "block"
+  }else{
+    divSelecProdutosMesa.style.display = "none"
+  }
+})
+  
 function addProdutosNoCard(nomeProduto, precoProduto, tipoMoeda, quantidadeProd){
   let divCol = document.createElement("div")
   let divCard = document.createElement("div")
@@ -143,21 +357,6 @@ function addProdutosNoCard(nomeProduto, precoProduto, tipoMoeda, quantidadeProd)
   produNomeTxt.innerHTML = nomeProduto
   precoProdutoTxt.innerHTML = precoProduto + ".00 " + tipoMoeda
   produQuantidadeTxt.innerHTML = quantidadeProd
-
-  /*divCard.addEventListener("click", ()=>{
-    produQuantidade.innerHTML = "Qtd " + quantProduto++
-
-    const db = getDatabase();
-    set(ref(db, 'produtos/selecProdutos/' + nomeProduto), {
-      quantidadeProd: quantProduto - 1
-    });
-
-    if(divCard.classList.contains("cardRegVendasSelecionado")){
-      //
-    }else{
-      divCard.classList.add("cardRegVendasSelecionado")
-    }
-  })*/
 
   divCol.classList.add("col")
   divCard.classList.add("card")
@@ -191,7 +390,7 @@ function addTdsProdutosNaDiv(produtos){
 }
 
 function PegarTdsProdutosSelecionados(){
-  const dbRef = ref(db, "mesas/produtos/" + CodigoMesaClicado)
+  const dbRef = ref(db, "mesas/selecProdutos")
 
   onValue(dbRef, (snapshot) =>{
       var todosProdutos = []
@@ -199,29 +398,38 @@ function PegarTdsProdutosSelecionados(){
       snapshot.forEach(childSnapshot => {
         todosProdutos.push(childSnapshot.val())
       })
-
+      console.log(todosProdutos)
       addTdsProdutosNaDiv(todosProdutos)
   })
 }
 
-const dbRef = ref(db, "mesas/produtos/" + CodigoMesaClicado)
+btnFecharContaMesa.addEventListener("click", ()=>{
+  //let btnProximo = document.createElement("button")
+  let valorTotal = 0
+ 
+  DivSelecionarProdutosMesa.style.display = "block"
+  finalizarAdicaoMesa.style.display = "none"
+  window.onload = PegarTdsProdutosSelecionados()  
 
-/*setInterval(()=>{
-  
-  onValue(dbRef, (snapshot) =>{
-    var todosProdutos = []
+  const dbRef = ref(db, "mesas/selecProdutosValor")
 
-    snapshot.forEach(childSnapshot => {
-      todosProdutos.push(childSnapshot.val())
-    })
-
-    todosProdutos.forEach(element => {
-      
-      dbRef = ref(db, "mesa/produtos/" + CodigoMesaClicado + "/" + element.produto + "/")
-    });
-    console.log(dbRef)
-    
+  onValue(dbRef, (snapshot)=>{
+    const data = snapshot.val()
+    console.log(data)
+    valorTotal = data.valorTotal
   })
-}, 1000)*/
 
+  spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
+})
+
+btnProximoAddMesa.addEventListener("click", ()=>{
+  if(DivSelecionarProdutosMesa.style.display == "block"){
+    finalizarAdicaoMesa.style.display = "block"
+    DivSelecionarProdutosMesa.style.display = "none"
+    btnProximoAddMesa.setAttribute("disabled", "disabled")
+  }else{
+    finalizarAdicaoMesa.style.display = "none"
+    DivSelecionarProdutosMesa.style.display = "block"
+  }
   
+})

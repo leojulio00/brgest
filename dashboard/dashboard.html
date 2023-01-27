@@ -294,7 +294,7 @@
                     </div>
                     <div class="produtosEscolhidoFinal row  row-cols-1 row-cols-md-1 g-4">
                       <div class="col">
-                        <div class="card cardRegVendasSelecionado">
+                        <div class="card cardRegVendasSelecionado cardNenhumProd">
                           <div class="card-body">
                             Nenhum Produto Escolhido
                           </div>
@@ -465,7 +465,7 @@
                       <input type="text" class="form-control nomeProd" id="nomeProdutoCadastro" required>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label for="precoCompraProduto" class="form-label">Preço de compra /uni.</label>
                     <div class="input-group">
                       <input type="text" class="form-control precCompra" id="precoCompraProduto" required>
@@ -473,28 +473,21 @@
                     </div>
                     
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label for="precoVendaProduto" class="form-label">Preço para venda /uni.</label>
                     <div class="input-group">
                       <input type="text" class="form-control precVendaR" id="precoVendaProduto" aria-describedby="inputGroupPrepend3" required>
                       <span class="input-group-text">Mts</span>
                     </div>
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label for="lucroVendaProduto" class="form-label">Lucro da venda /uni.</label>
                     <div class="input-group">
                       <input type="number" class="form-control lucroVenda" id="lucroVendaProduto" aria-describedby="inputGroupPrepend3" disabled>
                       <span class="input-group-text">Mts</span>
                     </div>
                   </div>
-                  <div class="col-md-8">
-                    <label for="lucroVendaProduto" class="form-label">Data de validade</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control dataValidade" id="lucroVendaProduto" aria-describedby="inputGroupPrepend3" placeholder="Ex.: 30/12/2000">
-                      <span class="input-group-text">Mts</span>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
                     <label for="horaRegCadProdutos" class="form-label">Hora</label>
                       <input type="text" class="form-control horaRegCadProd" id="horaRegCadProdutos" aria-describedby="inputGroupPrepend3" disabled>
                   </div>
@@ -520,21 +513,44 @@
             <div class="" style="margin: 30px 0px">
               <h2 id="sectionEntrEst">Registo de entrada no stoque</h2>
 
+
+                <!--<div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Botão dropdown
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Alguma ação</a>
+                    <a class="dropdown-item" href="#">Outra ação</a>
+                    <a class="dropdown-item" href="#">Alguma coisa aqui</a>
+                  </div>
+                </div>-->
+
+
               <div>
                 <div class="bd-example">
                 <form class="row g-3">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <label for="nomeProdutoEstoque" class="form-label label2">Nome do produto</label>
                     <div class="input-group has-validation">
                       <span class="input-group-text">@</span>
-                      <input type="text" class="form-control nomeProdE" id="codProdutoEstoque" required>
+                      <input type="search" class="form-control nomeProdE" mozactionhint="next" id="codProdutoEstoque" required data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    </div>
+
+                    <div class="dropdown-menu menuDropdownNomeProdAddEstoque" aria-labelledby="codProdutoEstoque" >
+                      <a class="dropdown-item" href="#" width="100%">Alguma ação</a>
+                      <a class="dropdown-item" href="#">Outra ação</a>
+                      <a class="dropdown-item" href="#">Alguma coisa aqui</a>
                     </div>
                   </div>
-                  <div class="col-md-8">
+                  <div class="col-md-6">
                     <label for="quantProdEstoque" class="form-label">Quantidade</label>
                     <input type="text" class="form-control quantProdE" id="quantProdEstoque">
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-6">
+                    <label for="lucroVendaProduto" class="form-label">Data de validade</label>
+                    <input type="text" class="form-control dataValidade" id="lucroVendaProduto" aria-describedby="inputGroupPrepend3" placeholder="Ex.: 30/12/2000">
+                  </div>
+                  <div class="col-md-6">
                     <label for="horaRegRegEntradaActual" class="form-label">Hora actual</label>
                       <input type="text" class="form-control horaRegEst" id="horaRegRegEntradaActual" aria-describedby="inputGroupPrepend3" disabled>
                   </div>
@@ -560,6 +576,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Nome do produto</th>
                     <th scope="col">Quantidade disponivel</th>
+                    <th scope="col">Data de validade</th>
                     <th scope="col">Ultima modificacao</th>
                   </tr>
                   </thead>
@@ -804,6 +821,78 @@
                         </div>
                         <div class="divBtnProximo" style="margin: 0px 0px 0px 20px;">
                           <button type="button" class="btn btn-primary btnProximoRegVenda">Próximo</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade modalProdutosMesa" id="modalProdutosMesa" tabindex="-1" aria-labelledby="tituloModalMesa" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="tituloModalRegVendas">Gestão de Mesas</h5>
+                      <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                      <div class="DivSelecionarProdutosMesa">
+                        <div class="divBtnMesa posicaoFlex">
+                          <h5>Gerir Mesa selecionanda</h5>
+                          <button type="button" class="btn btn-primary btnAdicionarProdutosMesa">
+                            Adicionar produtos 
+                          </button>
+                        </div>
+                        <div class="divDetalhesMesa" style="display: block;">
+                          <p>Detalhes da mesa:</p>
+                          <div class="detalhesMesa row  row-cols-1 row-cols-md-2 g-4">
+                          </div>
+                        </div>
+
+                        <div class="divSelecProdutosMesa" style="display: none;">
+                          <p>Selecione o produto e a sua quantidade desejada</p>
+                          <div class="selecProdutosMesa row  row-cols-1 row-cols-md-2 g-4">
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="finalizarAdicaoMesa" style="display: none;">
+                        <div class="metodosPagamentos row  row-cols-1 row-cols-md-1 g-4" style="margin-top: 20px">
+                          <div class="col mx-auto">
+                            <div class="row">
+                              <button type="button" class="btn btn-secondary btn-sm p-2 btnContinuarMesa"  data-bs-toggle="modal"data-bs-target="#modalProdutosMesa">Continuar</button>
+                            </div>
+                            <div class="row align-middle" style="margin: 10px 0px; text-align: center;">
+                              <h4 class="">Ou</h4>
+                            </div>
+                            <div class="row">
+                              <button type="button" class="btn btn-primary btn-sm p-2 btnFecharContaMesa">Fechar conta da mesa</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!--<div class="verProdutosMesa" style="display: none;">
+                      <p>Produtos da mesa selecionada</p>
+                      <div class="listarTdsProdutosMesa row  row-cols-1 row-cols-md-1 g-4">
+
+                      </div>
+                      <div class="divTotalVerProdutosMesa border-top" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin: 20px 0px;">
+                        <strong>Total</strong>
+                        <span class="spanTotalVerProdutosMesa"></span>
+                      </div>
+                    </div>-->
+
+                    <div class="modal-footer">
+                      <div class="btnModalRegvendas" style="display: flex; flex-direction: row; flex-wrap: none;">
+                        <div class="divBtnCancelar">
+                          <button type="button" class="btn btn-secondary btnCancelar2" data-bs-dismiss="modal" >Cancelar</button>
+                        </div>
+                        <div class="divBtnProximo" style="margin: 0px 0px 0px 20px;">
+                          <button type="button" class="btn btn-primary btnProximoAddMesa">Próximo</button>
                         </div>
                       </div>
                     </div>

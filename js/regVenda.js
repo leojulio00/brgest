@@ -24,6 +24,7 @@ var btnRegVenda = document.querySelector(".btnRegVenda")
 var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos")
 var btnAdicionarMetodo = document.querySelector(".btnAdicionarMetodo")
 var btnFecharModalVendas = document.querySelector(".btnFecharModalVendas")
+var cardNenhumProd = document.querySelector(".cardNenhumProd")
 
 
 
@@ -94,7 +95,7 @@ function regVendasNormal(){
   spanTotalVenda.innerHTML = "0 " + TipoMoeda
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
-  //window.location.reload()
+  window.location.reload()
 
   divSelecProdutos.style.display = "block"
   divSelecMetodos.style.display = "none"
@@ -227,7 +228,9 @@ function addItemToTableMetodosP(nomeMetodo){
       dados = data
     })
 
-    function passarPTelaFinalizarPreVenda(){
+    btnFecharModalVendas.click()
+
+    /*function passarPTelaFinalizarPreVenda(){
       console.log(dados)
 
       if(dados == null){
@@ -240,7 +243,7 @@ function addItemToTableMetodosP(nomeMetodo){
     }
     alert("Fechou")
     //btnFecharModalVendas.click()
-    passarPTelaFinalizarPreVenda()
+    passarPTelaFinalizarPreVenda()*/
   })
 
   divCol.classList.add("col")
@@ -633,15 +636,17 @@ btnAdicionarProdutos.addEventListener("click", ()=>{
 })
 
 btnAdicionarMetodo.addEventListener("click", ()=>{
-  if(confirPE == true){
+  if(produtosEscolhidoFinal.childNodes[1].innerText){
     divSelecProdutos.style.display = "none"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "block"
+    console.log("maior")
   }else{
     alert("Adicione um produto")
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
+    console.log("menor")
   }
 })
 
@@ -714,6 +719,7 @@ btnRegVenda.addEventListener("click", ()=>{
   }
 })
 
+/*
 const citiesRef = collection(dbFt, "produtosMesa");
 
 const q = query(citiesRef, where("codigoMesa", "==", "M-002"));
@@ -725,18 +731,26 @@ querySnapshot.forEach((doc) => {
   // doc.data() is never undefined for query doc snapshots
   console.log(doc.id, " => ", doc.data().produtos);
    dadosP.push(doc.data().produtos)
-   dadosPP.push(dadosP.forEach((l)=>{
+   *dadosPP.push(dadosP.forEach((l)=>{
     //console.log(l)
-   }))
+   }))*
    //let arrayDados = Object.keys(dadosP).map(i => JSON.parse(dadosP[Number(i)]))
+
+   console.log(dadosP[0])
    dadosP.forEach((val)=>{
-    console.log(val.nomeProd)
+    dadosPP.unshift(val)
+    
+    *dadosPP.forEach((val2)=>{
+      console.log(val2)
+    })*
    })
-  /*dadosP.forEach((d)=>{
+
+   
+  *dadosP.forEach((d)=>{
     console.log(d)
-  })*/
+  })*
   
-});
+});*/
 
 
 /*import { firebaseConfig} from "./firebaseConfig.js";
