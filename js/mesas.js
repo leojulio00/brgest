@@ -29,7 +29,7 @@ var btnContinuarMesa = document.querySelector(".btnContinuarMesa")
 var btnProximoAddMesa = document.querySelector(".btnProximoAddMesa")
 var btnFecharContaMesa = document.querySelector(".btnFecharContaMesa")
 var spanTotalVenda = document.querySelector(".spanTotalVenda")
-
+var btnFecharModalMesas = document.querySelector(".btnFecharModalMesas")
 
 btnCadastrarMesa.addEventListener("click", ()=>{
     set(ref(db, 'mesas/todasMesas/' + codMesa.value), {
@@ -418,8 +418,12 @@ btnFecharContaMesa.addEventListener("click", ()=>{
     console.log(data)
     valorTotal = data.valorTotal
   })
-
+  
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
+
+  btnFecharModalMesas.click()
+  
+  window.localStorage.setItem("prodEscolhido", true);
 })
 
 btnProximoAddMesa.addEventListener("click", ()=>{

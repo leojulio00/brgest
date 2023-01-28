@@ -227,7 +227,11 @@ function addItemToTableMetodosP(nomeMetodo){
       const data = snapshot.val()    
       dados = data
     })
+    let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
 
+    if(prodEscolhidoLocalStorage != "true"){
+    }
+    btnFinalizarVenda.click()
     btnFecharModalVendas.click()
 
     /*function passarPTelaFinalizarPreVenda(){
@@ -526,7 +530,7 @@ function PegarTdsMesas(){
 window.onload = PegarTdsMesas()
 
 
-btnAdicionarAMesa.addEventListener("click", ()=>{
+/**/btnAdicionarAMesa.addEventListener("click", ()=>{
   mesasDisponiveis.style.display = "block"
 })
 
@@ -550,9 +554,14 @@ btnFinalizarVenda.addEventListener("click", ()=>{
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
   window.onload = PegarMetodosSelecionado()
-  window.onload = PegarTdsProdutosSelecionados()
   divBtnProximo.classList.remove("d-none") 
   divBtnProximo.classList.add("d-block")   
+
+  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+
+    if(prodEscolhidoLocalStorage != "true"){
+      window.onload = PegarTdsProdutosSelecionados()
+    }
 
   const dbRef = ref(db, "produtos/selecProdutosValor")
 
@@ -563,6 +572,9 @@ btnFinalizarVenda.addEventListener("click", ()=>{
   })
 
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
+
+  window.localStorage.setItem("prodEscolhido", true);
+
 })
 
 
@@ -576,9 +588,9 @@ onValue(dbRef, (snapshot)=>{
 
 
 botaoProximo.addEventListener("click", ()=>{
-  function passarPTelaMetodos(){
+  /*function passarPTelaMetodos(){
     console.log(dadosSelecProdBtnPrx)
-
+    btnFecharModalVendas.click()
     if(dadosSelecProdBtnPrx == null){
       alert("Selecione um produto")
     }else{
@@ -589,9 +601,14 @@ botaoProximo.addEventListener("click", ()=>{
       botaoProximo.classList.add("btnProximoRegVendaModalMesas")
       divBtnProximo.classList.add("d-none") 
     }
-  }
+  }*/
+  /*let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
 
-  passarPTelaMetodos()
+  if(prodEscolhidoLocalStorage != "true"){
+    btnFinalizarVenda.click()
+  }*/
+  btnFinalizarVenda.click()
+  //passarPTelaMetodos()
   
 })
 
@@ -599,6 +616,8 @@ const dbRefMetPagamentoE = ref(db, "metodosPagamento/metodoSelecionado")
 let confirME = true
 const dbRefProdE = ref(db, "produtos/selecProdutos")
 let confirPE = true
+const dbRefProdEMesa = ref(db, "mesas/selecProdutos")
+let confirPEMesa = true
 
 onValue(dbRefProdE, (snapshot)=>{
   const data = snapshot.val()
@@ -608,6 +627,19 @@ onValue(dbRefProdE, (snapshot)=>{
   }else{
     confirPE = true
   }
+  console.log(data)
+  console.log("Prod " + dbRefProdE)
+})
+
+onValue(dbRefProdEMesa, (snapshot)=>{
+  const data = snapshot.val()
+  console.log(data)
+  if(data == null){
+    confirPEMesa = false
+  }else{
+    confirPEMesa = true
+  }
+  console.log("Mesa" + confirPEMesa)
 })
 
 onValue(dbRefMetPagamentoE, (snapshot)=>{
@@ -623,10 +655,13 @@ onValue(dbRefMetPagamentoE, (snapshot)=>{
   }else{
     confirME = true
   }
+  
+  console.log("Meth" + confirPEMesa)
 })
 
 btnAdicionarProdutos.addEventListener("click", ()=>{
-  if(confirME == true){
+  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+  if(prodEscolhidoLocalStorage == "true"){
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
@@ -635,8 +670,11 @@ btnAdicionarProdutos.addEventListener("click", ()=>{
   }
 })
 
+
 btnAdicionarMetodo.addEventListener("click", ()=>{
-  if(produtosEscolhidoFinal.childNodes[1].innerText){
+  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+  console.log(prodEscolhidoLocalStorage)
+  if(prodEscolhidoLocalStorage == "true"){
     divSelecProdutos.style.display = "none"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "block"
@@ -654,20 +692,21 @@ botaoCancelar.addEventListener("click", ()=>{
   if(confirPE == true){
     regVendasNormal()
     alert("Cancelado com sucesso") 
-
+    window.localStorage.setItem("prodEscolhido", false);
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
   }else{
     alert("Nada seleciondo")
   }
+
 })
 
 botaoCancelar2.addEventListener("click", ()=>{
   if(confirME == true){
     regVendasNormal()
     
-
+    window.localStorage.setItem("prodEscolhido", false);
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
@@ -701,9 +740,9 @@ btnRegVenda.addEventListener("click", ()=>{
   })
 
     chaveVendas = parseInt(chaveVendasString)
-
-  if(confirPE == true){
-    if(confirME == true){
+    let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+ 
+    if(prodEscolhidoLocalStorage == "true"){
       console.log(chaveVendas++)
       set(ref(db, 'vendas/' + chaveVendas), {
         produtos: produtosSelecionados,
@@ -714,9 +753,6 @@ btnRegVenda.addEventListener("click", ()=>{
     }else{
       alert("Adicione um metodo de pagamento antes")
     }
-  }else{
-    alert("Adicione um produto antes")
-  }
 })
 
 /*
