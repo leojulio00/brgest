@@ -46,10 +46,12 @@ function regVendasNormal(){
   });
 
   const dbRefProdSelect = ref(db, "produtos/selecProdutos")
+  const dbRefProdSelectMesa = ref(db, "mesas/selecProdutos")
   const dbRefMethSelect = ref(db, "metodosPagamento/metodoSelecionado")
 
   remove(dbRefProdSelect)
   remove(dbRefMethSelect)
+  remove(dbRefProdSelectMesa)
   
   //window.location.href = "./dashboard.html"
 
@@ -95,7 +97,7 @@ function regVendasNormal(){
   spanTotalVenda.innerHTML = "0 " + TipoMoeda
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
-  window.location.reload()
+  //window.location.reload()
 
   divSelecProdutos.style.display = "block"
   divSelecMetodos.style.display = "none"
@@ -233,6 +235,7 @@ function addItemToTableMetodosP(nomeMetodo){
     }
     btnFinalizarVenda.click()
     btnFecharModalVendas.click()
+    window.onload = PegarMetodosSelecionado()
 
     /*function passarPTelaFinalizarPreVenda(){
       console.log(dados)
@@ -553,14 +556,13 @@ btnFinalizarVenda.addEventListener("click", ()=>{
   finalizarPreVenda.style.display = "none"
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
-  window.onload = PegarMetodosSelecionado()
   divBtnProximo.classList.remove("d-none") 
   divBtnProximo.classList.add("d-block")   
 
   let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
 
     if(prodEscolhidoLocalStorage != "true"){
-      window.onload = PegarTdsProdutosSelecionados()
+      //window.onload = PegarTdsProdutosSelecionados()
     }
 
   const dbRef = ref(db, "produtos/selecProdutosValor")
@@ -609,7 +611,7 @@ botaoProximo.addEventListener("click", ()=>{
   }*/
   btnFinalizarVenda.click()
   //passarPTelaMetodos()
-  
+  window.onload = PegarTdsProdutosSelecionados()
 })
 
 const dbRefMetPagamentoE = ref(db, "metodosPagamento/metodoSelecionado")
@@ -673,23 +675,23 @@ btnAdicionarProdutos.addEventListener("click", ()=>{
 
 btnAdicionarMetodo.addEventListener("click", ()=>{
   let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
-  console.log(prodEscolhidoLocalStorage)
+
   if(prodEscolhidoLocalStorage == "true"){
     divSelecProdutos.style.display = "none"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "block"
-    console.log("maior")
   }else{
     alert("Adicione um produto")
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
-    console.log("menor")
   }
 })
 
 botaoCancelar.addEventListener("click", ()=>{
-  if(confirPE == true){
+  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+
+  if(prodEscolhidoLocalStorage == "true"){
     regVendasNormal()
     alert("Cancelado com sucesso") 
     window.localStorage.setItem("prodEscolhido", false);
@@ -716,7 +718,7 @@ botaoCancelar2.addEventListener("click", ()=>{
 })
 
 var chaveVendasString
-var chaveVendas
+var chaveVendas = 0
 
 const commentsRef = ref(db, 'vendas');
 onChildAdded(commentsRef, (data) => {
@@ -725,13 +727,22 @@ onChildAdded(commentsRef, (data) => {
 
 btnRegVenda.addEventListener("click", ()=>{
   let produtosSelecionados = ""
+  let produtosSelecionadosMesas = ""
   let metodoSelecionando = ""
+  let codMesaEscolhido = window.localStorage.getItem("codMesaEscolhido");
 
   const dbRefProdutos = ref(db, "produtos/selecProdutos")
+  const dbRefProdutosMesas = ref(db, "mesas/selecProdutos/" + codMesaEscolhido)
   const dbRefMetodo = ref(db, "/metodosPagamento/metodoSelecionado")
+
   onValue(dbRefProdutos, (snapshot)=>{
     const data = snapshot.val()
     produtosSelecionados = data
+  })
+
+  onValue(dbRefProdutosMesas, (snapshot)=>{
+    const data = snapshot.val()
+    produtosSelecionadosMesas = data
   })
 
   onValue(dbRefMetodo, (snapshot)=>{
@@ -745,11 +756,14 @@ btnRegVenda.addEventListener("click", ()=>{
     if(prodEscolhidoLocalStorage == "true"){
       console.log(chaveVendas++)
       set(ref(db, 'vendas/' + chaveVendas), {
+        codigoMesa: codMesaEscolhido,
         produtos: produtosSelecionados,
-        metodoPagamento: metodoSelecionando
+        metodoPagamento: metodoSelecionando,
+        produtosMesa: produtosSelecionadosMesas
       });
       regVendasNormal()
       alert("Venda cadatrada com sucesso")
+      window.localStorage.removeItem("codMesaEscolhido"); 
     }else{
       alert("Adicione um metodo de pagamento antes")
     }

@@ -81,6 +81,8 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
     divSelecMetodos.style.display = "none"
     finalizarPreVenda.style.display = "none"*/
     DivSelecionarProdutosMesa.style.display = "block"
+    finalizarAdicaoMesa.style.display = "none"
+    btnProximoAddMesa.removeAttribute("disabled", "disabled")
 
     /*btnProximoRegVenda.classList.remove("d-none")
     btnProximoRegVenda.classList.add("d-block")
@@ -93,6 +95,8 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
     
     CodigoMesaClicado = codigoMesa
     console.log(CodigoMesaClicado)
+    window.localStorage.setItem("codMesaEscolhido", "" + CodigoMesaClicado + "");
+
     addDetalhesMesa()
   })
 
@@ -234,10 +238,9 @@ function addDetalhesMesa(){
   divCardBody2.appendChild(rotuloMesaTxt) 
   divCardBody3.appendChild(formaMesaTxt)
   divCardBody4.appendChild(tamanhoMesaTxt) 
-
+  detalhesMesa.innerHTML = ""
   detalhesMesa.appendChild(divCol1)
   detalhesMesa.appendChild(divCol2)
-  console.log(detalhesMesa)
 }
 
 function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
@@ -264,7 +267,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
     }
 
     const db = getDatabase();
-    set(ref(db, 'mesas/selecProdutos/' + nomeProd), {
+    set(ref(db, 'mesas/selecProdutos/' + CodigoMesaClicado + "/" + nomeProd), {
       nomeProduto: nomeProd,
       quantidadeProd: quantProduto - 1,
       precoProduto: precVenda,
@@ -280,7 +283,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
     let valorActual = 0 
     let valorSomado = 0
     let valorProduto = precVenda
-    const dbRef = ref(db, "mesas/selecProdutosValor")
+    const dbRef = ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor")
 
     onValue(dbRef, (snapshot) => {
       var data = snapshot.val()
@@ -290,7 +293,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
 
     valorSomado = parseInt(valorProduto) + parseInt(valorActual)
       
-    set(ref(db, 'mesas/selecProdutosValor/'), {
+    set(ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor"), {
       valorTotal: valorSomado
     });
   })
@@ -390,7 +393,7 @@ function addTdsProdutosNaDiv(produtos){
 }
 
 function PegarTdsProdutosSelecionados(){
-  const dbRef = ref(db, "mesas/selecProdutos")
+  const dbRef = ref(db, "mesas/selecProdutos/" + CodigoMesaClicado)
 
   onValue(dbRef, (snapshot) =>{
       var todosProdutos = []
@@ -411,7 +414,7 @@ btnFecharContaMesa.addEventListener("click", ()=>{
   finalizarAdicaoMesa.style.display = "none"
   window.onload = PegarTdsProdutosSelecionados()  
 
-  const dbRef = ref(db, "mesas/selecProdutosValor")
+  const dbRef = ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor")
 
   onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()
@@ -436,4 +439,9 @@ btnProximoAddMesa.addEventListener("click", ()=>{
     DivSelecionarProdutosMesa.style.display = "block"
   }
   
+})
+
+btnContinuarMesa.addEventListener("click", ()=>{
+  window.onload = PegarTdsProdutosSelecionados() 
+  window.localStorage.removeItem("codMesaEscolhido"); 
 })
