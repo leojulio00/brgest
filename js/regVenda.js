@@ -574,7 +574,7 @@ btnFinalizarVenda.addEventListener("click", ()=>{
   })
 
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
-
+  window.localStorage.setItem("valorTotalProdutos", valorTotal);
   window.localStorage.setItem("prodEscolhido", true);
 
 })
@@ -695,6 +695,7 @@ botaoCancelar.addEventListener("click", ()=>{
     regVendasNormal()
     alert("Cancelado com sucesso") 
     window.localStorage.setItem("prodEscolhido", false);
+    window.localStorage.removeItem("valorTotalProdutos")
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
@@ -709,6 +710,7 @@ botaoCancelar2.addEventListener("click", ()=>{
     regVendasNormal()
     
     window.localStorage.setItem("prodEscolhido", false);
+    window.localStorage.removeItem("valorTotalProdutos")
     divSelecProdutos.style.display = "block"
     finalizarPreVenda.style.display = "none"
     divSelecMetodos.style.display = "none"
@@ -725,12 +727,23 @@ onChildAdded(commentsRef, (data) => {
   chaveVendasString = data.key
 });
 
+var valorTotalProdutos = window.localStorage.getItem("valorTotalProdutos");
+var saldoInicial
+var saldoFinal = 0
+const dbRefSaldo = ref(db, "/saldo")
+
+onValue(dbRefSaldo, (snapshot)=>{
+  const data = snapshot.val()
+  saldoInicial = data.saldo
+
+})
+
 btnRegVenda.addEventListener("click", ()=>{
   let produtosSelecionados = ""
   let produtosSelecionadosMesas = ""
   let metodoSelecionando = ""
   let codMesaEscolhido = window.localStorage.getItem("codMesaEscolhido");
-
+  
   const dbRefProdutos = ref(db, "produtos/selecProdutos")
   const dbRefProdutosMesas = ref(db, "mesas/selecProdutos/" + codMesaEscolhido)
   const dbRefMetodo = ref(db, "/metodosPagamento/metodoSelecionado")
@@ -750,20 +763,27 @@ btnRegVenda.addEventListener("click", ()=>{
     metodoSelecionando = data
   })
 
+  saldoFinal = parseInt(saldoInicial) + parseInt(valorTotalProdutos)
+  
     chaveVendas = parseInt(chaveVendasString)
     let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
  
     if(prodEscolhidoLocalStorage == "true"){
-      console.log(chaveVendas++)
       set(ref(db, 'vendas/' + chaveVendas), {
         codigoMesa: codMesaEscolhido,
         produtos: produtosSelecionados,
         metodoPagamento: metodoSelecionando,
         produtosMesa: produtosSelecionadosMesas
       });
+
+      set(ref(db, 'saldo'), {
+        saldo: parseInt(saldoFinal)
+      });
+
       regVendasNormal()
       alert("Venda cadatrada com sucesso")
-      window.localStorage.removeItem("codMesaEscolhido"); 
+      window.localStorage.removeItem("codMesaEscolhido");
+      window.localStorage.removeItem("valorTotalProdutos") 
     }else{
       alert("Adicione um metodo de pagamento antes")
     }

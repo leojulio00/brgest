@@ -332,62 +332,6 @@
               </div>
             </div>
 
-          <!--<div class="pedidos" style="margin: 30px 0px">
-              <h2 id="sectionPedidos">Pedidos</h2>
-
-              <div class="">
-                <form class="row g-3">
-                  <div class="col-md-6">
-                    <label for="codPedido" class="form-label">Codigo do pedido</label>
-                    <div class="input-group has-validation">
-                      <span class="input-group-text">@</span>
-                      <input type="text" class="form-control codPedido" id="codPedido" required>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="estadoPedi" class="form-label">Estado do pedido</label>                
-                    
-                      <select class="form-select form-select estadoPedi" id="estadoPedi" aria-label=".form-select-lg example">
-                        <option selected>Selecione a opção</option>
-                        <option value="Aberto">Aberto</option>
-                        <option value="Cancelado">Cancelado</option>
-                        <option value="Finalizado">Finalizado</option>
-                      </select>
-                    
-                  </div>
-                  <div class="col-md-12">
-                    <label for="prodPedidos" class="form-label prodPed">Produtos pedidos</label>
-                    <textarea class="form-control prodPedidos" aria-label="With textarea" id="prodPedidos"></textarea>
-                  </div>
-                  
-                  <div class="col-4">
-                    <button class="btn btn-primary btnRegPedido" type="submit">Adicionar Pedido</button>
-                  </div>
-                  <div class="col-4">
-                    <button class="btn btn-primary btnAltPedido" type="submit">Alterar Pedido</button>
-                  </div>
-                  <div class="col-4">
-                    <button class="btn btn- btnCanPedido" type="submit" disabled>Apagar Pedido</button>
-                  </div>
-                </form>
-              </div>
-
-              <div class="" style="margin: 30px 0px">
-                <h3>Ver Pedidos</h3>
-                <table class="table table-striped">
-                  <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Pedidos feitos</th>
-                    <th scope="col">Estado</th>
-                    
-                  </tr>
-                  </thead>
-                  <tbody class="bodyPedidos"></tbody>
-                </table>
-              </div>
-            </div>-->
-
             <div class="Mesas" style="margin: 30px 0px">
               <h2 id="sectionMesas">Mesas</h2>
 
@@ -569,8 +513,8 @@
                 <button class="btn btn-outline-primary btnRefresh" type="submit">Refresh</button>
               </div>-->
 
-              <div>
-                <table class="table table-striped">
+              <div style="position: relative; width: 100%; overflow: scroll;">
+                <table class="table table-striped"  style="position: relative; width: 100%; max-width: max-content; overflow: scroll;">
                   <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -925,6 +869,7 @@
       <script src="../js/logout.js" type="module"></script>
       <script src="../js/alterarSenha.js" type="module"></script>
       <script src="../js/mesas.js" type="module"></script>
+      <script src="../js/saldo.js" type="module"></script>
       <script src="../js/chartDesempenho.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="dashboard.js"></script>

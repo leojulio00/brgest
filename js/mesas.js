@@ -425,7 +425,7 @@ btnFecharContaMesa.addEventListener("click", ()=>{
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
 
   btnFecharModalMesas.click()
-  
+  window.localStorage.setItem("valorTotalProdutos", "" + valorTotal + "");
   window.localStorage.setItem("prodEscolhido", true);
 })
 
