@@ -715,6 +715,9 @@ botaoCancelar2.addEventListener("click", ()=>{
 
 var chaveVendasString
 var chaveVendas = 0
+var nrMovimentacoesString
+var nrMovimentacoes = 0
+var nrMovimentacoess = 0
 
 const commentsRef = ref(db, 'vendas');
 onChildAdded(commentsRef, (data) => {
@@ -724,11 +727,13 @@ onChildAdded(commentsRef, (data) => {
 var valorTotalProdutos = window.localStorage.getItem("valorTotalProdutos");
 var saldoInicial, saldoIniciall = 0
 var saldoFinal = 0
-const dbRefSaldo = ref(db, "/saldo")
+const dbRefSaldo = ref(db, "/saldo/saldo")
 
 onValue(dbRefSaldo, (snapshot)=>{
   const data = snapshot.val()
   saldoInicial = data.saldo
+  nrMovimentacoesString = data.totalMovimentacoes
+  nrMovimentacoess = parseInt(nrMovimentacoesString)
   saldoIniciall = parseInt(saldoInicial)
 })
 
@@ -758,6 +763,8 @@ btnRegVenda.addEventListener("click", ()=>{
   })
 
   saldoFinal = parseInt(saldoIniciall) + parseInt(valorTotalProdutos)
+  nrMovimentacoes = parseInt(nrMovimentacoess) + 1
+
   
     chaveVendas = parseInt(chaveVendasString)
 
@@ -771,8 +778,9 @@ btnRegVenda.addEventListener("click", ()=>{
         produtosMesa: produtosSelecionadosMesas
       });
 
-      set(ref(db, 'saldo'), {
-        saldo: parseInt(saldoFinal)
+      set(ref(db, '/saldo/saldo'), {
+        saldo: parseInt(saldoFinal),
+        totalMovimentacoes: nrMovimentacoes
       });
       //botaoCancelar.click()
       regVendasNormal()
