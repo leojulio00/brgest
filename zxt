@@ -1,0 +1,73 @@
+
+                  <div class="row-md-1">
+                    <div class="col-12">
+                      <form class="row g-3">
+                        <div class="col-md-6">
+                          <label for="precoProduto" class="form-label">Digita o valor de entrada</label>
+                          <div class="input-group">
+                            <input type="text" class="form-control precVenda" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                            <span class="input-group-text">Mts</span>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="precoProduto" class="form-label">Digita o motivo</label>
+                          <div class="input-group">
+                            <textarea class="form-control" aria-label="With textarea"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-secondary btnRegVenda" type="submit">Registar Entrada</button>
+                        </div>
+                        <div class="col-6">
+                      </form>
+                    </div>
+                    <div class="col-12">
+                      <form class="row g-3">
+                        <div class="col-md-6">
+                          <label for="precoProduto" class="form-label">Digita o valor de saída</label>
+                          <div class="input-group">
+                            <input type="text" class="form-control precVenda" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                            <span class="input-group-text">Mts</span>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="precoProduto" class="form-label">Digita o motivo</label>
+                          <div class="input-group">
+                            <textarea class="form-control" aria-label="With textarea"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <button class="btn btn-secondary btnRegVenda justify-content-end" type="submit">Registar Saída</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+
+                  <!--<div class="cardGanhoGanho">
+                    <div>
+                      <h5 class="card-title">Registar entrada</h5>
+                      <h1 class="saldoGanhoTxt">99</h1>
+                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
+                    </div>
+
+                    <div>
+                      <p class="card-title">Ontem</p>
+                      <h1 class="saldoGanhoTxt">99</h1>
+                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
+                    </div>
+
+                    <div>
+                      <p class="card-title">Últimos 7 dias</p>
+                      <h1 class="saldoGanhoTxt">99</h1>
+                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
+                    </div>
+
+                    <div>
+                      <p class="card-title">Este mês</p>
+                      <h1 class="saldoGanhoTxt">99</h1>
+                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
+                    </div>
+
+                  </div>-->
+                

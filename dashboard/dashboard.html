@@ -148,50 +148,75 @@
               <h1 class="h2">Página inicial</h1>
             </div>
             <div class="cardNumGerais">
-              <div class="col-md-3">
+              <div class="col-md-5">
                 <div class="card-body cardSaldo">
                   <h5 class="card-title">Saldo na conta</h5>
                   <div>
                     <h1 class="saldoContaTxt">99</h1>
-                    <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
+                    <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
+                  </div>
+                  <h5 class="card-title">Total de movimentações</h5>
+                  <div>
+                    <h1 class="saldoContaTxt">99</h1>
+                    <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                   </div>
                 </div>
               </div>  
               
-              <div class="col-md-9">
+              <div class="col-md-7">
                 <div class="card-body cardGanho">
-                  <h5 class="card-title">Ganhos</h5>
-                  <div class="cardGanhoGanho">
-                    <div>
-                      <p class="card-title">Hoje, até agora</p>
-                      <h1 class="saldoGanhoTxt">99</h1>
-                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
-                    </div>
-
-                    <div>
-                      <p class="card-title">Ontem</p>
-                      <h1 class="saldoGanhoTxt">99</h1>
-                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
-                    </div>
-
-                    <div>
-                      <p class="card-title">Últimos 7 dias</p>
-                      <h1 class="saldoGanhoTxt">99</h1>
-                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
-                    </div>
-
-                    <div>
-                      <p class="card-title">Este mês</p>
-                      <h1 class="saldoGanhoTxt">99</h1>
-                      <p class="card-text"><small class="text-muted">Valor mais actualizado</small></p>
-                    </div>
-
+                  <div class="row-md-1">
+                    <h5 class="card-title col-md-12">Movimentos na conta</h5>
                   </div>
+
+                  <div class="row">
+                    <div class="col-sm">
+                      <form class="">
+                        <div class="">
+                          <label for="precoProduto" class="form-label">Digita o valor de entrada</label>
+                          <div class="input-group">
+                            <input type="text" class="form-control valorEntradaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                            <span class="input-group-text">Mts</span>
+                          </div>
+                        </div>
+                        <div class="">
+                          <label for="precoProduto" class="form-label">Digita o motivo</label>
+                          <div class="input-group">
+                            <textarea class="form-control motivoEntradaCaixa" aria-label="With textarea"></textarea>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-end m-1">
+                          <button class="btn btn-secondary btnRegEntradaCaixa" type="submit">Registar Entrada</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-sm">
+                      <form class="">
+                        <div class="">
+                          <label for="precoProduto" class="form-label">Digita o valor de saída</label>
+                          <div class="input-group">
+                            <input type="text" class="form-control valorSaidaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                            <span class="input-group-text">Mts</span>
+                          </div>
+                        </div>
+                        <div class="">
+                          <label for="precoProduto" class="form-label">Digita o motivo</label>
+                          <div class="input-group">
+                            <textarea class="form-control motivoSaidaCaixa" aria-label="With textarea"></textarea>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                          <button class="btn btn-secondary btnRegSaidaCaixa justify-content-end" type="submit">Registar Saída</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  
                 </div>
               </div>  
             </div>
             <div class="divDesempenho ">
-              <div class="d-flex flex-nowrap md-12" style="display: flex; flex-wrap: wrap; width: 100%;">
+              <div class="d-flex flex-nowrap row-md-12" style="display: flex; flex-wrap: wrap; width: 100%;">
                 <h5>Desempenho</h5>
               </div>
 
@@ -851,6 +876,8 @@
     </div>
 
       
+      <script src="../js/saldo.js" type="module"></script>
+      <script src="../js/userLogado.js" type="module"></script>
       <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script src="sidebars.js"></script>
@@ -865,11 +892,9 @@
       <script src="../js/verPedidos.js" type="module"></script>
       <script src="../js/verColab.js" type="module"></script>
       <script src="../js/horaReg.js"></script>
-      <script src="../js/userLogado.js" type="module"></script>
       <script src="../js/logout.js" type="module"></script>
       <script src="../js/alterarSenha.js" type="module"></script>
       <script src="../js/mesas.js" type="module"></script>
-      <script src="../js/saldo.js" type="module"></script>
       <script src="../js/chartDesempenho.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="dashboard.js"></script>

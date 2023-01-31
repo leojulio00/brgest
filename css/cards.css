@@ -6,10 +6,8 @@
 }
 
 .cardSaldo{
-    height: 200px;
-    width: 100%;
     min-width: 150px;
-    max-width: 70vw;
+    max-width: 100%;
     margin: 20px;
     padding: 20px;
     background: #423DCC;
@@ -45,4 +43,8 @@
 
 .saldoGanhoTxt{
     font-size: 3rem;
+}
+
+.cardTxtSaldo{
+    visibility: hidden;
 }

@@ -1,5 +1,7 @@
 .btn-primary{
     background-color: #423DCC;
+    font-size: 16px;
+    margin-top: 10px;
 }
 
 .btn-primary:hover{
@@ -9,6 +11,8 @@
 
 .btn-secondary{
     background-color: #100126;
+    font-size: 16px;
+    margin-top: 10px;
 }
 
 .btn-secondary:hover{

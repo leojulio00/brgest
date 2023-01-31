@@ -58,7 +58,7 @@ onValue(dbRefMetodoMesa, (snapshot)=>{
   metodoSelecionandoMesa = data
 })
 
-var CodigoMesaClicado = ""
+export var CodigoMesaClicado = ""
 
 function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   let divCol = document.createElement("div")
@@ -425,7 +425,7 @@ btnFecharContaMesa.addEventListener("click", ()=>{
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
 
   btnFecharModalMesas.click()
-  window.localStorage.setItem("valorTotalProdutos", "" + valorTotal + "");
+  window.localStorage.setItem("valorTotalProdutos",valorTotal);
   window.localStorage.setItem("prodEscolhido", true);
 })
 

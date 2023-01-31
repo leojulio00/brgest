@@ -1,5 +1,6 @@
 import { firebaseConfig} from "./firebaseConfig.js";
 import { TipoMoeda } from "./tipoMoeda.js";
+import { CodigoMesaClicado } from "./mesas.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
@@ -42,6 +43,10 @@ set(ref(db, 'produtos/selecProdutosValor/'), {
 
 function regVendasNormal(){
   set(ref(db, 'produtos/selecProdutosValor/'), {
+    valorTotal: 0
+  });
+
+  set(ref(db, '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'),{
     valorTotal: 0
   });
 
@@ -231,9 +236,8 @@ function addItemToTableMetodosP(nomeMetodo){
     })
     let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
 
-    if(prodEscolhidoLocalStorage != "true"){
-    }
-    btnFinalizarVenda.click()
+    window.localStorage.setItem("metodoEscolhido", true)
+    //btnFinalizarVenda.click()
     btnFecharModalVendas.click()
     window.onload = PegarMetodosSelecionado()
 
@@ -430,7 +434,6 @@ function ultimaAdicaoMesa(codigoMesa){
   const commentsRefMesa = ref(db, 'mesas/produtos/' + codigoMesa + "/");
   onChildAdded(commentsRefMesa, (data) => {
     chaveMesaString = data.key
-    console.log(chaveMesaString)
 
     chaveMesa = parseInt(chaveMesaString)
   });
@@ -458,7 +461,6 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   divCard.addEventListener("click", async ()=>{
     ultimaAdicaoMesa(codigoMesa)
 
-      console.log(chaveMesa++)
       /*set(ref(db, 'mesas/' + codigoMesa), {
         codigoMesa: codigoMesa,
         produtos: produtosSelecionadosMesa,
@@ -623,30 +625,24 @@ let confirPEMesa = true
 
 onValue(dbRefProdE, (snapshot)=>{
   const data = snapshot.val()
-  console.log(data)
   if(data == null){
     confirPE = false
   }else{
     confirPE = true
   }
-  console.log(data)
-  console.log("Prod " + dbRefProdE)
 })
 
 onValue(dbRefProdEMesa, (snapshot)=>{
   const data = snapshot.val()
-  console.log(data)
   if(data == null){
     confirPEMesa = false
   }else{
     confirPEMesa = true
   }
-  console.log("Mesa" + confirPEMesa)
 })
 
 onValue(dbRefMetPagamentoE, (snapshot)=>{
   const data = snapshot.val()
-  console.log(data)
   if(data == null){
     confirME = false
     //if(confirME == false){
@@ -657,8 +653,6 @@ onValue(dbRefMetPagamentoE, (snapshot)=>{
   }else{
     confirME = true
   }
-  
-  console.log("Meth" + confirPEMesa)
 })
 
 btnAdicionarProdutos.addEventListener("click", ()=>{
@@ -728,14 +722,14 @@ onChildAdded(commentsRef, (data) => {
 });
 
 var valorTotalProdutos = window.localStorage.getItem("valorTotalProdutos");
-var saldoInicial
+var saldoInicial, saldoIniciall = 0
 var saldoFinal = 0
 const dbRefSaldo = ref(db, "/saldo")
 
 onValue(dbRefSaldo, (snapshot)=>{
   const data = snapshot.val()
   saldoInicial = data.saldo
-
+  saldoIniciall = parseInt(saldoInicial)
 })
 
 btnRegVenda.addEventListener("click", ()=>{
@@ -763,9 +757,10 @@ btnRegVenda.addEventListener("click", ()=>{
     metodoSelecionando = data
   })
 
-  saldoFinal = parseInt(saldoInicial) + parseInt(valorTotalProdutos)
+  saldoFinal = parseInt(saldoIniciall) + parseInt(valorTotalProdutos)
   
     chaveVendas = parseInt(chaveVendasString)
+
     let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
  
     if(prodEscolhidoLocalStorage == "true"){
@@ -779,13 +774,13 @@ btnRegVenda.addEventListener("click", ()=>{
       set(ref(db, 'saldo'), {
         saldo: parseInt(saldoFinal)
       });
-
+      //botaoCancelar.click()
       regVendasNormal()
       alert("Venda cadatrada com sucesso")
       window.localStorage.removeItem("codMesaEscolhido");
       window.localStorage.removeItem("valorTotalProdutos") 
     }else{
-      alert("Adicione um metodo de pagamento antes")
+      alert("Adicione um produto antes")
     }
 })
 
