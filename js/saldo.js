@@ -10,6 +10,7 @@ var valorEntradaCaixa = document.querySelector(".valorEntradaCaixa")
 var motivoEntradaCaixa = document.querySelector(".motivoEntradaCaixa")
 var valorSaidaCaixa = document.querySelector(".valorSaidaCaixa")
 var motivoSaidaCaixa = document.querySelector(".motivoSaidaCaixa")
+var totalVendasTxt = document.querySelector(".totalVendasTxt")
 var btnRegEntradaCaixa = document.querySelector(".btnRegEntradaCaixa")
 var btnRegSaidaCaixa = document.querySelector(".btnRegSaidaCaixa")
 var horaRegEst = document.querySelector(".horaRegEst")
@@ -26,6 +27,8 @@ var chaveSaldoEntradaString
 var chaveSaldoEntrada = 0
 var chaveSaldoSaidaString
 var chaveSaldoSaida = 0
+var nrTotalVendasString
+var nrTotalVendas = 0
 var nrMovimentacoesString
 var nrMovimentacoes = 0
 
@@ -38,6 +41,25 @@ onChildAdded(commentsRef, (data) => {
 const commentsRefSaida = ref(db, '/saldo/saida');
 onChildAdded(commentsRefSaida, (data) => {
   chaveSaldoSaidaString = data.key
+});
+
+const commentsRefTotalVendas = ref(db, '/vendas');
+onChildAdded(commentsRefTotalVendas, (data) => {
+  nrTotalVendasString = data.key
+
+  nrTotalVendas = nrTotalVendasString
+
+  totalVendasTxt.innerHTML = nrTotalVendas
+
+  var lucroPorProduto = []
+
+  data.forEach(childSnapshot => {
+    lucroPorProduto.push(childSnapshot.val().lucroVenda)
+  })
+
+  
+
+  console.log(data.val().lucroVenda)
 });
 
 const dbRefSaldo = ref(db, "/saldo/saldo")

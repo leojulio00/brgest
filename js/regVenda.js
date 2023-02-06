@@ -111,7 +111,7 @@ function regVendasNormal(){
   btnFecharModalVendas.click()
 }
 
-function addItemToTable(nomeProd, precVenda, tipoMoeda){
+function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
     let divCol = document.createElement("div")
     let divCard = document.createElement("div")
     let divCardBody = document.createElement("div")
@@ -135,7 +135,8 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda){
         nomeProduto: nomeProd,
         quantidadeProd: quantProduto - 1,
         precoProduto: precVenda,
-        tipoMoeda: tipoMoeda
+        tipoMoeda: tipoMoeda, 
+        lucroProduto: lucroProduto * (quantProduto - 1)
       });
 
       if(divCard.classList.contains("cardRegVendasSelecionado")){
@@ -185,7 +186,7 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda){
 function addAllItemsToTable(produtos){
   produtosAdicio.innerHTML = ""
     produtos.forEach(element => {
-        addItemToTable(element.nomeProd, element.precVenda, element.tipoMoeda)
+        addItemToTable(element.nomeProd, element.precVenda, element.tipoMoeda, element.lucroProd)
     });
 }
 
@@ -724,7 +725,8 @@ onChildAdded(commentsRef, (data) => {
   chaveVendasString = data.key
 });
 
-var valorTotalProdutos = window.localStorage.getItem("valorTotalProdutos");
+var valorTotalProdutos = 0
+valorTotalProdutos = parseInt(window.localStorage.getItem("valorTotalProdutos"));
 var saldoInicial, saldoIniciall = 0
 var saldoFinal = 0
 const dbRefSaldo = ref(db, "/saldo/saldo")
@@ -747,10 +749,26 @@ btnRegVenda.addEventListener("click", ()=>{
   const dbRefProdutosMesas = ref(db, "mesas/selecProdutos/" + codMesaEscolhido)
   const dbRefMetodo = ref(db, "/metodosPagamento/metodoSelecionado")
 
+  let lucroInicialPorVenda = 0
+
   onValue(dbRefProdutos, (snapshot)=>{
     const data = snapshot.val()
     produtosSelecionados = data
+    
+    var lucroPorProduto = []
+
+    snapshot.forEach(childSnapshot => {
+      lucroPorProduto.push(childSnapshot.val().lucroProduto)
+    })
+
+    
+    lucroPorProduto.forEach((val)=>{
+      lucroInicialPorVenda = lucroInicialPorVenda + val
+    })
+    
   })
+
+  console.log(lucroInicialPorVenda)
 
   onValue(dbRefProdutosMesas, (snapshot)=>{
     const data = snapshot.val()
@@ -762,11 +780,14 @@ btnRegVenda.addEventListener("click", ()=>{
     metodoSelecionando = data
   })
 
-  saldoFinal = parseInt(saldoIniciall) + parseInt(valorTotalProdutos)
+  var valorTotalProdutoss = parseInt(valorTotalProdutos)
+  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss
+
+  console.log(saldoIniciall + " " + valorTotalProdutoss)
   nrMovimentacoes = parseInt(nrMovimentacoess) + 1
 
   
-    chaveVendas = parseInt(chaveVendasString)
+    chaveVendas = parseInt(chaveVendasString) + 1
 
     let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
  
@@ -775,11 +796,12 @@ btnRegVenda.addEventListener("click", ()=>{
         codigoMesa: codMesaEscolhido,
         produtos: produtosSelecionados,
         metodoPagamento: metodoSelecionando,
-        produtosMesa: produtosSelecionadosMesas
+        produtosMesa: produtosSelecionadosMesas,
+        lucroVenda: lucroInicialPorVenda
       });
 
       set(ref(db, '/saldo/saldo'), {
-        saldo: parseInt(saldoFinal),
+        saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
         totalMovimentacoes: nrMovimentacoes
       });
       //botaoCancelar.click()

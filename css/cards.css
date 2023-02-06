@@ -3,13 +3,18 @@
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
+    margin: 0px;
+}
+
+.cardNumGerais .col-sm{
+    position: relative;
+    margin: 10px 0px;
+    padding: 10px;
 }
 
 .cardSaldo{
     min-width: 150px;
     max-width: 100%;
-    margin: 20px;
-    padding: 20px;
     background: #423DCC;
     color: white;
     border-radius: 10px;
@@ -23,16 +28,13 @@
 .cardGanho{
     min-width: 100px;
     min-height: 200px;
-    
-    margin: 20px;
-    padding: 20px;
     background: #423DCC;
     color: white;
     border-radius: 10px;
     box-shadow: 0px 0px 3px #000;
 }
 
-.cardGanhoGanho{
+cardGanhoGanho{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -48,3 +50,20 @@
 .cardTxtSaldo{
     visibility: hidden;
 }
+
+.divResulVendas .col-sm{
+    max-width: 100%;
+    position: relative;
+    margin: 10px 0px;
+    text-align: center;
+    padding: 10px;
+}
+
+@media (min-width: 550px) {
+    .cardNumGerais .col-sm{
+        margin: 0px 20px;
+    }
+    .divResulVendas .col-sm{
+        margin: 0px 10px;
+    }
+  }
