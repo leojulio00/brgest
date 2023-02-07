@@ -720,7 +720,7 @@ var nrMovimentacoesString
 var nrMovimentacoes = 0
 var nrMovimentacoess = 0
 
-const commentsRef = ref(db, 'vendas');
+const commentsRef = ref(db, 'vendas/todasVendas');
 onChildAdded(commentsRef, (data) => {
   chaveVendasString = data.key
 });
@@ -737,6 +737,34 @@ onValue(dbRefSaldo, (snapshot)=>{
   nrMovimentacoesString = data.totalMovimentacoes
   nrMovimentacoess = parseInt(nrMovimentacoesString)
   saldoIniciall = parseInt(saldoInicial)
+}, {
+  onlyOnce: false
+})
+
+var valorLucroInicial, valorLucroIniciall = 0
+var valorLucroFinal = 0
+const dbRefLucro = ref(db, "/vendas/lucroTotalVendas")
+
+onValue(dbRefLucro, (snapshot)=>{
+  const data = snapshot.val()
+  valorLucroInicial = data.lucroTotal
+  
+  valorLucroIniciall = parseInt(valorLucroInicial)
+}, {
+  onlyOnce: false
+})
+
+var valorTotalVendasInicial, valorTotalVendasIniciall = 0
+var valorTotalVendasFinal = 0
+const dbRefValorVendas = ref(db, "/vendas/valorTotalVendas")
+
+onValue(dbRefValorVendas, (snapshot)=>{
+  const data = snapshot.val()
+  valorTotalVendasInicial = data.valorTotal
+  
+  valorTotalVendasIniciall = parseInt(valorTotalVendasInicial)
+}, {
+  onlyOnce: false
 })
 
 btnRegVenda.addEventListener("click", ()=>{
@@ -768,7 +796,6 @@ btnRegVenda.addEventListener("click", ()=>{
     
   })
 
-  console.log(lucroInicialPorVenda)
 
   onValue(dbRefProdutosMesas, (snapshot)=>{
     const data = snapshot.val()
@@ -783,7 +810,6 @@ btnRegVenda.addEventListener("click", ()=>{
   var valorTotalProdutoss = parseInt(valorTotalProdutos)
   saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss
 
-  console.log(saldoIniciall + " " + valorTotalProdutoss)
   nrMovimentacoes = parseInt(nrMovimentacoess) + 1
 
   
@@ -792,23 +818,38 @@ btnRegVenda.addEventListener("click", ()=>{
     let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
  
     if(prodEscolhidoLocalStorage == "true"){
-      set(ref(db, 'vendas/' + chaveVendas), {
-        codigoMesa: codMesaEscolhido,
-        produtos: produtosSelecionados,
-        metodoPagamento: metodoSelecionando,
-        produtosMesa: produtosSelecionadosMesas,
-        lucroVenda: lucroInicialPorVenda
-      });
-
-      set(ref(db, '/saldo/saldo'), {
-        saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
-        totalMovimentacoes: nrMovimentacoes
-      });
-      //botaoCancelar.click()
-      regVendasNormal()
-      alert("Venda cadatrada com sucesso")
-      window.localStorage.removeItem("codMesaEscolhido");
-      window.localStorage.removeItem("valorTotalProdutos") 
+      try {
+        set(ref(db, 'vendas/todasVendas/' + chaveVendas), {
+          codigoMesa: codMesaEscolhido,
+          produtos: produtosSelecionados,
+          metodoPagamento: metodoSelecionando,
+          produtosMesa: produtosSelecionadosMesas,
+          lucroVenda:{
+            lucroVenda: lucroInicialPorVenda
+          } 
+        });
+  
+        set(ref(db, '/saldo/saldo'), {
+          saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
+          totalMovimentacoes: nrMovimentacoes
+        });
+        
+        set(ref(db, '/vendas/lucroTotalVendas'), {
+          lucroTotal: valorLucroIniciall + lucroInicialPorVenda
+        });
+  
+        set(ref(db, '/vendas/valorTotalVendas'), {
+          valorTotal: valorTotalVendasIniciall + valorTotalProdutoss
+        });
+  
+        //botaoCancelar.click()
+        regVendasNormal()
+        alert("Venda cadatrada com sucesso")
+        window.localStorage.removeItem("codMesaEscolhido");
+        window.localStorage.removeItem("valorTotalProdutos") 
+      } catch (error) {
+        alert("Reinicie a pagina")
+      }
     }else{
       alert("Adicione um produto antes")
     }

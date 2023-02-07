@@ -21,6 +21,10 @@
     box-shadow: 0px 0px 3px #000;
 }
 
+.cardSaldoSaldo{
+    margin-bottom: 20px;
+}
+
 .saldoContaTxt{
     font-size: 3rem;
 }
@@ -65,5 +69,9 @@ cardGanhoGanho{
     }
     .divResulVendas .col-sm{
         margin: 0px 10px;
+    }
+
+    .cardSaldoSaldo{
+        margin-right: 20px;
     }
   }

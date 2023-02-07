@@ -1,8 +1,8 @@
 import { firebaseConfig} from "./firebaseConfig.js";
 import { TipoMoeda } from "./tipoMoeda.js"
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { getDatabase, ref, remove, onValue, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
-import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
+import { getDatabase, ref, remove, onValue, set, onChildAdded, query, orderByChild } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+import { getFirestore, collection, addDoc, setDoc, doc, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
 
 var saldoContaTxt = document.querySelector(".saldoContaTxt")
 var totalMovimentacoesTxt = document.querySelector(".totalMovimentacoesTxt")
@@ -11,6 +11,12 @@ var motivoEntradaCaixa = document.querySelector(".motivoEntradaCaixa")
 var valorSaidaCaixa = document.querySelector(".valorSaidaCaixa")
 var motivoSaidaCaixa = document.querySelector(".motivoSaidaCaixa")
 var totalVendasTxt = document.querySelector(".totalVendasTxt")
+var valorTotalVendasTxt = document.querySelector(".valorTotalVendasTxt")
+var lucroTotalVendasTxt = document.querySelector(".lucroTotalVendasTxt")
+var totalProdutosCadastradosTxt = document.querySelector(".totalProdutosCadastradosTxt")
+var precoTotalCompraProdutosTxt = document.querySelector(".precoTotalCompraProdutosTxt")
+var precoTotalVendaProdutosTxt = document.querySelector(".precoTotalVendaProdutosTxt")
+var lucroTotalVendaProdutosTxt = document.querySelector(".lucroTotalVendaProdutosTxt")
 var btnRegEntradaCaixa = document.querySelector(".btnRegEntradaCaixa")
 var btnRegSaidaCaixa = document.querySelector(".btnRegSaidaCaixa")
 var horaRegEst = document.querySelector(".horaRegEst")
@@ -43,7 +49,7 @@ onChildAdded(commentsRefSaida, (data) => {
   chaveSaldoSaidaString = data.key
 });
 
-const commentsRefTotalVendas = ref(db, '/vendas');
+const commentsRefTotalVendas = ref(db, '/vendas/todasVendas');
 onChildAdded(commentsRefTotalVendas, (data) => {
   nrTotalVendasString = data.key
 
@@ -59,8 +65,14 @@ onChildAdded(commentsRefTotalVendas, (data) => {
 
   
 
-  console.log(data.val().lucroVenda)
+  //console.log(lucroPorProduto)
 });
+
+/*var firstNodeRef = ref(db, "/vendas");
+firstNodeRef.child("1").child("produtos").once("value", function(snapshot) {
+  var data = snapshot.val();
+  console.log(data);
+});*/
 
 const dbRefSaldo = ref(db, "/saldo/saldo")
 onValue(dbRefSaldo, (snapshot)=>{
@@ -73,6 +85,70 @@ onValue(dbRefSaldo, (snapshot)=>{
     nrMovimentacoesString = data.totalMovimentacoes
 
     totalMovimentacoesTxt.innerHTML = nrMovimentacoesString
+})
+
+var valorLucroInicial, valorLucroIniciall = 0
+var valorLucroFinal = 0
+const dbRefLucro = ref(db, "/vendas/lucroTotalVendas")
+
+onValue(dbRefLucro, (snapshot)=>{
+  const data = snapshot.val()
+  valorLucroInicial = data.lucroTotal
+  
+  valorLucroIniciall = parseInt(valorLucroInicial)
+
+  lucroTotalVendasTxt.innerHTML = valorLucroIniciall
+}, {
+  onlyOnce: false
+})
+
+var valorTotalVendasInicial, valorTotalVendasIniciall = 0
+var valorTotalVendasFinal = 0
+const dbRefValorVendas = ref(db, "/vendas/valorTotalVendas")
+
+onValue(dbRefValorVendas, (snapshot)=>{
+  const data = snapshot.val()
+  valorTotalVendasInicial = data.valorTotal
+  
+  valorTotalVendasIniciall = parseInt(valorTotalVendasInicial)
+
+  valorTotalVendasTxt.innerHTML = valorTotalVendasIniciall
+}, {
+  onlyOnce: false
+})
+
+onValue(ref(db, "/produtos/todosProdutos"), (snapshot)=>{
+    let todosProdutos = []
+
+    snapshot.forEach(childSnapshot => {
+        todosProdutos.push(childSnapshot.val())
+    })
+
+    let valorTodosProdutos = todosProdutos.length
+
+    totalProdutosCadastradosTxt.innerHTML = valorTodosProdutos
+})
+
+
+const mostViewedPosts = query(ref(db, '/produtos/todosProdutos'), orderByChild('precCompra'));
+
+onValue(mostViewedPosts, (snapshot)=>{
+    const data = snapshot.val()
+    let todosProdutos = []
+    let valorPrecoCompra = 0
+    let valorPrecoVenda = 0
+
+    snapshot.forEach(childSnapshot => {
+        todosProdutos.push(parseInt(childSnapshot.val().precCompra) * parseInt(childSnapshot.val().quantProdE))
+
+        valorPrecoCompra = valorPrecoCompra + (parseInt(childSnapshot.val().precCompra) * parseInt(childSnapshot.val().quantProdE))
+
+        valorPrecoVenda = valorPrecoVenda + (parseInt(childSnapshot.val().precVenda) * parseInt(childSnapshot.val().quantProdE))
+    })
+
+    precoTotalCompraProdutosTxt.innerHTML = valorPrecoCompra
+    precoTotalVendaProdutosTxt.innerHTML = valorPrecoVenda
+    lucroTotalVendaProdutosTxt.innerHTML = valorPrecoVenda - valorPrecoCompra
 })
 
 btnRegEntradaCaixa.addEventListener("click", ()=>{
