@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebas
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var actualPass = document.querySelector(".senhaActual")
 var novaPass = document.querySelector(".novaSenha")
 var confirPass = document.querySelector(".confSenha")
@@ -16,7 +17,7 @@ const auth = getAuth();
 const db = getDatabase(app);
 
 btnAlterPass.addEventListener("click", ()=>{
-  const starCountRef = ref(db, 'users/' + userLocalStorage);
+  const starCountRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/users/' + userLocalStorage);
 
   if(actualPass.value != "" & novaPass.value != "" & confirPass.value != ""){
     onValue(starCountRef, (snapshot) => {
@@ -37,6 +38,10 @@ btnAlterPass.addEventListener("click", ()=>{
           updatePassword(user, novaPass.value).then(() => {
             // Update successful.
             alert("Senha alterada com sucesso!")
+
+            actualPass.value = ""
+            novaPass.value = ""
+            confirPass.value = ""
           }).catch((error) => {
             // An error ocurred
             // ...

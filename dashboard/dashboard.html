@@ -621,7 +621,7 @@
                 <div>
                   <div class="bd-example">
                   <form class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-none">
                       <label for="codColaboradores" class="form-label">Codigo do colaboradores</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text">@</span>
@@ -664,10 +664,10 @@
                         <button class="btn btn-primary btnCadasColab" type="button">Cadastrar Colaborador</button>
                       </div>
                       <div class="col-4">
-                        <button class="btn btn-primary" type="button">Alterar Colaborador</button>
+                        <button class="btn btn-primary" type="button" disabled>Alterar Colaborador</button>
                       </div>
                       <div class="col-4">
-                        <button class="btn btn-primary" type="button">Apagar Colaborador</button>
+                        <button class="btn btn-primary" type="button" disabled>Apagar Colaborador</button>
                       </div>
                     </div>
                   </div>
@@ -707,7 +707,7 @@
                 <h2>Dados do usuário</h2>
               </div>
               <div class="listaDadosUser">
-                <div>
+                <div class="d-none">
                   <strong>Código: </strong>
                   <label class="userCod" for=""></label>
                 </div>
@@ -923,6 +923,8 @@
               </div>
             </div>
           </section>
+
+          <button class="w-100 btn btn-lg btn-primary btnEntrar d-none" type="submit" style="background-color: #423DCC;">ENTRAR</button>
 
         </main>
       </div>

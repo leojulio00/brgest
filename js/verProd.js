@@ -1,21 +1,23 @@
-import { firebaseConfig} from "./firebaseConfig.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+import { firebaseConfig} from './firebaseConfig.js';
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from './login.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js';
+import { getDatabase, ref, child, onValue, get } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js';
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var cod = 0
-var bodyEstoque = document.querySelector(".bodyEstoque")
-var btnRefresh = document.querySelector(".btnRefresh")
+var bodyEstoque = document.querySelector('.bodyEstoque')
+var btnRefresh = document.querySelector('.btnRefresh')
 
   const app = initializeApp(firebaseConfig);
     const db = getDatabase();
 
 function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
-    let trow = document.createElement("tr")
-    let td1 = document.createElement("td")
-    let td2 = document.createElement("td")
-    let td3 = document.createElement("td")
-    let td4 = document.createElement("td")
-    let td5 = document.createElement("td")
+    let trow = document.createElement('tr')
+    let td1 = document.createElement('td')
+    let td2 = document.createElement('td')
+    let td3 = document.createElement('td')
+    let td4 = document.createElement('td')
+    let td5 = document.createElement('td')
 
     td1.innerHTML = ++cod
     td2.innerHTML = nomeProdE
@@ -33,7 +35,7 @@ function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
 }
 
 function addAllItemsToTable(produtosEstoque){
-    bodyEstoque.innerHTML = ""
+    bodyEstoque.innerHTML = ''
     produtosEstoque.forEach(element => {
         addItemToTable(element.nomeProdE, element.quantProdE, element.dataValidade, element.horaRegEst)
     });
@@ -42,7 +44,7 @@ function addAllItemsToTable(produtosEstoque){
 function GetAllDataOnce(){
     const dbRef = ref(db)
 
-    get(child(dbRef, "produtosEstoque")).then((snapshot)=>{
+    get(child(dbRef, 'produtosEstoque')).then((snapshot)=>{
         var produtos = []
 
 
@@ -54,7 +56,7 @@ function GetAllDataOnce(){
 }
 
 function GetAllDataRealtime(){
-    const dbRef = ref(db, "produtos/estoque/")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/')
 
     onValue(dbRef, (snapshot) =>{
         var produtos = []
@@ -67,7 +69,7 @@ function GetAllDataRealtime(){
     })
 }
 
-/*btnRefresh.addEventListener("click", ()=>{
+/*btnRefresh.addEventListener('click', ()=>{
     //GetAllDataRealtime()
     window.onload
 })*/

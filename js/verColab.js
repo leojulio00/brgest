@@ -2,6 +2,7 @@ import { firebaseConfig} from "./firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, child, onValue, get } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var cod = 0
 var bodyColab = document.querySelector(".bodyColab")
 var btnRefresh = document.querySelector(".btnRefresh")
@@ -57,7 +58,7 @@ function addAllItemsToTable(produtosEstoque){
 }*/
 
 function GetAllDataRealtime(){
-    const dbRef = ref(db, "users")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/users')
 
     onValue(dbRef, (snapshot) =>{
         var colaboradores = []

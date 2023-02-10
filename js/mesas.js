@@ -1,9 +1,11 @@
 import { firebaseConfig} from "./firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "./login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { TipoMoeda } from "./tipoMoeda.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 var codMesa = document.querySelector(".codMesa")
@@ -32,7 +34,7 @@ var spanTotalVenda = document.querySelector(".spanTotalVenda")
 var btnFecharModalMesas = document.querySelector(".btnFecharModalMesas")
 
 btnCadastrarMesa.addEventListener("click", ()=>{
-    set(ref(db, 'mesas/todasMesas/' + codMesa.value), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas/' + codMesa.value), {
         codigoMesa: codMesa.value,
         tamanho: tamanhoMesa.value,
         foma: formaMesaSelect.options[formaMesaSelect.selectedIndex].text,
@@ -46,8 +48,8 @@ btnCadastrarMesa.addEventListener("click", ()=>{
 let produtosSelecionadosMesa = ""
 let metodoSelecionandoMesa = ""
 
-const dbRefProdutosMesa = ref(db, "produtos/selecProdutos")
-const dbRefMetodoMesa = ref(db, "/metodosPagamento/metodoSelecionado")
+const dbRefProdutosMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
+const dbRefMetodoMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 onValue(dbRefProdutosMesa, (snapshot)=>{
   const data = snapshot.val()
   produtosSelecionadosMesa = data
@@ -136,7 +138,7 @@ function addTdasMesasNaDiv(produtos){
 }
 
 function PegarTdsMesas(){
-  const dbRef = ref(db, "mesas/todasMesas")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas')
 
   onValue(dbRef, (snapshot) =>{
       var todasMesas = []
@@ -167,7 +169,7 @@ function addDetalhesMesa(){
   let formaMesaTxt = document.createElement("h5")
   let tamanhoMesaTxt = document.createElement("h5")
 
-  const dbRef = ref(db, "mesas/todasMesas/" + CodigoMesaClicado)
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas/' + CodigoMesaClicado)
 
     onValue(dbRef, (snapshot) =>{
         let dados = snapshot.val()
@@ -267,7 +269,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
     }
 
     const db = getDatabase();
-    set(ref(db, 'mesas/selecProdutos/' + CodigoMesaClicado + "/" + nomeProd), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + CodigoMesaClicado + '/' + nomeProd), {
       nomeProduto: nomeProd,
       quantidadeProd: quantProduto - 1,
       precoProduto: precVenda,
@@ -283,7 +285,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
     let valorActual = 0 
     let valorSomado = 0
     let valorProduto = precVenda
-    const dbRef = ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor')
 
     onValue(dbRef, (snapshot) => {
       var data = snapshot.val()
@@ -293,7 +295,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
 
     valorSomado = parseInt(valorProduto) + parseInt(valorActual)
       
-    set(ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor"), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'), {
       valorTotal: valorSomado
     });
   })
@@ -326,7 +328,7 @@ function addTdsProdutosMesa(produtos){
 }
 
 function PegarTdsProdutosMesa(){
-  const dbRef = ref(db, "produtos/todosProdutos")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos')
 
   onValue(dbRef, (snapshot) =>{
       var todosProdutos = []
@@ -393,7 +395,7 @@ function addTdsProdutosNaDiv(produtos){
 }
 
 function PegarTdsProdutosSelecionados(){
-  const dbRef = ref(db, "mesas/selecProdutos/" + CodigoMesaClicado)
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + CodigoMesaClicado)
 
   onValue(dbRef, (snapshot) =>{
       var todosProdutos = []
@@ -414,7 +416,7 @@ btnFecharContaMesa.addEventListener("click", ()=>{
   finalizarAdicaoMesa.style.display = "none"
   window.onload = PegarTdsProdutosSelecionados()  
 
-  const dbRef = ref(db, "mesas/" + CodigoMesaClicado + "/selecProdutosValor")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor')
 
   onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()

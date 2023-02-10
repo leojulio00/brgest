@@ -3,6 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebas
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var userCod = document.querySelector(".userCod")
 var userNome = document.querySelector(".userNome")
 var userCategoria = document.querySelector(".userCategoria")
@@ -16,7 +17,7 @@ const database = getDatabase(app);
 
 
   
-  const starCountRef = ref(database, 'users/' + userLocalStorage);
+  const starCountRef = ref(database, 'estabelecimentos/' + usuarioEstabelecimento + '/users/' + userLocalStorage);
   onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
       //updateStarCount(postElement, data);

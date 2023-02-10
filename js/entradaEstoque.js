@@ -1,4 +1,5 @@
 import { firebaseConfig} from "./firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder } from "./login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
@@ -9,6 +10,7 @@ var dataValidade = document.querySelector(".dataValidade")
 var horaRegEst = document.querySelector(".horaRegEst")
 var btnAdiProdE = document.querySelector(".btnAdiProdE")
 var menuDropdownNomeProdAddEstoque = document.querySelector(".menuDropdownNomeProdAddEstoque")
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 
 
 const app = initializeApp(firebaseConfig);
@@ -27,7 +29,7 @@ nomeProdE.addEventListener("keyup", ()=>{
         horaRegA.value = data.horaReg
     });*/
 
-    const starCountRef = ref(db, 'produtos/todosProdutos');
+    const starCountRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos');
     var todosNomesProdutos = []
 
     onValue(starCountRef, (snapshot) =>{
@@ -62,7 +64,7 @@ nomeProdE.addEventListener("keyup", ()=>{
 btnAdiProdE.addEventListener("click", ()=>{
     function adicionarProd(nomeProdE, quantProdE, dataValidade, horaRegEst) {
         const db = getDatabase();
-        set(ref(db, 'produtos/estoque/' + nomeProdE), {
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + nomeProdE), {
           nomeProdE: nomeProdE,
           quantProdE: quantProdE,
           dataValidade: dataValidade,

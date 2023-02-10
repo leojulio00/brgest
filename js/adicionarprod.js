@@ -1,7 +1,9 @@
 import { firebaseConfig} from "./firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "./login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var nomeProd = document.querySelector(".nomeProd")
 var precVendaR = document.querySelector(".precVendaR")
 var precCompra = document.querySelector(".precCompra")
@@ -49,14 +51,14 @@ precVendaR.addEventListener("keyup", ()=>{
 })
 
 btnRegProd.addEventListener("click", ()=>{
-  const tipoMoedaRef = ref(db, 'tipoMoeda/');
+  const tipoMoedaRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/tipoMoeda/');
   onValue(tipoMoedaRef, (snapshot) => {
     const data = snapshot.val();
     tipoMoeda = data.tipoMoeda
 
     function adicionarProd(nomeProd, precVenda, precCompra, lucroProd, tipoMoeda, horaReg,) {
       const db = getDatabase();
-      set(ref(db, 'produtos/todosProdutos/' + nomeProd), {
+      set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProd), {
         nomeProd: nomeProd,
         precVenda: precVenda,
         precCompra: precCompra,
@@ -84,7 +86,7 @@ btnRegProd.addEventListener("click", ()=>{
 btnAlterProd.addEventListener("click", ()=>{
   function adicionarProd(codProd, nomeProd, precVenda, horaReg,) {
     const db = getDatabase();
-    set(ref(db, 'produtos/' + codProd), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/' + codProd), {
       nomeProd: nomeProd,
       precVenda: precVenda,
       horaReg: horaReg

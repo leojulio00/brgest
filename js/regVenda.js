@@ -1,10 +1,12 @@
 import { firebaseConfig} from "./firebaseConfig.js";
 import { TipoMoeda } from "./tipoMoeda.js";
+import { usuarioMail, usuarioNome, usuarioTel } from "./login.js";
 import { CodigoMesaClicado } from "./mesas.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinal")
 var metodoPagamentoEscolhido = document.querySelector(".metodoPagamentoEscolhido")
 var produtosAdicio = document.querySelector(".produtosAdicio")
@@ -37,51 +39,51 @@ divSelecProdutos.style.display = "block"
 divSelecMetodos.style.display = "none"
 finalizarPreVenda.style.display = "none"
 
-set(ref(db, 'produtos/selecProdutosValor/'), {
+set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor/'), {
   valorTotal: 0
 });
 
 function regVendasNormal(){
-  set(ref(db, 'produtos/selecProdutosValor/'), {
+  set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor/'), {
     valorTotal: 0
   });
 
-  set(ref(db, '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'),{
+  set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'),{
     valorTotal: 0
   });
 
-  const dbRefProdSelect = ref(db, "produtos/selecProdutos")
-  const dbRefProdSelectMesa = ref(db, "mesas/selecProdutos")
-  const dbRefMethSelect = ref(db, "metodosPagamento/metodoSelecionado")
+  const dbRefProdSelect = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
+  const dbRefProdSelectMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos')
+  const dbRefMethSelect = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 
   remove(dbRefProdSelect)
   remove(dbRefMethSelect)
   remove(dbRefProdSelectMesa)
   
-  //window.location.href = "./dashboard.html"
+  //window.location.href = './dashboard.html'
 
-  let divCol = document.createElement("div")
-  let divCard = document.createElement("div")
-  let divCardBody = document.createElement("div")
-  let nomeMetodoTxt = document.createElement("p")
-  let divCol2 = document.createElement("div")
-  let divCard2 = document.createElement("div")
-  let divCardBody2 = document.createElement("div")
-  let nomeProdTxt = document.createElement("p")
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let nomeMetodoTxt = document.createElement('p')
+  let divCol2 = document.createElement('div')
+  let divCard2 = document.createElement('div')
+  let divCardBody2 = document.createElement('div')
+  let nomeProdTxt = document.createElement('p')
 
-  nomeMetodoTxt.innerHTML = "Nenhum método Escolhido"
-  nomeProdTxt.innerHTML = "Nenhum produto Escolhido"
+  nomeMetodoTxt.innerHTML = 'Nenhum método Escolhido'
+  nomeProdTxt.innerHTML = 'Nenhum produto Escolhido'
   
-  divCol.classList.add("col")
-  divCard.classList.add("card")
-  divCard.classList.add("cardRegVendasSelecionado")
-  divCardBody.classList.add("card-body")
-  nomeMetodoTxt.style.margin = "0px"
-  divCol2.classList.add("col")
-  divCard2.classList.add("card")
-  divCard2.classList.add("cardRegVendasSelecionado")
-  divCardBody2.classList.add("card-body")
-  nomeProdTxt.style.margin = "0px"
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  nomeMetodoTxt.style.margin = '0px'
+  divCol2.classList.add('col')
+  divCard2.classList.add('card')
+  divCard2.classList.add('cardRegVendasSelecionado')
+  divCardBody2.classList.add('card-body')
+  nomeProdTxt.style.margin = '0px'
 
   divCol.appendChild(divCard)  
   divCard.appendChild(divCardBody) 
@@ -99,39 +101,39 @@ function regVendasNormal(){
     produtosEscolhidoFinal.appendChild(divCol2)
   }
 
-  spanTotalVenda.innerHTML = "0 " + TipoMoeda
+  spanTotalVenda.innerHTML = '0 ' + TipoMoeda
   window.onload = GetAllDataRealtime()
   window.onload = GetAllDataRealtimeMetodosP()
   //window.location.reload()
 
-  divSelecProdutos.style.display = "block"
-  divSelecMetodos.style.display = "none"
-  finalizarPreVenda.style.display = "none"
+  divSelecProdutos.style.display = 'block'
+  divSelecMetodos.style.display = 'none'
+  finalizarPreVenda.style.display = 'none'
 
   btnFecharModalVendas.click()
 }
 
 function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
-    let divCol = document.createElement("div")
-    let divCard = document.createElement("div")
-    let divCardBody = document.createElement("div")
-    let produNome = document.createElement("h3")
-    let produQuantidade = document.createElement("h5")
-    let produPreco = document.createElement("h1")
+    let divCol = document.createElement('div')
+    let divCard = document.createElement('div')
+    let divCardBody = document.createElement('div')
+    let produNome = document.createElement('h3')
+    let produQuantidade = document.createElement('h5')
+    let produPreco = document.createElement('h1')
     let quantProduto = 1
-    //produQuantidade.innerHTML = "Qtd " + quantProduto
+    //produQuantidade.innerHTML = 'Qtd ' + quantProduto
 
 
     produNome.innerHTML = nomeProd
-    produPreco.innerHTML = precVenda + " " + tipoMoeda
+    produPreco.innerHTML = precVenda + ' ' + tipoMoeda
 
     
 
-    divCard.addEventListener("click", ()=>{
-      produQuantidade.innerHTML = "Qtd " + quantProduto++
+    divCard.addEventListener('click', ()=>{
+      produQuantidade.innerHTML = 'Qtd ' + quantProduto++
 
       const db = getDatabase();
-      set(ref(db, 'produtos/selecProdutos/' + nomeProd), {
+      set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos/' + nomeProd), {
         nomeProduto: nomeProd,
         quantidadeProd: quantProduto - 1,
         precoProduto: precVenda,
@@ -139,16 +141,16 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
         lucroProduto: lucroProduto * (quantProduto - 1)
       });
 
-      if(divCard.classList.contains("cardRegVendasSelecionado")){
+      if(divCard.classList.contains('cardRegVendasSelecionado')){
         //
       }else{
-        divCard.classList.add("cardRegVendasSelecionado")
+        divCard.classList.add('cardRegVendasSelecionado')
       }
 
       let valorActual = 0 
       let valorSomado = 0
       let valorProduto = precVenda
-      const dbRef = ref(db, "produtos/selecProdutosValor")
+      const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor')
 
       onValue(dbRef, (snapshot) => {
         var data = snapshot.val()
@@ -158,21 +160,21 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
 
       valorSomado = parseInt(valorProduto) + parseInt(valorActual)
         
-      set(ref(db, 'produtos/selecProdutosValor/'), {
+      set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor/'), {
         valorTotal: valorSomado
       });
     })
 
-    divCol.classList.add("col")
-    divCard.classList.add("card")
-    divCard.classList.add("cardRegVendas")
-    divCardBody.classList.add("card-body")
-    produNome.classList.add("card-title")
-    produNome.style.fontSize = "18px"
-    produPreco.classList.add("card-title")
-    produPreco.style.fontSize = "26px"
-    produQuantidade.classList.add("card-text")
-    produQuantidade.style.fontSize = "16px"
+    divCol.classList.add('col')
+    divCard.classList.add('card')
+    divCard.classList.add('cardRegVendas')
+    divCardBody.classList.add('card-body')
+    produNome.classList.add('card-title')
+    produNome.style.fontSize = '18px'
+    produPreco.classList.add('card-title')
+    produPreco.style.fontSize = '26px'
+    produQuantidade.classList.add('card-text')
+    produQuantidade.style.fontSize = '16px'
 
     divCol.appendChild(divCard)  
     divCard.appendChild(divCardBody) 
@@ -184,14 +186,14 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
 }
 
 function addAllItemsToTable(produtos){
-  produtosAdicio.innerHTML = ""
+  produtosAdicio.innerHTML = ''
     produtos.forEach(element => {
         addItemToTable(element.nomeProd, element.precVenda, element.tipoMoeda, element.lucroProd)
     });
 }
 
 function GetAllDataRealtime(){
-    const dbRef = ref(db, "produtos/todosProdutos")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos')
 
     onValue(dbRef, (snapshot) =>{
         var todosProdutos = []
@@ -209,35 +211,35 @@ window.onload = GetAllDataRealtime()
 
 
 function addItemToTableMetodosP(nomeMetodo){
-  let divCol = document.createElement("div")
-  let divCard = document.createElement("div")
-  let divCardBody = document.createElement("div")
-  let nomeMetodoTxt = document.createElement("h1")
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let nomeMetodoTxt = document.createElement('h1')
 
   nomeMetodoTxt.innerHTML = nomeMetodo
 
-  divCard.addEventListener("click", ()=>{
+  divCard.addEventListener('click', ()=>{
     const db = getDatabase();
-    set(ref(db, 'metodosPagamento/metodoSelecionado/' + nomeMetodo), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado/' + nomeMetodo), {
       nomeMetodo: nomeMetodo
     });
 
-    if(divCard.classList.contains("cardRegVendasSelecionado")){
+    if(divCard.classList.contains('cardRegVendasSelecionado')){
       //
     }else{
-      divCard.classList.add("cardRegVendasSelecionado")
+      divCard.classList.add('cardRegVendasSelecionado')
     }
 
-    const dbRef = ref(db, "metodosPagamento/metodoSelecionado")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
     var dados
 
     onValue(dbRef, (snapshot)=>{
       const data = snapshot.val()    
       dados = data
     })
-    let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+    let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
 
-    window.localStorage.setItem("metodoEscolhido", true)
+    window.localStorage.setItem('metodoEscolhido', true)
     //btnFinalizarVenda.click()
     btnFecharModalVendas.click()
     window.onload = PegarMetodosSelecionado()
@@ -246,24 +248,24 @@ function addItemToTableMetodosP(nomeMetodo){
       console.log(dados)
 
       if(dados == null){
-        alert("Selecione um método")
+        alert('Selecione um método')
       }else{
-        divSelecProdutos.style.display = "block"
-        divSelecMetodos.style.display = "none"
-        finalizarPreVenda.style.display = "none"
+        divSelecProdutos.style.display = 'block'
+        divSelecMetodos.style.display = 'none'
+        finalizarPreVenda.style.display = 'none'
       }
     }
-    alert("Fechou")
+    alert('Fechou')
     //btnFecharModalVendas.click()
     passarPTelaFinalizarPreVenda()*/
   })
 
-  divCol.classList.add("col")
-  divCard.classList.add("card")
-  divCard.classList.add("cardMetodospagamento")
-  divCardBody.classList.add("card-body")
-  nomeMetodoTxt.classList.add("card-title")
-  nomeMetodoTxt.style.fontSize = "22px"
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardMetodospagamento')
+  divCardBody.classList.add('card-body')
+  nomeMetodoTxt.classList.add('card-title')
+  nomeMetodoTxt.style.fontSize = '22px'
 
   divCol.appendChild(divCard)  
   divCard.appendChild(divCardBody) 
@@ -274,14 +276,14 @@ function addItemToTableMetodosP(nomeMetodo){
 }
 
 function addAllItemsToTableMetodosP(metodos){
-  metodosPagamentos.innerHTML = ""
+  metodosPagamentos.innerHTML = ''
 metodos.forEach(element => {
   addItemToTableMetodosP(element.nomeMetodo)
   });
 }
 
 function GetAllDataRealtimeMetodosP(){
-  const dbRef = ref(db, "metodosPagamento/todosMetodos")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/todosMetodos')
 
   onValue(dbRef, (snapshot) =>{
       var todosMetodos = []
@@ -298,19 +300,19 @@ window.onload = GetAllDataRealtimeMetodosP()
 
 
 function addMetodNoCard(nomeMetodo){
-  let divCol = document.createElement("div")
-  let divCard = document.createElement("div")
-  let divCardBody = document.createElement("div")
-  let metodoPagamento = document.createElement("h5")
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let metodoPagamento = document.createElement('h5')
 
   metodoPagamento.innerHTML = nomeMetodo
 
-  divCol.classList.add("col")
-  divCard.classList.add("card")
-  divCard.classList.add("cardRegVendasSelecionado")
-  divCardBody.classList.add("card-body")
-  metodoPagamento.classList.add("card-title")
-  metodoPagamento.style.fontSize = "16px"
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  metodoPagamento.classList.add('card-title')
+  metodoPagamento.style.fontSize = '16px'
 
   divCol.appendChild(divCard)  
   divCard.appendChild(divCardBody) 
@@ -320,14 +322,14 @@ function addMetodNoCard(nomeMetodo){
 }
 
 function addTdsMetodNoCard(metodo){
-  metodoPagamentoEscolhido.innerHTML = ""
+  metodoPagamentoEscolhido.innerHTML = ''
     metodo.forEach(element => {
         addMetodNoCard(element.nomeMetodo)
     });
 }
 
 function PegarMetodosSelecionado(){
-    const dbRef = ref(db, "metodosPagamento/metodoSelecionado")
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 
     onValue(dbRef, (snapshot) =>{
         var metodoSelec = []
@@ -342,46 +344,46 @@ function PegarMetodosSelecionado(){
 
 
 function addProdutosNoCard(nomeProduto, precoProduto, tipoMoeda, quantidadeProd){
-  let divCol = document.createElement("div")
-  let divCard = document.createElement("div")
-  let divCardBody = document.createElement("div")
-  let produNomeTxt = document.createElement("h5")
-  let precoProdutoTxt = document.createElement("h5")
-  let produQuantidadeTxt = document.createElement("h5")
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let produNomeTxt = document.createElement('h5')
+  let precoProdutoTxt = document.createElement('h5')
+  let produQuantidadeTxt = document.createElement('h5')
 
   produNomeTxt.innerHTML = nomeProduto
-  precoProdutoTxt.innerHTML = precoProduto + ".00 " + tipoMoeda
+  precoProdutoTxt.innerHTML = precoProduto + '.00 ' + tipoMoeda
   produQuantidadeTxt.innerHTML = quantidadeProd
 
-  /*divCard.addEventListener("click", ()=>{
-    produQuantidade.innerHTML = "Qtd " + quantProduto++
+  /*divCard.addEventListener('click', ()=>{
+    produQuantidade.innerHTML = 'Qtd ' + quantProduto++
 
     const db = getDatabase();
     set(ref(db, 'produtos/selecProdutos/' + nomeProduto), {
       quantidadeProd: quantProduto - 1
     });
 
-    if(divCard.classList.contains("cardRegVendasSelecionado")){
+    if(divCard.classList.contains('cardRegVendasSelecionado')){
       //
     }else{
-      divCard.classList.add("cardRegVendasSelecionado")
+      divCard.classList.add('cardRegVendasSelecionado')
     }
   })*/
 
-  divCol.classList.add("col")
-  divCard.classList.add("card")
-  divCard.classList.add("cardRegVendasSelecionado")
-  divCardBody.classList.add("card-body")
-  divCardBody.style.display = "flex"
-  divCardBody.style.flexDirection = "row"
-  divCardBody.style.flexWrap = "nowrap"
-  divCardBody.style.justifyContent = "space-between"
-  produNomeTxt.classList.add("card-title")
-  produNomeTxt.style.fontSize = "16px"
-  precoProdutoTxt.classList.add("card-title")
-  precoProdutoTxt.style.fontSize = "16px"
-  produQuantidadeTxt.classList.add("card-text")
-  produQuantidadeTxt.style.fontSize = "16px"
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  divCardBody.style.display = 'flex'
+  divCardBody.style.flexDirection = 'row'
+  divCardBody.style.flexWrap = 'nowrap'
+  divCardBody.style.justifyContent = 'space-between'
+  produNomeTxt.classList.add('card-title')
+  produNomeTxt.style.fontSize = '16px'
+  precoProdutoTxt.classList.add('card-title')
+  precoProdutoTxt.style.fontSize = '16px'
+  produQuantidadeTxt.classList.add('card-text')
+  produQuantidadeTxt.style.fontSize = '16px'
 
   divCol.appendChild(divCard)  
   divCard.appendChild(divCardBody) 
@@ -393,14 +395,14 @@ function addProdutosNoCard(nomeProduto, precoProduto, tipoMoeda, quantidadeProd)
 }
 
 function addTdsProdutosNaDiv(produtos){
-  produtosEscolhidoFinal.innerHTML = ""
+  produtosEscolhidoFinal.innerHTML = ''
   produtos.forEach(element => {
       addProdutosNoCard(element.nomeProduto, element.precoProduto, element.tipoMoeda, element.quantidadeProd)
   });
 }
 
 function PegarTdsProdutosSelecionados(){
-  const dbRef = ref(db, "produtos/selecProdutos")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
 
   onValue(dbRef, (snapshot) =>{
       var todosProdutos = []
@@ -413,11 +415,11 @@ function PegarTdsProdutosSelecionados(){
   })
 }
 
-let produtosSelecionadosMesa = ""
-let metodoSelecionandoMesa = ""
+let produtosSelecionadosMesa = ''
+let metodoSelecionandoMesa = ''
 
-const dbRefProdutosMesa = ref(db, "produtos/selecProdutos")
-const dbRefMetodoMesa = ref(db, "/metodosPagamento/metodoSelecionado")
+const dbRefProdutosMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
+const dbRefMetodoMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 onValue(dbRefProdutosMesa, (snapshot)=>{
   const data = snapshot.val()
   produtosSelecionadosMesa = data
@@ -432,7 +434,7 @@ var chaveMesaString
 var chaveMesa = 0
 
 function ultimaAdicaoMesa(codigoMesa){
-  const commentsRefMesa = ref(db, 'mesas/produtos/' + codigoMesa + "/");
+  const commentsRefMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/produtos/' + codigoMesa + '/');
   onChildAdded(commentsRefMesa, (data) => {
     chaveMesaString = data.key
 
@@ -441,25 +443,25 @@ function ultimaAdicaoMesa(codigoMesa){
 }
 
 function addMesasNaDiv(codigoMesa, rotulo, tamanho){
-  let divCol = document.createElement("div")
-  let divCard = document.createElement("div")
-  let divCardBody = document.createElement("div")
-  let codigoMesaTxt = document.createElement("h5")
-  let rotuloMesaTxt = document.createElement("h5")
-  let tamanhoMesaTxt = document.createElement("h5")
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let codigoMesaTxt = document.createElement('h5')
+  let rotuloMesaTxt = document.createElement('h5')
+  let tamanhoMesaTxt = document.createElement('h5')
 
-  codigoMesaTxt.innerHTML = "Cod. " + codigoMesa
-  rotuloMesaTxt.innerHTML = "Rot." + rotulo
-  tamanhoMesaTxt.innerHTML = "Tamanho " + tamanho
+  codigoMesaTxt.innerHTML = 'Cod. ' + codigoMesa
+  rotuloMesaTxt.innerHTML = 'Rot.' + rotulo
+  tamanhoMesaTxt.innerHTML = 'Tamanho ' + tamanho
 
-  divCard.setAttribute("data-bs-dismiss", "modal")
+  divCard.setAttribute('data-bs-dismiss', 'modal')
 
   function getRandom(max) {
     return Math.floor(Math.random() * max + 1)
   }
 
   let numeroSorteado = getRandom(100)
-  divCard.addEventListener("click", async ()=>{
+  divCard.addEventListener('click', async ()=>{
     ultimaAdicaoMesa(codigoMesa)
 
       /*set(ref(db, 'mesas/' + codigoMesa), {
@@ -469,16 +471,16 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
       });*/
 
       try {
-        const docRef = await addDoc(collection(dbFt, "produtosMesa"), {
+        const docRef = await addDoc(collection(dbFt, 'produtosMesa'), {
           codigoMesa: codigoMesa,
           produtos: produtosSelecionadosMesa,
           metodoPagamento: metodoSelecionandoMesa
         }, { merge: true });
-        /*setDoc(doc(db, "cities", "new-city-id"), data)
-        console.log("Document written with ID: ", docRef.id);*/
-        alert("Adicionado a mesa com sucesso")
+        /*setDoc(doc(db, 'cities', 'new-city-id'), data)
+        console.log('Document written with ID: ', docRef.id);*/
+        alert('Adicionado a mesa com sucesso')
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error('Error adding document: ', e);
       }
 
     
@@ -487,21 +489,21 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
     regVendasNormal()
   })
 
-  divCol.classList.add("col")
-  divCard.classList.add("card")
-  divCard.classList.add("cardRegVendasSelecionado")
-  divCardBody.classList.add("card-body")
-  divCardBody.style.display = "flex"
-  divCardBody.style.flexDirection = "row"
-  divCardBody.style.flexWrap = "nowrap"
-  divCardBody.style.justifyContent = "space-between"
-  divCardBody.style.margin = "5px 0px"
-  codigoMesaTxt.classList.add("card-title")
-  codigoMesaTxt.style.margin = "0px"
-  rotuloMesaTxt.classList.add("card-title")
-  rotuloMesaTxt.style.margin = "0px"
-  tamanhoMesaTxt.classList.add("card-text")
-  tamanhoMesaTxt.style.margin = "0px"
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  divCardBody.style.display = 'flex'
+  divCardBody.style.flexDirection = 'row'
+  divCardBody.style.flexWrap = 'nowrap'
+  divCardBody.style.justifyContent = 'space-between'
+  divCardBody.style.margin = '5px 0px'
+  codigoMesaTxt.classList.add('card-title')
+  codigoMesaTxt.style.margin = '0px'
+  rotuloMesaTxt.classList.add('card-title')
+  rotuloMesaTxt.style.margin = '0px'
+  tamanhoMesaTxt.classList.add('card-text')
+  tamanhoMesaTxt.style.margin = '0px'
 
   divCol.appendChild(divCard)  
   divCard.appendChild(divCardBody) 
@@ -513,14 +515,14 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
 }
 
 function addTdasMesasNaDiv(produtos){
-  divMesasDisponiveis.innerHTML = ""
+  divMesasDisponiveis.innerHTML = ''
   produtos.forEach(element => {
       addMesasNaDiv(element.codigoMesa, element.rotulo, element.tamanho)
   });
 }
 
 function PegarTdsMesas(){
-  const dbRef = ref(db, "mesas/todasMesas")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas')
 
   onValue(dbRef, (snapshot) =>{
       var todasMesas = []
@@ -568,7 +570,7 @@ btnFinalizarVenda.addEventListener("click", ()=>{
       //window.onload = PegarTdsProdutosSelecionados()
     }
 
-  const dbRef = ref(db, "produtos/selecProdutosValor")
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor')
 
   onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()
@@ -583,7 +585,7 @@ btnFinalizarVenda.addEventListener("click", ()=>{
 })
 
 
-const dbRef = ref(db, "produtos/selecProdutos")
+const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
 var dadosSelecProdBtnPrx
 
 onValue(dbRef, (snapshot)=>{
@@ -617,11 +619,11 @@ botaoProximo.addEventListener("click", ()=>{
   window.onload = PegarTdsProdutosSelecionados()
 })
 
-const dbRefMetPagamentoE = ref(db, "metodosPagamento/metodoSelecionado")
+const dbRefMetPagamentoE = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 let confirME = true
-const dbRefProdE = ref(db, "produtos/selecProdutos")
+const dbRefProdE = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
 let confirPE = true
-const dbRefProdEMesa = ref(db, "mesas/selecProdutos")
+const dbRefProdEMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos')
 let confirPEMesa = true
 
 onValue(dbRefProdE, (snapshot)=>{
@@ -647,8 +649,8 @@ onValue(dbRefMetPagamentoE, (snapshot)=>{
   if(data == null){
     confirME = false
     //if(confirME == false){
-      btnAdicionarMetodo.setAttribute("data-bs-toggle", "modal")
-      btnAdicionarMetodo.setAttribute("data-bs-target", "#modalRegistarVendas")
+      btnAdicionarMetodo.setAttribute('data-bs-toggle', 'modal')
+      btnAdicionarMetodo.setAttribute('data-bs-target', '#modalRegistarVendas')
       
     //}
   }else{
@@ -656,61 +658,61 @@ onValue(dbRefMetPagamentoE, (snapshot)=>{
   }
 })
 
-btnAdicionarProdutos.addEventListener("click", ()=>{
-  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
-  if(prodEscolhidoLocalStorage == "true"){
-    divSelecProdutos.style.display = "block"
-    finalizarPreVenda.style.display = "none"
-    divSelecMetodos.style.display = "none"
+btnAdicionarProdutos.addEventListener('click', ()=>{
+  let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
+  if(prodEscolhidoLocalStorage == 'true'){
+    divSelecProdutos.style.display = 'block'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'none'
   }else{
-    //alert("Adicione um metodo")
+    //alert('Adicione um metodo')
   }
 })
 
 
-btnAdicionarMetodo.addEventListener("click", ()=>{
-  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+btnAdicionarMetodo.addEventListener('click', ()=>{
+  let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
 
-  if(prodEscolhidoLocalStorage == "true"){
-    divSelecProdutos.style.display = "none"
-    finalizarPreVenda.style.display = "none"
-    divSelecMetodos.style.display = "block"
+  if(prodEscolhidoLocalStorage == 'true'){
+    divSelecProdutos.style.display = 'none'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'block'
   }else{
-    alert("Adicione um produto")
-    divSelecProdutos.style.display = "block"
-    finalizarPreVenda.style.display = "none"
-    divSelecMetodos.style.display = "none"
+    alert('Adicione um produto')
+    divSelecProdutos.style.display = 'block'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'none'
   }
 })
 
-botaoCancelar.addEventListener("click", ()=>{
-  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+botaoCancelar.addEventListener('click', ()=>{
+  let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
 
-  if(prodEscolhidoLocalStorage == "true"){
+  if(prodEscolhidoLocalStorage == 'true'){
     regVendasNormal()
-    alert("Cancelado com sucesso") 
-    window.localStorage.setItem("prodEscolhido", false);
-    window.localStorage.removeItem("valorTotalProdutos")
-    divSelecProdutos.style.display = "block"
-    finalizarPreVenda.style.display = "none"
-    divSelecMetodos.style.display = "none"
+    alert('Cancelado com sucesso') 
+    window.localStorage.setItem('prodEscolhido', false);
+    window.localStorage.removeItem('valorTotalProdutos')
+    divSelecProdutos.style.display = 'block'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'none'
   }else{
-    alert("Nada seleciondo")
+    alert('Nada seleciondo')
   }
 
 })
 
-botaoCancelar2.addEventListener("click", ()=>{
+botaoCancelar2.addEventListener('click', ()=>{
   if(confirME == true){
     regVendasNormal()
     
-    window.localStorage.setItem("prodEscolhido", false);
-    window.localStorage.removeItem("valorTotalProdutos")
-    divSelecProdutos.style.display = "block"
-    finalizarPreVenda.style.display = "none"
-    divSelecMetodos.style.display = "none"
+    window.localStorage.setItem('prodEscolhido', false);
+    window.localStorage.removeItem('valorTotalProdutos')
+    divSelecProdutos.style.display = 'block'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'none'
   }else{
-    //alert("Nada seleciondo")
+    //alert('Nada seleciondo')
   }
 })
 
@@ -720,16 +722,16 @@ var nrMovimentacoesString
 var nrMovimentacoes = 0
 var nrMovimentacoess = 0
 
-const commentsRef = ref(db, 'vendas/todasVendas');
+const commentsRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas');
 onChildAdded(commentsRef, (data) => {
   chaveVendasString = data.key
 });
 
 var valorTotalProdutos = 0
-valorTotalProdutos = parseInt(window.localStorage.getItem("valorTotalProdutos"));
+valorTotalProdutos = parseInt(window.localStorage.getItem('valorTotalProdutos'));
 var saldoInicial, saldoIniciall = 0
 var saldoFinal = 0
-const dbRefSaldo = ref(db, "/saldo/saldo")
+const dbRefSaldo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo')
 
 onValue(dbRefSaldo, (snapshot)=>{
   const data = snapshot.val()
@@ -743,8 +745,8 @@ onValue(dbRefSaldo, (snapshot)=>{
 
 var valorLucroInicial, valorLucroIniciall = 0
 var valorLucroFinal = 0
-const dbRefLucro = ref(db, "/vendas/lucroTotalVendas")
-
+const dbRefLucro = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas')
+console.log(dbRefLucro)
 onValue(dbRefLucro, (snapshot)=>{
   const data = snapshot.val()
   valorLucroInicial = data.lucroTotal
@@ -756,7 +758,7 @@ onValue(dbRefLucro, (snapshot)=>{
 
 var valorTotalVendasInicial, valorTotalVendasIniciall = 0
 var valorTotalVendasFinal = 0
-const dbRefValorVendas = ref(db, "/vendas/valorTotalVendas")
+const dbRefValorVendas = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/valorTotalVendas')
 
 onValue(dbRefValorVendas, (snapshot)=>{
   const data = snapshot.val()
@@ -767,15 +769,15 @@ onValue(dbRefValorVendas, (snapshot)=>{
   onlyOnce: false
 })
 
-btnRegVenda.addEventListener("click", ()=>{
-  let produtosSelecionados = ""
-  let produtosSelecionadosMesas = ""
-  let metodoSelecionando = ""
-  let codMesaEscolhido = window.localStorage.getItem("codMesaEscolhido");
+btnRegVenda.addEventListener('click', ()=>{
+  let produtosSelecionados = ''
+  let produtosSelecionadosMesas = ''
+  let metodoSelecionando = ''
+  let codMesaEscolhido = window.localStorage.getItem('codMesaEscolhido');
   
-  const dbRefProdutos = ref(db, "produtos/selecProdutos")
-  const dbRefProdutosMesas = ref(db, "mesas/selecProdutos/" + codMesaEscolhido)
-  const dbRefMetodo = ref(db, "/metodosPagamento/metodoSelecionado")
+  const dbRefProdutos = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
+  const dbRefProdutosMesas = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + codMesaEscolhido)
+  const dbRefMetodo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 
   let lucroInicialPorVenda = 0
 
@@ -815,11 +817,11 @@ btnRegVenda.addEventListener("click", ()=>{
   
     chaveVendas = parseInt(chaveVendasString) + 1
 
-    let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+    let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
  
-    if(prodEscolhidoLocalStorage == "true"){
+    if(prodEscolhidoLocalStorage == 'true'){
       try {
-        set(ref(db, 'vendas/todasVendas/' + chaveVendas), {
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + chaveVendas), {
           codigoMesa: codMesaEscolhido,
           produtos: produtosSelecionados,
           metodoPagamento: metodoSelecionando,
@@ -829,43 +831,43 @@ btnRegVenda.addEventListener("click", ()=>{
           } 
         });
   
-        set(ref(db, '/saldo/saldo'), {
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo'), {
           saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
           totalMovimentacoes: nrMovimentacoes
         });
         
-        set(ref(db, '/vendas/lucroTotalVendas'), {
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas'), {
           lucroTotal: valorLucroIniciall + lucroInicialPorVenda
         });
   
-        set(ref(db, '/vendas/valorTotalVendas'), {
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/valorTotalVendas'), {
           valorTotal: valorTotalVendasIniciall + valorTotalProdutoss
         });
   
         //botaoCancelar.click()
         regVendasNormal()
-        alert("Venda cadatrada com sucesso")
-        window.localStorage.removeItem("codMesaEscolhido");
-        window.localStorage.removeItem("valorTotalProdutos") 
+        alert('Venda cadatrada com sucesso')
+        window.localStorage.removeItem('codMesaEscolhido');
+        window.localStorage.removeItem('valorTotalProdutos') 
       } catch (error) {
-        alert("Reinicie a pagina")
+        alert('Reinicie a pagina')
       }
     }else{
-      alert("Adicione um produto antes")
+      alert('Adicione um produto antes')
     }
 })
 
 /*
-const citiesRef = collection(dbFt, "produtosMesa");
+const citiesRef = collection(dbFt, 'produtosMesa');
 
-const q = query(citiesRef, where("codigoMesa", "==", "M-002"));
+const q = query(citiesRef, where('codigoMesa', '==', 'M-002'));
 
 const querySnapshot = await getDocs(q);
 let dadosP = []
 let dadosPP = []
 querySnapshot.forEach((doc) => {
   // doc.data() is never undefined for query doc snapshots
-  console.log(doc.id, " => ", doc.data().produtos);
+  console.log(doc.id, ' => ', doc.data().produtos);
    dadosP.push(doc.data().produtos)
    *dadosPP.push(dadosP.forEach((l)=>{
     //console.log(l)
@@ -889,7 +891,7 @@ querySnapshot.forEach((doc) => {
 });*/
 
 
-/*import { firebaseConfig} from "./firebaseConfig.js";
+/*import { firebaseConfig} from './firebaseConfig.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 

@@ -5,9 +5,12 @@ import { getDatabase, ref, remove, onValue, set } from "https://www.gstatic.com/
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+
 export var TipoMoeda = ""
 
-const dbRef = ref(db, "tipoMoeda")
+const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/tipoMoeda')
+console.log(dbRef)
 
 onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()
