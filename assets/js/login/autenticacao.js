@@ -1,5 +1,5 @@
 console.log("sucesso")
-import { getAuth, signInWithEmailAndPassword } from "../node_modules/firebase/auth"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 var inputEmail = document.querySelector(".inputEmail")
 var inputPass = document.querySelector(".inputPass")

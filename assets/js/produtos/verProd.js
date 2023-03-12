@@ -1,5 +1,5 @@
-import { firebaseConfig} from './firebaseConfig.js';
-import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from './login.js';
+import { firebaseConfig} from '../logico/firebaseConfig.js';
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from '../login/login.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js';
 import { getDatabase, ref, child, onValue, get } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js';
 
@@ -11,7 +11,7 @@ var btnRefresh = document.querySelector('.btnRefresh')
   const app = initializeApp(firebaseConfig);
     const db = getDatabase();
 
-function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
+function addItemToTable(nomeProd, quantiProd, dataValidade, dataModi){
     let trow = document.createElement('tr')
     let td1 = document.createElement('td')
     let td2 = document.createElement('td')
@@ -20,7 +20,7 @@ function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
     let td5 = document.createElement('td')
 
     td1.innerHTML = ++cod
-    td2.innerHTML = nomeProdE
+    td2.innerHTML = nomeProd
     td3.innerHTML = quantiProd
     td4.innerHTML = dataValidade
     td5.innerHTML = dataModi
@@ -37,7 +37,7 @@ function addItemToTable(nomeProdE, quantiProd, dataValidade, dataModi){
 function addAllItemsToTable(produtosEstoque){
     bodyEstoque.innerHTML = ''
     produtosEstoque.forEach(element => {
-        addItemToTable(element.nomeProdE, element.quantProdE, element.dataValidade, element.horaRegEst)
+        addItemToTable(element.nomeProd, element.quantProdE, element.dataValidade, element.horaRegEst)
     });
 }
 
@@ -56,7 +56,7 @@ function GetAllDataOnce(){
 }
 
 function GetAllDataRealtime(){
-    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/')
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/')
 
     onValue(dbRef, (snapshot) =>{
         var produtos = []

@@ -1,7 +1,7 @@
-import { firebaseConfig} from "./firebaseConfig.js";
-import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "./login.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "../login/login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { TipoMoeda } from "./tipoMoeda.js";
+import { TipoMoeda } from "../saldo/tipoMoeda.js";
 import { getDatabase, ref, remove, onValue, set, onChildAdded} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 

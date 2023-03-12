@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title>BR Gest.</title>
+    <title>Painel BR Gest.</title>
 
     <!--<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">-->
-    <link rel="shortcut icon" href="../img/BR Gest favicon 01.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/img/BR Gest favicon 01.png" type="image/x-icon">
 
     
 
@@ -36,16 +36,16 @@
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
     <link href="sidebars.css" rel="stylesheet">
-    <link href="../css/buttons.css" rel="stylesheet">
-    <link href="../css/cards.css" rel="stylesheet">
-    <link href="../css/chartDesempenho.css" rel="stylesheet">
-    <link href="../css/cardRegistarvendas.css" rel="stylesheet">
-    <link href="../css/btnSidebar.css" rel="stylesheet">
+    <link href="../assets/css/buttons.css" rel="stylesheet">
+    <link href="../assets/css/cards.css" rel="stylesheet">
+    <link href="../assets/css/chartDesempenho.css" rel="stylesheet">
+    <link href="../assets/css/cardRegistarvendas.css" rel="stylesheet">
+    <link href="../assets/css/btnSidebar.css" rel="stylesheet">
   </head>
 
   <body>  
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><img  src="../img/BR Gest logo 03.png" alt="Logotipo da companhia e-bar&rest" style="margin: 0px; padding: 0px; width: 80px"></a>
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#"><img  src="../assets/img/BR Gest logo 03.png" alt="Logotipo da companhia e-bar&rest" style="margin: 0px; padding: 0px; width: 80px"></a>
       <div class="navbar-nav">
         <div class="nav-item text-nowrap  justify-content-end" style="margin-right: 70px;">
           <a class="nav-link px-3"><button class="logoutt" style="background: none; color: white; border: none;">Sair</button></a>
@@ -930,28 +930,61 @@
       </div>
     </div>
 
-      
-      <script src="../js/saldo.js" type="module"></script>
-      <script src="../js/userLogado.js" type="module"></script>
-      <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="sidebars.js"></script>
-      <script src="../js/sidebarActions.js"></script>
-      <script src="../js/adicionaruser.js" type="module"></script>
-      <script src="../js/adicionarprod.js" type="module"></script>
-      <script src="../js/entradaEstoque.js" type="module"></script>
-      <script src="../js/regVenda.js" type="module"></script>
-      <script src="../js/verProd.js" type="module"></script>
-      <script src="../js/adicionarpedido.js" type="module"></script>
-      <script src="../js/dadosUser.js" type="module"></script>
-      <script src="../js/verPedidos.js" type="module"></script>
-      <script src="../js/verColab.js" type="module"></script>
-      <script src="../js/horaReg.js"></script>
-      <script src="../js/logout.js" type="module"></script>
-      <script src="../js/alterarSenha.js" type="module"></script>
-      <script src="../js/mesas.js" type="module"></script>
-      <script src="../js/chartDesempenho.js"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="dashboard.js"></script>
+    <!---------------  SCRIPT SALDO  ---------------->
+    <script src="../assets/js/saldo/saldo.js" type="module"></script>
+    
+
+
+    <!---------------  SCRIPT LAYOUT  ---------------->
+    <script src="sidebars.js"></script>
+    <script src="../assets/js/layout/sidebarActions.js"></script>
+
+
+
+    <!---------------  SCRIPT LOGIN  ---------------->
+    <script src="../assets/js/login/userLogado.js" type="module"></script>
+    <script src="../assets/js/login/logout.js" type="module"></script>
+    
+
+
+    <!---------------  SCRIPT COLABORADORES  ---------------->
+    <script src="../assets/js/colaboradores/dadosUser.js" type="module"></script>    
+    <script src="../assets/js/colaboradores/verColab.js" type="module"></script>
+    <script src="../assets/js/colaboradores/adicionaruser.js" type="module"></script>
+
+
+
+    <!---------------  SCRIPT LOGICO  ---------------->
+    <script src="../assets/js/logico/horaReg.js"></script>
+
+
+
+    <!---------------  SCRIPT MESAS  ---------------->
+    <script src="../assets/js/mesas/mesas.js" type="module"></script>
+
+
+
+    <!---------------  SCRIPT PRODUTOS  ---------------->
+    <script src="../assets/js/produtos/verProd.js" type="module"></script>
+    <script src="../assets/js/produtos/adicionarpedido.js" type="module"></script>
+    <script src="../assets/js/produtos/verPedidos.js" type="module"></script>
+    <script src="../assets/js/produtos/adicionarprod.js" type="module"></script>
+    <script src="../assets/js/produtos/entradaEstoque.js" type="module"></script>
+
+
+
+    <!---------------  SCRIPT VENDAS  ---------------->
+    <script src="../assets/js/vendas/regVenda.js" type="module"></script>
+      
+      
+      
+      
+    <!---------------  SCRIPT OUTROS  ---------------->
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+    <script src="dashboard.js"></script>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import { firebaseConfig} from "./firebaseConfig.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 

@@ -1,5 +1,5 @@
-import { firebaseConfig} from "./firebaseConfig.js";
-import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "./login.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder, usuarioCargo } from "../login/login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getAuth, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";

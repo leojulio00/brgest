@@ -1,6 +1,6 @@
-import { firebaseConfig} from './firebaseConfig.js';
+import { firebaseConfig} from '../logico/firebaseConfig.js';
 import { TipoMoeda } from './tipoMoeda.js'
-import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder} from "./login.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder} from "../login/login.js";
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js';
 import { getDatabase, ref, remove, onValue, set, onChildAdded, query, orderByChild } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js';
 import { getFirestore, collection, addDoc, setDoc, doc, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
@@ -148,6 +148,7 @@ onValue(mostViewedPosts, (snapshot)=>{
         valorPrecoCompra = valorPrecoCompra + (parseInt(childSnapshot.val().precCompra) * parseInt(childSnapshot.val().quantProdE))
 
         valorPrecoVenda = valorPrecoVenda + (parseInt(childSnapshot.val().precVenda) * parseInt(childSnapshot.val().quantProdE))
+
     })
 
     precoTotalCompraProdutosTxt.innerHTML = valorPrecoCompra

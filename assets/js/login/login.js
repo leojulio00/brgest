@@ -1,4 +1,4 @@
-import { firebaseConfig} from "./firebaseConfig.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
@@ -25,7 +25,6 @@ btnEntrar.addEventListener("click", ()=>{
     const user = userCredential.user;
     alert("login feito com sucesso")
     
-    window.location.href = "dashboard/dashboard.html"
     window.localStorage.setItem("user", user.uid)
 
     usuarioId = user.uid
@@ -45,6 +44,9 @@ btnEntrar.addEventListener("click", ()=>{
       window.localStorage.setItem('usuarioEstabelecimento', usuarioEstabelecimento)
       console.log(usuarioMail + " " + usuarioMail + " " + usuarioNome + " " + usuarioTel + " " + usuarioEnder + " " + usuarioCargo + " " + usuarioEstabelecimento)
       
+
+      
+      window.location.href = "dashboard/dashboard.html"
     });
   })
   .catch((error) => {

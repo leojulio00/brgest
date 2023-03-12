@@ -1,9 +1,9 @@
-import { firebaseConfig} from "./firebaseConfig.js";
-import { TipoMoeda } from "./tipoMoeda.js";
-import { usuarioMail, usuarioNome, usuarioTel } from "./login.js";
-import { CodigoMesaClicado } from "./mesas.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
+import { TipoMoeda } from "../saldo/tipoMoeda.js";
+import { usuarioMail, usuarioNome, usuarioTel } from "../login/login.js";
+import { CodigoMesaClicado } from "../mesas/mesas.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { getDatabase, ref, remove, onValue, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+import { getDatabase, ref, remove, onValue, set, onChildAdded, update } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
 
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
@@ -580,8 +580,13 @@ btnFinalizarVenda.addEventListener("click", ()=>{
 
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda
   window.localStorage.setItem("valorTotalProdutos", valorTotal);
+
   window.localStorage.setItem("prodEscolhido", true);
 
+
+  set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosTotal'), {
+    valorTotal: valorTotal
+  });
 })
 
 
@@ -727,11 +732,18 @@ onChildAdded(commentsRef, (data) => {
   chaveVendasString = data.key
 });
 
-var valorTotalProdutos = 0
-valorTotalProdutos = parseInt(window.localStorage.getItem('valorTotalProdutos'));
+var valorTotalProdutos
+//valorTotalProdutos = parseInt(window.localStorage.getItem('valorTotalProdutos'));
 var saldoInicial, saldoIniciall = 0
 var saldoFinal = 0
 const dbRefSaldo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo')
+const dbRefValorTtlProd = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor')
+
+onValue(dbRefValorTtlProd, (snapshot)=>{
+  const data = snapshot.val()
+
+  valorTotalProdutos = data.valorTotal
+})
 
 onValue(dbRefSaldo, (snapshot)=>{
   const data = snapshot.val()
@@ -769,34 +781,99 @@ onValue(dbRefValorVendas, (snapshot)=>{
   onlyOnce: false
 })
 
+function reduzirQuantProduto(chaveProduto, quantidade){
+  const dbRefProdutos = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto)
+  let quantidadeActual = 0
+
+  try {
+    onValue(dbRefProdutos, (snapshot)=>{
+      const data = snapshot.val()
+      quantidadeActual = data.quantProdE
+
+      
+    })
+    
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto + '/quantProdE'), quantidadeActual - quantidade)
+
+    console.log("aceitou")
+    /*const postData = {
+      quantProdE: quantidadeActual - quantidade
+    };
+
+    const updates = {};
+    updates['estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto] = postData;
+    updates['estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto] = postData;
+
+    update(ref(db), updates)
+
+    /*set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto), {
+      quantProdE: quantidadeActual - quantidade
+    });*
+
+    db.ref('estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto).update({
+      quantProdE: quantidadeActual - quantidade
+    });
+  
+
+    /*set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto), {
+      quantProdE: quantidadeActual - quantidade
+    });*
+
+    db.ref('estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto).update({
+      quantProdE: quantidadeActual - quantidade
+    });*/
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+
 btnRegVenda.addEventListener('click', ()=>{
   let produtosSelecionados = ''
   let produtosSelecionadosMesas = ''
   let metodoSelecionando = ''
   let codMesaEscolhido = window.localStorage.getItem('codMesaEscolhido');
   
+
   const dbRefProdutos = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
   const dbRefProdutosMesas = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + codMesaEscolhido)
   const dbRefMetodo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 
   let lucroInicialPorVenda = 0
+  var quantidadeProduto = []
 
   onValue(dbRefProdutos, (snapshot)=>{
     const data = snapshot.val()
     produtosSelecionados = data
     
     var lucroPorProduto = []
+    
 
     snapshot.forEach(childSnapshot => {
       lucroPorProduto.push(childSnapshot.val().lucroProduto)
     })
 
+    snapshot.forEach(childSnapshot => {
+      quantidadeProduto.push(childSnapshot.val())
+
+      //reduzirQuantProduto(childSnapshot.val().nomeProduto, childSnapshot.val().quantidadeProd)
+    })
+
+    
     
     lucroPorProduto.forEach((val)=>{
       lucroInicialPorVenda = lucroInicialPorVenda + val
     })
     
+  }, {
+    onlyOnce: false
   })
+
+  quantidadeProduto.forEach((val)=>{
+    reduzirQuantProduto(val.nomeProduto, val.quantidadeProd)
+  })
+  console.log(quantidadeProduto)
 
 
   onValue(dbRefProdutosMesas, (snapshot)=>{
@@ -811,6 +888,7 @@ btnRegVenda.addEventListener('click', ()=>{
 
   var valorTotalProdutoss = parseInt(valorTotalProdutos)
   saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss
+  console.log(saldoIniciall + ' hd ' + valorTotalProdutoss)
 
   nrMovimentacoes = parseInt(nrMovimentacoess) + 1
 
@@ -821,6 +899,25 @@ btnRegVenda.addEventListener('click', ()=>{
  
     if(prodEscolhidoLocalStorage == 'true'){
       try {
+        onValue(dbRefProdutos, (snapshot)=>{
+          const data = snapshot.val()
+          produtosSelecionados = data
+          
+          var lucroPorProduto = []
+      
+          snapshot.forEach(childSnapshot => {
+            lucroPorProduto.push(childSnapshot.val().lucroProduto)
+          })
+      
+          
+          lucroPorProduto.forEach((val)=>{
+            lucroInicialPorVenda = lucroInicialPorVenda + val
+          })
+          
+        }, {
+          onlyOnce: false
+        })
+
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + chaveVendas), {
           codigoMesa: codMesaEscolhido,
           produtos: produtosSelecionados,
@@ -850,7 +947,7 @@ btnRegVenda.addEventListener('click', ()=>{
         window.localStorage.removeItem('codMesaEscolhido');
         window.localStorage.removeItem('valorTotalProdutos') 
       } catch (error) {
-        alert('Reinicie a pagina')
+        console.log(error)
       }
     }else{
       alert('Adicione um produto antes')

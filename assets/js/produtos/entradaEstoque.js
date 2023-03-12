@@ -1,5 +1,5 @@
-import { firebaseConfig} from "./firebaseConfig.js";
-import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder } from "./login.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
+import { usuarioMail, usuarioNome, usuarioTel, usuarioEnder } from "../login/login.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
@@ -64,12 +64,21 @@ nomeProdE.addEventListener("keyup", ()=>{
 btnAdiProdE.addEventListener("click", ()=>{
     function adicionarProd(nomeProdE, quantProdE, dataValidade, horaRegEst) {
         const db = getDatabase();
-        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + nomeProdE), {
-          nomeProdE: nomeProdE,
-          quantProdE: quantProdE,
-          dataValidade: dataValidade,
-          horaRegEst: horaRegEst
-        });
+        let quantidadeInicial = 0
+
+        onValue(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE), (snapshot)=>{
+          const data = snapshot.val()
+          quantidadeInicial = data.quantProdE
+        })
+
+        let quantidadeFinal = parseInt(quantProdE) + parseInt(quantidadeInicial)
+
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/nomeProd'),  nomeProdE)
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/quantProdE'), quantidadeFinal )
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/dataValidade'),  dataValidade)
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/horaRegEst'),  horaRegEst)
+
+
         alert("Produto adicionado ao estoque com sucesso")
       }
       if(nomeProdE.value != "" && quantProdE.value != "" && dataValidade.value != ""){
