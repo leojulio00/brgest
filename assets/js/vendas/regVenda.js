@@ -934,7 +934,7 @@ btnRegVenda.addEventListener('click', ()=>{
         });
         
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas'), {
-          lucroTotal: valorLucroIniciall + lucroInicialPorVenda
+          lucroTotal: valorLucroIniciall + (lucroInicialPorVenda/2)
         });
   
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/valorTotalVendas'), {

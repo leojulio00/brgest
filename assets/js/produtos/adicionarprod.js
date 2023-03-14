@@ -64,7 +64,8 @@ btnRegProd.addEventListener("click", ()=>{
         precCompra: precCompra,
         lucroProd: lucroProd,
         tipoMoeda: tipoMoeda,
-        horaReg: horaReg
+        horaReg: horaReg,
+        quantProdE: 0
       });
     }
     

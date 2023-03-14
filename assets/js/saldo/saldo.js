@@ -41,8 +41,6 @@ var nrTotalVendas = 0
 var nrMovimentacoesString
 var nrMovimentacoes = 0
 
-console.log(usuarioEstabelecimento)
-
 const commentsRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/entrada');
 onChildAdded(commentsRef, (data) => {
   chaveSaldoEntradaString = data.key
