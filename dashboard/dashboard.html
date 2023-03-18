@@ -17,6 +17,21 @@
     
 
     <style>
+      /* Estilos para o gif preloader e o fundo branco */
+      #preloader {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fff;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -151,12 +166,12 @@
               <div class="col-sm cardSaldo cardSaldoSaldo">
                 <h5 class="card-title">Saldo na conta</h5>
                 <div>
-                  <h1 class="saldoContaTxt">99</h1>
+                  <h1 class="saldoContaTxt">0</h1>
                   <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                 </div>
                 <h5 class="card-title">Total de movimentações</h5>
                 <div>
-                  <h1 class="totalMovimentacoesTxt">99</h1>
+                  <h1 class="totalMovimentacoesTxt">0</h1>
                   <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                 </div>
               </div>  
@@ -172,7 +187,7 @@
                       <div class="">
                         <label for="precoProduto" class="form-label">Digita o valor de entrada</label>
                         <div class="input-group">
-                          <input type="text" class="form-control valorEntradaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                          <input type="number" class="form-control valorEntradaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
                           <span class="input-group-text">Mts</span>
                         </div>
                       </div>
@@ -193,7 +208,7 @@
                       <div class="">
                         <label for="precoProduto" class="form-label">Digita o valor de saída</label>
                         <div class="input-group">
-                          <input type="text" class="form-control valorSaidaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                          <input type="number" class="form-control valorSaidaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
                           <span class="input-group-text">Mts</span>
                         </div>
                       </div>
@@ -225,24 +240,27 @@
 
             <div class="divResulVendas row-md-1"  style="margin: 20px 0px;">
               <div class="row">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-3 border-bottom">
+                  <h4>Secção vendas</h4>
+                </div>
                 <div class="col-sm cardSaldo">
                     <h5 class="card-title">Total vendas efectuadas</h5>
                     <div>
-                      <h1 class="totalVendasTxt">99</h1>
+                      <h1 class="totalVendasTxt">0</h1>
                       <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                     </div>
                 </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Valor total das vendas</h5>
                     <div>
-                      <h1 class="valorTotalVendasTxt">99</h1>
+                      <h1 class="valorTotalVendasTxt">0</h1>
                       <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                     </div>
                 </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Lucro total das vendas</h5>
                   <div>
-                    <h1 class="lucroTotalVendasTxt">99</h1>
+                    <h1 class="lucroTotalVendasTxt">0</h1>
                     <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                   </div>
               </div>
@@ -250,31 +268,34 @@
 
             <div class="divResulVendas row-md-1"  style="margin: 20px 0px;">
               <div class="row">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-3 border-bottom">
+                  <h4>Secção produtos</h4>
+                </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Total dos produtos cadastrados</h5>
                   <div>
-                    <h1 class="totalProdutosCadastradosTxt">99</h1>
+                    <h1 class="totalProdutosCadastradosTxt">0</h1>
                     <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                   </div>
                 </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Preço de compra total dos produtos</h5>
                     <div>
-                      <h1 class="precoTotalCompraProdutosTxt">99</h1>
+                      <h1 class="precoTotalCompraProdutosTxt">0</h1>
                       <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                     </div>
                 </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Preço de venda total dos produtos</h5>
                   <div>
-                    <h1 class="precoTotalVendaProdutosTxt">99</h1>
+                    <h1 class="precoTotalVendaProdutosTxt">0</h1>
                     <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                   </div>
                 </div>
                 <div class="col-sm cardSaldo">
                   <h5 class="card-title">Lucro total da venda dos produtos</h5>
                   <div>
-                    <h1 class="lucroTotalVendaProdutosTxt">99</h1>
+                    <h1 class="lucroTotalVendaProdutosTxt">0</h1>
                     <p class="card-text cardTxtSaldo"><small class="text-muted">Valor mais actualizado</small></p>
                   </div>
                 </div>
@@ -632,15 +653,15 @@
                         <input type="text" class="form-control usuarioColab" id="codColaboradores" required>
                       </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                       <label for="nomeColaboradores" class="form-label">Nome do colaboradores</label>
                       <input type="text" class="form-control nomeColab" id="nomeColaboradores" required>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                       <label for="enderecoColaboradores" class="form-label">Endereço</label>
                       <input type="address" class="form-control enderColab" id="enderecoColaboradores" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                       <label for="telColaboradores" class="form-label">Telefone</label>
                       <input type="tel" class="form-control telColab" id="telColaboradores" required>
                     </div>
@@ -656,6 +677,7 @@
                         <option value="Gerente Caixa">Gerente Caixa</option>
                         <option value="Gerente Vendas">Gerente Vendas</option>
                         <option value="Gerente Estoque">Gerente Estoque</option>
+                        <option value="Garçom">Garçom</option>
                       </select>
                     </div>
                     <div class="col-md-6">
@@ -763,6 +785,16 @@
                   <button class="btn btn-primary btnAlterarSenha" type="submit">Alterar senha</button>
                 </div>
               </div>
+            </div>
+
+          </section>
+
+          <section class="sectionPrazoPlano tdsSection" style="display: none; z-index: 100;">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="sectionUsuario">
+              <h1 class="h2">Plano terminou</h1>
+            </div>
+            <div>
+              <p>Contacte a equipe técnica para renovar o seu plano!</p>
             </div>
 
           </section>
@@ -928,6 +960,12 @@
             </div>
           </section>
 
+          
+
+          <div id="preloader">
+            <img src="../assets/img/preloader.gif" alt="Gif preloader animado">
+          </div>
+
           <button class="w-100 btn btn-lg btn-primary btnEntrar d-none" type="submit" style="background-color: #423DCC;">ENTRAR</button>
 
         </main>
@@ -943,6 +981,7 @@
     <!---------------  SCRIPT LAYOUT  ---------------->
     <script src="sidebars.js"></script>
     <script src="../assets/js/layout/sidebarActions.js"></script>
+    <script src="../assets/js/layout/preloader.js"></script>
 
 
 
@@ -961,7 +1000,8 @@
 
     <!---------------  SCRIPT LOGICO  ---------------->
     <script src="../assets/js/logico/horaReg.js"></script>
-
+    <script src="../assets/js/logico/fun.js"></script>
+    <script src="../assets/js/logico/prazoPlano.js" type="module"></script>
 
 
     <!---------------  SCRIPT MESAS  ---------------->
@@ -980,6 +1020,7 @@
 
     <!---------------  SCRIPT VENDAS  ---------------->
     <script src="../assets/js/vendas/regVenda.js" type="module"></script>
+    <script src="../assets/js/vendas/verVendas.js" type="module"></script>
       
       
       

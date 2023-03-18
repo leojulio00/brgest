@@ -873,7 +873,6 @@ btnRegVenda.addEventListener('click', ()=>{
   quantidadeProduto.forEach((val)=>{
     reduzirQuantProduto(val.nomeProduto, val.quantidadeProd)
   })
-  console.log(quantidadeProduto)
 
 
   onValue(dbRefProdutosMesas, (snapshot)=>{

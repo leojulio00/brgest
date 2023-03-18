@@ -414,7 +414,9 @@ btnFecharContaMesa.addEventListener("click", ()=>{
  
   DivSelecionarProdutosMesa.style.display = "block"
   finalizarAdicaoMesa.style.display = "none"
-  window.onload = PegarTdsProdutosSelecionados()  
+  window.onload = PegarTdsProdutosSelecionados()
+  
+  PegarTdsProdutosMesa()
 
   const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor')
 
@@ -444,6 +446,6 @@ btnProximoAddMesa.addEventListener("click", ()=>{
 })
 
 btnContinuarMesa.addEventListener("click", ()=>{
-  window.onload = PegarTdsProdutosSelecionados() 
+  //window.onload = PegarTdsProdutosSelecionados() 
   window.localStorage.removeItem("codMesaEscolhido"); 
 })

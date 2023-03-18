@@ -47,6 +47,22 @@ btnEntrar.addEventListener("click", ()=>{
 
       
       window.location.href = "dashboard/dashboard.html"
+
+      // Função para simular a execução de uma tarefa demorada
+      function AbrirPreloader() {
+        // Inicia o gif preloader
+        var preloader = document.getElementById("preloader");
+        preloader.style.display = "flex";
+        // Simula uma tarefa demorada de 3 segundos
+        setTimeout(function() {
+            // Termina a tarefa e oculta o gif preloader
+            preloader.style.display = "none";
+            //alert("Minha função terminou de executar!");
+        }, 3500);
+      }
+
+      AbrirPreloader()
+
     });
   })
   .catch((error) => {

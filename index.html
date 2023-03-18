@@ -14,6 +14,21 @@
     <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+      /* Estilos para o gif preloader e o fundo branco */
+        #preloader {
+          position: fixed;
+          display: none;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #fff;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -61,6 +76,10 @@
   <p class="mt-5 mb-3 text-muted">&copy; 2023 BR Gest. Todos os direitos reservados</p>
 </main>
 
+<div id="preloader">
+  <img src="../assets/img/preloader.gif" alt="Gif preloader animado">
+</div>
+
   <!--<script src="js/app.js" type="module"></script>
   <script src="js/autenticacao.js" type="module"></script>-->
 
@@ -69,6 +88,7 @@
   <script src="assets/js/login/autenticacao.js" type="module"></script>
   <script src="assets/js/login/login.js" type="module"></script>
   <script src="assets/js/login/userLogadoLogin.js" type="module"></script>
+  <script src="../assets/js/layout/preloader.js"></script>
     
 </body>
 </html>

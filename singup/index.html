@@ -15,6 +15,21 @@
     <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+        /* Estilos para o gif preloader e o fundo branco */
+        #preloader {
+          position: fixed;
+          display: none;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #fff;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
         .bd-placeholder-img {
           font-size: 1.125rem;
           text-anchor: middle;
@@ -116,12 +131,20 @@
         <button class="w-100 btn btn-lg btn-primary btnEnviar" style="background-color: #423DCC; display: none;">Enviar</button>
         <a href="http://painel.brgest.com/index.html"><button class="w-100 btn btn-lg btn-secondary" style="background: none; border: 2px solid #423DCC; margin: 10px 0px; color: #423DCC;">Já estou cadastrado</button></a>
 
+        
+
         <p class="mt-5 mb-3 text-muted">&copy; 2023 BR Gest. Todos os direitos reservados</p>
     </main>
+
+    <div id="preloader">
+      <img src="../assets/img/preloader.gif" alt="Gif preloader animado">
+    </div>
+
     <!-- Bootstrap 5 JS (opcional) ->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js" integrity="sha512-Tz8nLnGcXONF95fJFlb2wU6ZPv6BjO6T1T6QsW8MSvO9FpU6jnxUiaqwPw8m3ETgg3ezHHDDd/VcF+JW8zvC9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
 
     <!-- Links de Ficheiros JavaScript -->
     <script src="../assets/js/singup/singup.js" type="module"></script>
+    <script src="../assets/js/layout/preloader.js"></script>
 </body>
 </html>
