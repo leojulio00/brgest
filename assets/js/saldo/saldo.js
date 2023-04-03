@@ -27,6 +27,9 @@ var userLocalStorage = window.localStorage.getItem('user');
 var valorInicial, valorIniciall = 0
 var saldoFinalEntrada = 0
 var saldoFinalSaida = 0
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -40,6 +43,45 @@ var nrTotalVendasString
 var nrTotalVendas = 0
 var nrMovimentacoesString
 var nrMovimentacoes = 0
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 const commentsRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/entrada');
 onChildAdded(commentsRef, (data) => {
@@ -172,14 +214,16 @@ btnRegEntradaCaixa.addEventListener('click', ()=>{
                 timestamp: horaRegEst.value,
                 usuario: userLocalStorage
             });
-            alert('Entrada no caixa registado com sucesso')
+            //alert('Entrada no caixa registado com sucesso')
+            AlertaSucesso('Entrada no caixa registado com sucesso')
             valorEntradaCaixa.value = ''
             motivoEntradaCaixa.value = ''
         } catch (error) {
             console.log(error)
         }
     }else{
-        alert('Preencha todos os campos de saida na conta')
+        //alert('Preencha todos os campos de saida na conta')
+        AlertaInfo('Preencha todos os campos por favor')
     }
 })
 
@@ -201,13 +245,15 @@ btnRegSaidaCaixa.addEventListener('click', ()=>{
                 timestamp: horaRegEst.value,
                 usuario: userLocalStorage
             });
-            alert('Retirada no caixa registado com sucesso')
+            //alert('Retirada no caixa registado com sucesso')
+            AlertaSucesso('Retirada no caixa registado com sucesso')
             valorSaidaCaixa.value = ''
             motivoSaidaCaixa.value = ''
         } catch (error) {
             console.log(error)
         }
     }else{
-        alert('Preencha todos os campos')
+        //alert('Preencha todos os campos')
+        AlertaInfo('Preencha todos os campos por favor')
     }
 })

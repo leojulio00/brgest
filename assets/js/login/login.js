@@ -13,17 +13,72 @@ export var usuarioEnder = ""
 export var usuarioCargo = ""
 export var usuarioEstabelecimento = ""
 export var usuarioId = ""
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
 btnEntrar.addEventListener("click", ()=>{
+  // Função para simular a execução de uma tarefa demorada
+  function AbrirPreloader() {
+    // Inicia o gif preloader
+    var preloader = document.getElementById("preloader");
+    preloader.style.display = "flex";
+    // Simula uma tarefa demorada de 3 segundos
+    setTimeout(function() {
+        // Termina a tarefa e oculta o gif preloader
+        preloader.style.display = "none";
+        //alert("Minha função terminou de executar!");
+    }, 3500);
+  }
+
+  AbrirPreloader()
 
   signInWithEmailAndPassword(auth, inputUser.value, inputPass.value).then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    alert("login feito com sucesso")
     
     window.localStorage.setItem("user", user.uid)
 
@@ -45,30 +100,21 @@ btnEntrar.addEventListener("click", ()=>{
       console.log(usuarioMail + " " + usuarioMail + " " + usuarioNome + " " + usuarioTel + " " + usuarioEnder + " " + usuarioCargo + " " + usuarioEstabelecimento)
       
 
-      
+      //alert("login feito com sucesso")
+      AlertaSucesso('Login feito com sucesso')
+
       window.location.href = "dashboard/dashboard.html"
 
-      // Função para simular a execução de uma tarefa demorada
-      function AbrirPreloader() {
-        // Inicia o gif preloader
-        var preloader = document.getElementById("preloader");
-        preloader.style.display = "flex";
-        // Simula uma tarefa demorada de 3 segundos
-        setTimeout(function() {
-            // Termina a tarefa e oculta o gif preloader
-            preloader.style.display = "none";
-            //alert("Minha função terminou de executar!");
-        }, 3500);
-      }
+      
 
-      AbrirPreloader()
 
     });
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    alert("erro: " + errorMessage)
+    //alert("erro: " + errorMessage)
+    AlertaInfo('Erro: '+ errorMessage)
     console.log(errorCode)
   });
 

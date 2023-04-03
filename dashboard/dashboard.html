@@ -56,6 +56,12 @@
     <link href="../assets/css/chartDesempenho.css" rel="stylesheet">
     <link href="../assets/css/cardRegistarvendas.css" rel="stylesheet">
     <link href="../assets/css/btnSidebar.css" rel="stylesheet">
+
+    <script>
+      if(typeof navigator.serviceWorker !== 'undefined'){
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+      }
+    </script>
   </head>
 
   <body>  
@@ -687,14 +693,16 @@
                   </form>
                     <div class=" d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3" style="position: relative; width: 100%; margin: 20px 0px;">
                       <div class="col-4">
-                        <button class="btn btn-primary btnCadasColab" type="button">Cadastrar Colaborador</button>
+                        <button class="btn btn-primary btnCadasColab">Cadastrar Colaborador</button>
                       </div>
+                      <!----
                       <div class="col-4">
                         <button class="btn btn-primary" type="button" disabled>Alterar Colaborador</button>
                       </div>
                       <div class="col-4">
                         <button class="btn btn-primary" type="button" disabled>Apagar Colaborador</button>
                       </div>
+                      -->
                     </div>
                   </div>
                 </div>
@@ -960,6 +968,18 @@
             </div>
           </section>
 
+
+          <div class="alert alert-success alert-dismissible alerta alerta-sucesso fade show" role="alert">
+            <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+          </div>
+
+          <div class="alert alert-danger alert-dismissible alerta alerta-erro fade show" role="alert">
+            <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+          </div>
+
+          <div class="alert alert-info alert-dismissible alerta alerta-info fade show" role="alert">
+            <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+          </div>
           
 
           <div id="preloader">
@@ -995,6 +1015,7 @@
     <script src="../assets/js/colaboradores/dadosUser.js" type="module"></script>    
     <script src="../assets/js/colaboradores/verColab.js" type="module"></script>
     <script src="../assets/js/colaboradores/adicionaruser.js" type="module"></script>
+    <script src="../assets/js/colaboradores/alterarSenhaUser.js" type="module"></script>
 
 
 

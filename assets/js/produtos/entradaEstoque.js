@@ -11,10 +11,52 @@ var horaRegEst = document.querySelector(".horaRegEst")
 var btnAdiProdE = document.querySelector(".btnAdiProdE")
 var menuDropdownNomeProdAddEstoque = document.querySelector(".menuDropdownNomeProdAddEstoque")
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 
 nomeProdE.addEventListener("keyup", ()=>{
@@ -79,7 +121,8 @@ btnAdiProdE.addEventListener("click", ()=>{
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/horaRegEst'),  horaRegEst)
 
 
-        alert("Produto adicionado ao estoque com sucesso")
+        //alert("Produto adicionado ao estoque com sucesso")
+        AlertaSucesso("Produto adicionado ao estoque com sucesso")
       }
       if(nomeProdE.value != "" && quantProdE.value != "" && dataValidade.value != ""){
         adicionarProd(nomeProdE.value, quantProdE.value, dataValidade.value, horaRegEst.value)

@@ -28,12 +28,55 @@ var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos")
 var btnAdicionarMetodo = document.querySelector(".btnAdicionarMetodo")
 var btnFecharModalVendas = document.querySelector(".btnFecharModalVendas")
 var cardNenhumProd = document.querySelector(".cardNenhumProd")
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbFt = getFirestore(app);
+
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 divSelecProdutos.style.display = "block"
 divSelecMetodos.style.display = "none"
@@ -478,7 +521,8 @@ function addMesasNaDiv(codigoMesa, rotulo, tamanho){
         }, { merge: true });
         /*setDoc(doc(db, 'cities', 'new-city-id'), data)
         console.log('Document written with ID: ', docRef.id);*/
-        alert('Adicionado a mesa com sucesso')
+        //alert('Adicionado a mesa com sucesso')
+        AlertaSucesso('Adicionado a mesa com sucesso')
       } catch (e) {
         console.error('Error adding document: ', e);
       }
@@ -683,7 +727,8 @@ btnAdicionarMetodo.addEventListener('click', ()=>{
     finalizarPreVenda.style.display = 'none'
     divSelecMetodos.style.display = 'block'
   }else{
-    alert('Adicione um produto')
+    //alert('Adicione um produto')
+    AlertaInfo('Adicione um produto')
     divSelecProdutos.style.display = 'block'
     finalizarPreVenda.style.display = 'none'
     divSelecMetodos.style.display = 'none'
@@ -695,14 +740,16 @@ botaoCancelar.addEventListener('click', ()=>{
 
   if(prodEscolhidoLocalStorage == 'true'){
     regVendasNormal()
-    alert('Cancelado com sucesso') 
+    //alert('Cancelado com sucesso')
+    AlertaInfo('Cancelado com sucesso') 
     window.localStorage.setItem('prodEscolhido', false);
     window.localStorage.removeItem('valorTotalProdutos')
     divSelecProdutos.style.display = 'block'
     finalizarPreVenda.style.display = 'none'
     divSelecMetodos.style.display = 'none'
   }else{
-    alert('Nada seleciondo')
+    //alert('Nada seleciondo')
+    AlertaInfo('Cancelado com sucesso')
   }
 
 })
@@ -942,14 +989,16 @@ btnRegVenda.addEventListener('click', ()=>{
   
         //botaoCancelar.click()
         regVendasNormal()
-        alert('Venda cadatrada com sucesso')
+        //alert('Venda cadatrada com sucesso')
+        AlertaSucesso('Venda cadastrada com sucesso')
         window.localStorage.removeItem('codMesaEscolhido');
         window.localStorage.removeItem('valorTotalProdutos') 
       } catch (error) {
         console.log(error)
       }
     }else{
-      alert('Adicione um produto antes')
+      //alert('Adicione um produto antes')
+      AlertaInfo('Adicione um produto antes')
     }
 })
 

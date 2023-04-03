@@ -43,6 +43,14 @@
             font-size: 3.5rem;
           }
         }
+
+        .alerta{
+          position: fixed;
+          display: none;
+          right: 15px;
+          bottom: 15px;
+          z-index: 996;
+        }
     </style>
 
     <!-- Custom styles for this template -->
@@ -136,6 +144,19 @@
         <p class="mt-5 mb-3 text-muted">&copy; 2023 BR Gest. Todos os direitos reservados</p>
     </main>
 
+    
+    <div class="alert alert-success alert-dismissible alerta alerta-sucesso fade show" role="alert">
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
+    <div class="alert alert-danger alert-dismissible alerta alerta-erro fade show" role="alert">
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
+    <div class="alert alert-info alert-dismissible alerta alerta-info fade show" role="alert">
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
     <div id="preloader">
       <img src="../assets/img/preloader.gif" alt="Gif preloader animado">
     </div>
@@ -146,5 +167,6 @@
     <!-- Links de Ficheiros JavaScript -->
     <script src="../assets/js/singup/singup.js" type="module"></script>
     <script src="../assets/js/layout/preloader.js"></script>
+    <script src="../assets/js/colaboradores/alterarSenhaUser.js" type="module"></script>
 </body>
 </html>

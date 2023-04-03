@@ -15,6 +15,9 @@ var btnAlterProd = document.querySelector(".btnAlterProd")
 var btnApagProd = document.querySelector(".btnApagProd")
 var tipoMoeda = ""
 var valorLucroVenda = 0
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -41,6 +44,45 @@ const db = getDatabase(app);
       precVenda.placeholder = data.precVenda
   });
 })*/
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 precVendaR.addEventListener("keyup", ()=>{
   //console.log("kdks")
@@ -72,14 +114,16 @@ btnRegProd.addEventListener("click", ()=>{
     if(nomeProd != "" && precVendaR != "" && precCompra != ""){
       adicionarProd(nomeProd.value, precVendaR.value, precCompra.value, lucroVenda.value, tipoMoeda, horaReg.value)
     
-      alert("Produto cadastrado com sucesso")
+      //alert("Produto cadastrado com sucesso")
+      AlertaSucesso("Produto cadastrado com sucesso")
       nomeProd.value = ""
       precVendaR.value = ""
       precCompra.value = ""
       lucroVenda.value = ""
       dataValidade.value = ""
     }else{
-      alert("Preencha todos os campos necessarios por favor")
+      //alert("Preencha todos os campos necessarios por favor")
+      AlertaInfo("Preencha todos os campos necessarios por favor")
     }
   });
 })
@@ -96,7 +140,8 @@ btnAlterProd.addEventListener("click", ()=>{
   
   adicionarProd(codProd.value, nomeProd.value, precVenda.value, horaReg.value)
   
-      alert("Produto cadastrado com sucesso")
+      //alert("Produto cadastrado com sucesso")
+      AlertaSucesso("Produto cadastrado com sucesso")
       codProd.value = ""
       nomeProd.value = ""
       precVenda.value = ""

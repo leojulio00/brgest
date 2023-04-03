@@ -7,6 +7,9 @@ var prodPed = document.querySelector(".prodPed")
 var btnRegPedido = document.querySelector(".btnRegPedido")
 var btnAltPedido = document.querySelector(".btnAltPedido")
 //var btnCanPedido = document.querySelector(".btnCanPedido")
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);

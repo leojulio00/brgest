@@ -32,6 +32,49 @@ var btnProximoAddMesa = document.querySelector(".btnProximoAddMesa")
 var btnFecharContaMesa = document.querySelector(".btnFecharContaMesa")
 var spanTotalVenda = document.querySelector(".spanTotalVenda")
 var btnFecharModalMesas = document.querySelector(".btnFecharModalMesas")
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
+
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 btnCadastrarMesa.addEventListener("click", ()=>{
     set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas/' + codMesa.value), {
@@ -41,7 +84,8 @@ btnCadastrarMesa.addEventListener("click", ()=>{
         rotulo: rotuloMesa.value
     });
 
-    alert("Mesa cadastrada")
+    //alert("Mesa cadastrada")
+    AlertaSucesso('Mesa cadastrada com sucesso')
 })
 
 

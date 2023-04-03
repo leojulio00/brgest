@@ -8,6 +8,7 @@ const db = getDatabase(app);
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
 
 let tdsSection = document.querySelectorAll(".tdsSection")
+var alertaInfo = document.querySelector('.alerta-info')
 var sectionPrazoPlano = document.querySelector('.sectionPrazoPlano')
 var dataInscricao = ''
 var dataInscricaoo = ''
@@ -15,21 +16,14 @@ var nomePlano = ''
 
 const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/dadosEmpresa')
 
-onValue(dbRef, (snapshot)=>{
-    const estadoPlano = snapshot.val().estadoPlano
-
-    if(estadoPlano == false){
-        setInterval(()=>{
-            tdsSection.forEach((val)=>{
-                val.style.display = "none"
-            })
-    
-            sectionPrazoPlano.style.display = 'block'
-        }, 10)
-    }else{
-        sectionPrazoPlano.style.display = 'none'
-    }
-})
+function AlertaInfo(mensagem){
+    let info = document.createElement('p')
+    info.style.margin = '0px'
+    info.style.padding = '0px'
+    info.innerHTML = mensagem
+    alertaInfo.appendChild(info)
+    alertaInfo.style.display = 'block'
+}
 
 onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()
@@ -83,7 +77,7 @@ function InserirData(){
         // Formata a data de início do plano no formato "dd/mm/yyyy"
         var dataInicioFormatada = dataInicio.split("/").reverse().join("/");
         // Emite um alerta para lembrar o usuário do prazo do plano
-        alert("Atenção! Seu plano " + nomePlano + " (iniciado em " + dataInicioFormatada + ") está prestes a expirar em " + diferencaDias + " dias.");
+        AlertaInfo("Atenção! Seu plano " + nomePlano + " (iniciado em " + dataInicioFormatada + ") está prestes a expirar em " + diferencaDias + " dias.")
     }
 
     if(diferencaDias <= 0){
@@ -91,6 +85,22 @@ function InserirData(){
     }
 
     set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/dadosEmpresa/validadePlano'), dataFim.getDate() + '/' + dataFim.getMonth() + '/' + dataFim.getFullYear());
+
+    onValue(dbRef, (snapshot)=>{
+        const estadoPlano = snapshot.val().estadoPlano
+    
+        if(estadoPlano == false){
+            setInterval(()=>{
+                tdsSection.forEach((val)=>{
+                    val.style.display = "none"
+                })
+        
+                sectionPrazoPlano.style.display = 'block'
+            }, 10)
+        }else{
+            sectionPrazoPlano.style.display = 'none'
+        }
+    })
 }
 
 

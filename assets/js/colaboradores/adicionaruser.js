@@ -13,6 +13,9 @@ var catgColab = document.querySelector(".catgColab")
 var passColab = document.querySelector(".passColab")
 var btnCadasColab = document.querySelector(".btnCadasColab")
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
@@ -20,10 +23,46 @@ const auth = getAuth();
 //var db = firebase.database()
 
 
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setInterval(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
-btnCadasColab.addEventListener("click", ()=>{
+btnCadasColab.addEventListener("click", (e)=>{
   function writeUserData(nomeColab, enderColab, telColab, emailColab, catgColab, senha) {
     const db = getDatabase();
 
@@ -53,7 +92,7 @@ btnCadasColab.addEventListener("click", ()=>{
         usuarioEstabelecimento: usuarioEstabelecimento
       });
 
-      alert("usuario criado com sucesso")
+      AlertaSucesso("usuario criado com sucesso")
 
       usuarioColab.value = ""
       nomeColab.value = ""
@@ -66,6 +105,7 @@ btnCadasColab.addEventListener("click", ()=>{
       const errorCode = error.code;
       const errorMessage = error.message;
       // ..
+      AlertaErro('Ocorreu um erro no processo de cadastro')
     });
   }
 
@@ -89,9 +129,14 @@ btnCadasColab.addEventListener("click", ()=>{
     if(nomeColab.value != "" && enderColab.value != "" && telColab.value != "" && emailColab.value != "" && catgColab.value != "" && passColab.value){
       writeUserData(nomeColab.value, enderColab.value, telColab.value, emailColab.value, catgColab.value, passColab.value)
     }else{
-      alert("Preencha todos os campos em branco")
+      AlertaInfo('Preencha todos os campos em branco por favor!')
     }
   } catch (error) {
+    AlertaErro('Ocorreu um erro no processo de cadastro contacte a equipe tecnica')
+
     console.log(error)
   }
+
+  e.preventDefault()
+  return false;
 })

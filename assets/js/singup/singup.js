@@ -42,6 +42,22 @@ setInterval(()=>{
 
 
 btnEnviar.addEventListener('click', ()=>{
+  // Função para simular a execução de uma tarefa demorada
+  function AbrirPreloader() {
+    // Inicia o gif preloader
+    var preloader = document.getElementById("preloader");
+    preloader.style.display = "flex";
+    // Simula uma tarefa demorada de 3 segundos
+    setTimeout(function() {
+        // Termina a tarefa e oculta o gif preloader
+        preloader.style.display = "none";
+        window.location.href = "../index.html"
+        //alert("Minha função terminou de executar!");
+    }, 8500);
+  }
+
+  AbrirPreloader()
+
     let usuarioId = ''
     function CriarConta(nomeCompleto, endereco, cargo, telefone, email, senha, nomeEmpresa, localizacaoEmpresa, emailEmpresa, telefoneEmpresa, tipoEmpresa, planoEscolhido){
         createUserWithEmailAndPassword(auth, email, senha)
@@ -122,31 +138,22 @@ btnEnviar.addEventListener('click', ()=>{
                 nomeMetodo: 'm-Pesa'
             }
           });
+
+          //alert("Conta criada com sucesso")
+          
+
         });
 
-        // Função para simular a execução de uma tarefa demorada
-        function AbrirPreloader() {
-          // Inicia o gif preloader
-          var preloader = document.getElementById("preloader");
-          preloader.style.display = "flex";
-          // Simula uma tarefa demorada de 3 segundos
-          setTimeout(function() {
-              // Termina a tarefa e oculta o gif preloader
-              preloader.style.display = "none";
-              //alert("Minha função terminou de executar!");
-          }, 3500);
-        }
+        
   
-        alert("Conta criada com sucesso")
+        
 
-        AbrirPreloader()
     } 
 
     try {
         if(nomeCompleto.value != "" && endereco.value != "" && cargo.value != "" && telefone.value != "" && email.value != "" && senha.value != "" && nomeEmpresa.value != "" && localizacaoEmpresa.value != "" && emailEmpresa.value != "" && telefoneEmpresa.value != "" && tipoEmpresa.value != "" && planoEscolhido.value != "" ){
           CriarConta(nomeCompleto.value, endereco.value, cargo.value, telefone.value, email.value, senha.value, nomeEmpresa.value, localizacaoEmpresa.value, emailEmpresa.value, telefoneEmpresa.value, tipoEmpresa.value, planoEscolhido.value)
 
-          window.location.href = "../index.html"
         }else{
           alert("Preencha todos os campos em branco")
         }

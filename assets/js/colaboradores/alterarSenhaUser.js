@@ -1,4 +1,4 @@
-import { firebaseConfig} from "./firebaseConfig.js";
+import { firebaseConfig} from "../logico/firebaseConfig.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
@@ -10,11 +10,53 @@ var confirPass = document.querySelector(".confSenha")
 var btnAlterPass = document.querySelector(".btnAlterarSenha")
 var userLocalStorage = window.localStorage.getItem("user");
 var usuarioMail = ""
+var alertaInfo = document.querySelector('.alerta-info')
+var alertaErro = document.querySelector('.alerta-erro')
+var alertaSucesso = document.querySelector('.alerta-sucesso')
 
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getDatabase(app);
+
+function AlertaSucesso(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaSucesso.appendChild(info)
+  alertaSucesso.style.display = 'block'
+  setTimeout(()=>{
+    alertaSucesso.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaErro(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaErro.appendChild(info)
+  alertaErro.style.display = 'block'
+  setTimeout(()=>{
+    alertaErro.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
+
+function AlertaInfo(mensagem){
+  let info = document.createElement('p')
+  info.style.margin = '0px'
+  info.style.padding = '0px'
+  info.innerHTML = mensagem
+  alertaInfo.appendChild(info)
+  alertaInfo.style.display = 'block'
+  setTimeout(()=>{
+    alertaInfo.style.display = 'none'
+    info.innerHTML = ''
+  }, 2500)
+}
 
 btnAlterPass.addEventListener("click", ()=>{
   const starCountRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/users/' + userLocalStorage);
@@ -37,7 +79,7 @@ btnAlterPass.addEventListener("click", ()=>{
         if(novaPass.value == confirPass.value){
           updatePassword(user, novaPass.value).then(() => {
             // Update successful.
-            alert("Senha alterada com sucesso!")
+            AlertaSucesso('Senha alterada com sucesso')
 
             actualPass.value = ""
             novaPass.value = ""
@@ -45,7 +87,8 @@ btnAlterPass.addEventListener("click", ()=>{
           }).catch((error) => {
             // An error ocurred
             // ...
-            alert("err:  2" + error)
+            AlertaErro('A nova senha tem de ser igual')
+            //alert("err:  2" + error)
           });
         }else{
           //alert("")
@@ -54,11 +97,12 @@ btnAlterPass.addEventListener("click", ()=>{
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert("erro:   1" + errorMessage)
+        AlertaErro('Senha que inseriu não é correta')
+        //alert("erro:   1" + errorMessage)
       });
     });
   }else{
-    alert("Preencha todos os campos por favor")
+    AlertaInfo("Preencha todos os campos por favor")
   }
 
 })
