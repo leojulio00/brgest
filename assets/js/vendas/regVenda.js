@@ -91,17 +91,11 @@ function regVendasNormal(){
     valorTotal: 0
   });
 
-  set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'),{
-    valorTotal: 0
-  });
-
   const dbRefProdSelect = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
-  const dbRefProdSelectMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos')
   const dbRefMethSelect = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
-
+  
   remove(dbRefProdSelect)
   remove(dbRefMethSelect)
-  remove(dbRefProdSelectMesa)
   
   //window.location.href = './dashboard.html'
 
@@ -181,7 +175,8 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
         quantidadeProd: quantProduto - 1,
         precoProduto: precVenda,
         tipoMoeda: tipoMoeda, 
-        lucroProduto: lucroProduto * (quantProduto - 1)
+        lucroProduto: lucroProduto * (quantProduto - 1),
+        precoTotalProduto: precVenda * (quantProduto -1)
       });
 
       if(divCard.classList.contains('cardRegVendasSelecionado')){
@@ -874,6 +869,7 @@ function reduzirQuantProduto(chaveProduto, quantidade){
   }
 }
 
+var now = new Date
 
 
 btnRegVenda.addEventListener('click', ()=>{
@@ -888,6 +884,7 @@ btnRegVenda.addEventListener('click', ()=>{
   const dbRefMetodo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
 
   let lucroInicialPorVenda = 0
+  let precoTotalVenda = 0
   var quantidadeProduto = []
 
   onValue(dbRefProdutos, (snapshot)=>{
@@ -895,6 +892,7 @@ btnRegVenda.addEventListener('click', ()=>{
     produtosSelecionados = data
     
     var lucroPorProduto = []
+    var precoTotalPorProduto = []
     
 
     snapshot.forEach(childSnapshot => {
@@ -912,6 +910,15 @@ btnRegVenda.addEventListener('click', ()=>{
     lucroPorProduto.forEach((val)=>{
       lucroInicialPorVenda = lucroInicialPorVenda + val
     })
+    
+    snapshot.forEach(childSnapshot => {
+      precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto)
+    })
+
+    precoTotalPorProduto.forEach((val)=>{
+      precoTotalVenda = precoTotalVenda + val
+    })
+    
     
   }, {
     onlyOnce: false
@@ -950,6 +957,7 @@ btnRegVenda.addEventListener('click', ()=>{
           produtosSelecionados = data
           
           var lucroPorProduto = []
+          var precoTotalPorProduto = []
       
           snapshot.forEach(childSnapshot => {
             lucroPorProduto.push(childSnapshot.val().lucroProduto)
@@ -959,6 +967,15 @@ btnRegVenda.addEventListener('click', ()=>{
           lucroPorProduto.forEach((val)=>{
             lucroInicialPorVenda = lucroInicialPorVenda + val
           })
+
+          
+          snapshot.forEach(childSnapshot => {
+            precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto)
+          })
+
+          precoTotalPorProduto.forEach((val)=>{
+            precoTotalVenda = precoTotalVenda + val
+          })
           
         }, {
           onlyOnce: false
@@ -967,8 +984,11 @@ btnRegVenda.addEventListener('click', ()=>{
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + chaveVendas), {
           codigoMesa: codMesaEscolhido,
           produtos: produtosSelecionados,
+          codigoVenda: chaveVendas,
           metodoPagamento: metodoSelecionando,
-          produtosMesa: produtosSelecionadosMesas,
+          //produtosMesa: produtosSelecionadosMesas,
+          horaActual: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " - " + now.getDate() + "/" + now.getMonth() + "/" + now.getFullYear(),
+          precoTotalVenda: precoTotalVenda/2,
           lucroVenda:{
             lucroVenda: lucroInicialPorVenda
           } 
@@ -993,6 +1013,8 @@ btnRegVenda.addEventListener('click', ()=>{
         AlertaSucesso('Venda cadastrada com sucesso')
         window.localStorage.removeItem('codMesaEscolhido');
         window.localStorage.removeItem('valorTotalProdutos') 
+
+        //location.reload();
       } catch (error) {
         console.log(error)
       }

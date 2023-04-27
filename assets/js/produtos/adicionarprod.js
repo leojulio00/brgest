@@ -111,7 +111,7 @@ btnRegProd.addEventListener("click", ()=>{
       });
     }
     
-    if(nomeProd != "" && precVendaR != "" && precCompra != ""){
+    if(nomeProd.value != "" && precVendaR.value != "" && precCompra.value != ""){
       adicionarProd(nomeProd.value, precVendaR.value, precCompra.value, lucroVenda.value, tipoMoeda, horaReg.value)
     
       //alert("Produto cadastrado com sucesso")

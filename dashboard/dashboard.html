@@ -47,6 +47,8 @@
       }
     </style>
 
+    <link rel="manifest" href="../manifest.json">
+
     
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
@@ -59,7 +61,7 @@
 
     <script>
       if(typeof navigator.serviceWorker !== 'undefined'){
-        navigator.serviceWorker.register('pwabuilder-sw.js')
+        navigator.serviceWorker.register('../pwabuilder-sw.js')
       }
     </script>
   </head>
@@ -249,7 +251,7 @@
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-2 pb-1 mb-3 border-bottom">
                   <h4>Secção vendas</h4>
                 </div>
-                <div class="col-sm cardSaldo">
+                <div class="col-sm cardSaldo cardTotalVendas">
                     <h5 class="card-title">Total vendas efectuadas</h5>
                     <div>
                       <h1 class="totalVendasTxt">0</h1>
@@ -322,62 +324,6 @@
 
               <div>
                 <div class="bd-example">
-                  <!--<form class="row g-3">
-                    <div class="col-md-2">
-                      <label for="codProdutoRegVendas" class="form-label">Codigo do Produto</label>
-                      <div class="input-group has-validation">
-                        <span class="input-group-text">@</span>
-                        <input type="text" class="form-control codProdV" id="codProdutoRegVendas" required>
-                      </div>
-                    </div>
-                    <div class="col-md-5">
-                      <label for="nomeProdutoVendas" class="form-label">Nome do produto</label>
-                      <input type="text" class="form-control nomeProdV" id="nomeProdutoVendas" required>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="precoProduto" class="form-label">Preço</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control precVenda" id="precoProduto" aria-describedby="inputGroupPrepend3" disabled>
-                        <span class="input-group-text">Mts</span>
-                      </div>
-                    </div>
-                    <div class="col-md-2">
-                      <label for="quantProd" class="form-label">Quantidade</label>
-                      <input type="text" class="form-control quantProdV" id="quantProd">
-                    </div>
-                    <div class="col-md-3">
-                      <label for="valorTotalProduto" class="form-label">Valor total</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control valorTot" id="valorTotalProduto" aria-describedby="inputGroupPrepend3" disabled>
-                        <span class="input-group-text">Mts</span>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="valorEntregueProduto" class="form-label">Valor entregue</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control valorEntr" id="valorEntregueProduto" required>
-                        <span class="input-group-text">Mts</span>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="trocoCliente" class="form-label">Troco</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control valorTr" id="trocoCliente" aria-describedby="inputGroupPrepend3" disabled>
-                        <span class="input-group-text">Mts</span>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <label for="horaRegVendas" class="form-label">Hora</label>
-                        <input type="text" class="form-control horaRegVen" id="horaRegVendas" aria-describedby="inputGroupPrepend3" disabled>
-                    </div>
-                    <div class="col-12">
-                      <button class="btn btn-primary btnRegVenda" type="submit">Registar Venda</button>
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalRegistarVendas">
-                        Vertically centered scrollable modal
-                      </button>
-                    </div>
-                  </form>-->
-                  
                   <h5>Confirme o pedido</h5>
                   
                   <div style="margin: 20px 0px;">
@@ -934,7 +880,7 @@
                               <h4 class="">Ou</h4>
                             </div>
                             <div class="row">
-                              <button type="button" class="btn btn-primary btn-sm p-2 btnFecharContaMesa">Fechar conta da mesa</button>
+                              <button type="button" class="btn btn-primary btn-sm p-2 btnFecharContaMesa" data-bs-toggle="modal" data-bs-target="#modalRegistarVendasMesas">Fechar conta da mesa</button>
                             </div>
                           </div>
                         </div>
@@ -961,6 +907,210 @@
                           <button type="button" class="btn btn-primary btnProximoAddMesa">Próximo</button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade modalRegistarVendasMesas" id="modalRegistarVendasMesas" tabindex="-1" aria-labelledby="tituloModalRegVendasMesas" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="tituloModalRegVendas">Registar Vendas na mesa</h5>
+                      <button type="button" class="btn-close btnFecharModalVendas" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                      <div class="bd-example">
+                        <h5>Confirme o pedido</h5>
+                        
+                        <div style="margin: 20px 0px;">
+                          <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between;">
+                            <h5 style="margin-right: 30px;">Produtos escolhidos</h5>
+                          </div>
+                          
+                          <div class="posicaoFlex border-bottom">
+                            <div>
+                              <strong>Nome</strong>
+                            </div>
+                            <div>
+                              <strong>Preço</strong>
+                            </div>
+                            <div>
+                              <strong>Qnt.</strong>
+                            </div>
+                          </div>
+                          <div class="produtosEscolhidoFinalMesa row  row-cols-1 row-cols-md-1 g-4">
+                            <div class="col">
+                              <div class="card cardRegVendasSelecionado cardNenhumProd">
+                                <div class="card-body">
+                                  Nenhum Produto Escolhido
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="divTotal border-top" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin: 20px 0px;">
+                          <strong>Total</strong>
+                          <span class="spanTotalVendaMesa"></span>
+                        </div>
+                        <div style="margin: 20px 0px;">
+                          <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between;">
+                            <h5 style="margin-right: 30px;">Método de pagamento escolhido</h5>
+                            <button type="button" class="btn btn-primary btnAdicionarMetodoMesa" style="margin: 10px 0px;">
+                              Adicionar Método 
+                            </button>
+                          </div>
+                          <div class="metodoPagamentoEscolhidoMesa row  row-cols-1 row-cols-md-1 g-4">
+                            <div class="col">
+                              <div class="card cardRegVendasSelecionadoMesa cardNenhumProd">
+                                <div class="card-body">
+                                  <p style="margin: 0px;">Nenhum método Escolhido</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                      <!--<div class="selecionarProdutos">
+                        <p>Selecione o produto e a sua quantidade desejada</p>
+                        <div class="produtosAdicio row  row-cols-1 row-cols-md-2 g-4">
+
+                        </div>
+                      </div>
+
+                      <div class="selecionarMPagamento" style="display: none;">
+                        <p>Selecione o método de pagamento desejado</p>
+                        <div class="metodosPagamentos row  row-cols-1 row-cols-md-2 g-4">
+
+                        </div>
+                      </div>-->
+
+                      <!--<div class="finalizarPreVenda" style="display: none;">
+                        <div class="metodosPagamentos row  row-cols-1 row-cols-md-1 g-4" style="margin-top: 20px">
+                          <div class="col mx-auto">
+                            <div class="row">
+                              <button type="button" class="btn btn-secondary btn-sm p-2 btnAdicionarAMesa">Adicionar a uma mesa</button>
+                            </div>
+                            <div class="row align-middle" style="margin: 10px 0px; text-align: center;">
+                              <h4 class="">Ou</h4>
+                            </div>
+                            <div class="row">
+                              <button type="button" class="btn btn-primary btn-sm p-2 btnFinalizarVenda" data-bs-toggle="modal" data-bs-target="#modalRegistarVendas">Finalizar venda</button>
+                            </div>
+                          </div>
+                          <div class="col mesasDisponiveis" style="display: none;">
+                            <p>Mesas disponíveis</p>
+                            <div class="row row-cols-1 row-cols-md-1 g-4 divMesasDisponiveis"></div>
+                          </div>
+                        </div>
+                      </div>-->
+                    </div>
+
+                    <div class="verProdutosMesa" style="display: none;">
+                      <p>Produtos da mesa selecionada</p>
+                      <div class="listarTdsProdutosMesa row  row-cols-1 row-cols-md-1 g-4">
+
+                      </div>
+                      <div class="divTotalVerProdutosMesa border-top" style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; margin: 20px 0px;">
+                        <strong>Total</strong>
+                        <span class="spanTotalVerProdutosMesa"></span>
+                      </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <div class="btnModalRegvendas" style="display: flex; flex-direction: row; flex-wrap: none;">
+                        <div class="divBtnCancelar">
+                          <button type="button" class="btn btn-secondary btnCancelarMesa" data-bs-dismiss="modal" >Cancelar</button>
+                        </div>
+                        <div class="divBtnProximo" style="margin: 0px 0px 0px 20px;">
+                          <button class="btn btn-primary btnRegVendaMesa align-right" type="submit">Registar Venda</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade modalSelecMetodosMesa" id="modalSelecMetodosMesa" tabindex="-1" aria-labelledby="modalSelecMetodosMesa" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title h4" id="modalSelecMetodosMesaLabel">Selecione o método de pagamento desejado</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="selecionarMPagamentoMesa">
+                        <div class="metodosPagamentosMesa row  row-cols-1 row-cols-md-2 g-4">
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary btnFecharModalVendasMesa" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="verVendas">
+              <div class="modal fade modalVerVendas" id="modalVerVendas" tabindex="-1" aria-labelledby="modalVerVendasLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title h4" id="modalVerVendasLabel">Vendas efectuadas</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="divVendasEfectuadas">
+                        
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal fade modalVerVendasDetalhado" id="modalVerVendasDetalhado" tabindex="-1" aria-labelledby="modalVerVendasDetalhadoLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title h4" id="modalVerVendasDetalhadoLabel">Vendas efectuadas</h5>
+                      <button type="button" class="btn-close btnCloseVerVendas" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <h5 class="modal-title h5" id="modalVerVendasDetalhadoLabel2">Método de pagamento escolhido</h5>
+
+                      <div class="divVendasEfectuadasDetalhadoMetodo">
+                        <div class="col" style="margin: 5px 0px">
+                          <div class="card cardRegVendasSelecionado">
+                            <div class="card-body" style="display: flex; flex-direction: row; justify-content: space-between; margin: 5px 0px;">
+                              <p class="card-title tituloCardMetodo" style="margin: 0px 5px"></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <h5 class="modal-title h5" id="modalVerVendasDetalhadoLabel3" style="margin: 5px 0px;">Produtos vendidos</h5>
+                      <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 10px;">
+                        <p>Nome prod.</p>
+                        <p>Quant.</p>
+                        <p>Preço Uni.</p>
+                        <p>Preço Total</p>
+                      </div>
+
+                      <div class="divVendasEfectuadasDetalhado">
+                        
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary btnCloseVerVendas" data-bs-dismiss="modal">Close</button>
                     </div>
                   </div>
                 </div>

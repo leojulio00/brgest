@@ -3,34 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+
   
   <link rel="shortcut icon" href="assets/img/BR Gest favicon 01.png" type="image/x-icon">
 
   <title>Página Offline</title>
 
-  <style>
-    body {
+  <!-- Bootstrap core CSS -->
+    <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      /* Estilos para o gif preloader e o fundo branco */
+        #preloader {
+          position: fixed;
+          display: none;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #fff;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .alerta{
+        position: fixed;
+        display: none;
+        right: 15px;
+        bottom: 15px;
+        z-index: 996;
+      }
+      
+      body {
         background-color: #f1f1f1;
-    }
+      }
 
-    .card {
-        margin-top: 100px;
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    }
+      .card {
+          margin-top: 100px;
+          border: none;
+          border-radius: 10px;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
 
-    .card-header {
-        border-radius: 10px;
-    }
+      .card-header {
+          border-radius: 10px;
+      }
 
-    .card-body {
-        font-size: 1.2rem;
-    }
+      .card-body {
+          font-size: 1.2rem;
+      }
 
-  </style>
+    </style>
 </head>
 <body>
   <div class="container">
@@ -47,8 +86,8 @@
       </div>
     </div>
   </div>
-  <!-- Bootstrap JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JavaScript
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>-->
 
   <script>
     if (!navigator.onLine) {

@@ -14,23 +14,27 @@ var formaMesaSelect = document.querySelector(".formaMesaSelect")
 var rotuloMesa = document.querySelector(".rotuloMesa")
 var divSelecProdutosMesa = document.querySelector(".divSelecProdutosMesa")
 var selecProdutosMesa = document.querySelector(".selecProdutosMesa")
-var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinal")
+var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinalMesa")
 var finalizarPreVenda = document.querySelector(".finalizarPreVenda")
 var divVerMesasDisponiveis =document.querySelector(".divVerMesasDisponiveis")
 var finalizarAdicaoMesa =document.querySelector(".finalizarAdicaoMesa")
 var DivSelecionarProdutosMesa = document.querySelector(".DivSelecionarProdutosMesa")
 var listarTdsProdutosMesa =document.querySelector(".listarTdsProdutosMesa")
 var spanTotalVerProdutosMesa = document.querySelector(".spanTotalVerProdutosMesa")
+var metodoPagamentoEscolhidoMesa = document.querySelector('.metodoPagamentoEscolhidoMesa')
+var metodosPagamentosMesa = document.querySelector('.metodosPagamentosMesa')
 var detalhesMesa = document.querySelector(".detalhesMesa")
 var btnCadastrarMesa = document.querySelector(".btnCadastrarMesa")
-var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos")
+var btnFecharModalVendasMesa = document.querySelector(".btnFecharModalVendasMesa")
 var btnCancelar2 = document.querySelector(".btnCancelar2")
-var btnProximoRegVenda = document.querySelector(".btnProximoRegVenda")
+var btnCancelarMesa = document.querySelector('.btnCancelarMesa')
+var btnAdicionarMetodoMesa = document.querySelector(".btnAdicionarMetodoMesa")
 var btnAdicionarProdutosMesa = document.querySelector(".btnAdicionarProdutosMesa")
 var btnContinuarMesa = document.querySelector(".btnContinuarMesa")
 var btnProximoAddMesa = document.querySelector(".btnProximoAddMesa")
 var btnFecharContaMesa = document.querySelector(".btnFecharContaMesa")
-var spanTotalVenda = document.querySelector(".spanTotalVenda")
+var btnRegVendaMesa = document.querySelector('.btnRegVendaMesa')
+var spanTotalVenda = document.querySelector(".spanTotalVendaMesa")
 var btnFecharModalMesas = document.querySelector(".btnFecharModalMesas")
 var alertaInfo = document.querySelector('.alerta-info')
 var alertaErro = document.querySelector('.alerta-erro')
@@ -76,6 +80,69 @@ function AlertaInfo(mensagem){
   }, 2500)
 }
 
+function regVendasNormal(){
+  set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor'),{
+    valorTotal: 0
+  });
+
+  const dbRefProdSelectMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos')
+  const dbRefMethSelect = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
+  
+  remove(dbRefMethSelect)
+  remove(dbRefProdSelectMesa)
+  
+  //window.location.href = './dashboard.html'
+
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let nomeMetodoTxt = document.createElement('p')
+  let divCol2 = document.createElement('div')
+  let divCard2 = document.createElement('div')
+  let divCardBody2 = document.createElement('div')
+  let nomeProdTxt = document.createElement('p')
+
+  nomeMetodoTxt.innerHTML = 'Nenhum método Escolhido'
+  nomeProdTxt.innerHTML = 'Nenhum produto Escolhido'
+  
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  nomeMetodoTxt.style.margin = '0px'
+  divCol2.classList.add('col')
+  divCard2.classList.add('card')
+  divCard2.classList.add('cardRegVendasSelecionado')
+  divCardBody2.classList.add('card-body')
+  nomeProdTxt.style.margin = '0px'
+
+  divCol.appendChild(divCard)  
+  divCard.appendChild(divCardBody) 
+  divCardBody.appendChild(nomeMetodoTxt) 
+  
+  divCol2.appendChild(divCard2)  
+  divCard2.appendChild(divCardBody2) 
+  divCardBody2.appendChild(nomeProdTxt) 
+  
+  if(metodoPagamentoEscolhidoMesa.childNodes.length == 0){
+    metodoPagamentoEscolhidoMesa.appendChild(divCol)
+  }
+
+  if(produtosEscolhidoFinal.childNodes.length == 0){
+    produtosEscolhidoFinal.appendChild(divCol2)
+  }
+
+  spanTotalVenda.innerHTML = '0 ' + TipoMoeda
+  //window.onload = GetAllDataRealtime()
+  window.onload = GetAllDataRealtimeMetodosP()
+  //window.location.reload()
+
+  //divSelecMetodos.style.display = 'none'
+  //finalizarPreVenda.style.display = 'none'
+
+  btnFecharModalVendasMesa.click()
+}
+
 btnCadastrarMesa.addEventListener("click", ()=>{
     set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas/' + codMesa.value), {
         codigoMesa: codMesa.value,
@@ -105,6 +172,7 @@ onValue(dbRefMetodoMesa, (snapshot)=>{
 })
 
 export var CodigoMesaClicado = ""
+
 
 function addMesasNaDiv(codigoMesa, rotulo, tamanho){
   let divCol = document.createElement("div")
@@ -196,6 +264,137 @@ function PegarTdsMesas(){
 }
 
 window.onload = PegarTdsMesas()
+
+function addMetodNoCard(nomeMetodo){
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let metodoPagamento = document.createElement('h5')
+
+  metodoPagamento.innerHTML = nomeMetodo
+
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardRegVendasSelecionado')
+  divCardBody.classList.add('card-body')
+  metodoPagamento.classList.add('card-title')
+  metodoPagamento.style.fontSize = '16px'
+
+  divCol.appendChild(divCard)  
+  divCard.appendChild(divCardBody) 
+  divCardBody.appendChild(metodoPagamento)  
+
+  metodoPagamentoEscolhidoMesa.appendChild(divCol)
+}
+
+function addTdsMetodNoCard(metodo){
+  metodoPagamentoEscolhidoMesa.innerHTML = ''
+    metodo.forEach(element => {
+        addMetodNoCard(element.nomeMetodo)
+    });
+}
+
+function PegarMetodosSelecionado(){
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
+
+    onValue(dbRef, (snapshot) =>{
+        var metodoSelec = []
+
+        snapshot.forEach(childSnapshot => {
+          metodoSelec.push(childSnapshot.val())
+        })
+
+        addTdsMetodNoCard(metodoSelec)
+    })
+}
+
+function addItemToTableMetodosP(nomeMetodo){
+  let divCol = document.createElement('div')
+  let divCard = document.createElement('div')
+  let divCardBody = document.createElement('div')
+  let nomeMetodoTxt = document.createElement('h1')
+
+  nomeMetodoTxt.innerHTML = nomeMetodo
+
+  divCard.addEventListener('click', ()=>{
+    const db = getDatabase();
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado/' + nomeMetodo), {
+      nomeMetodo: nomeMetodo
+    });
+
+    if(divCard.classList.contains('cardRegVendasSelecionado')){
+      //
+    }else{
+      divCard.classList.add('cardRegVendasSelecionado')
+    }
+
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
+    var dados
+
+    onValue(dbRef, (snapshot)=>{
+      const data = snapshot.val()    
+      dados = data
+    })
+    let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
+
+    window.localStorage.setItem('metodoEscolhido', true)
+    //btnFinalizarVenda.click()
+    btnFecharModalVendasMesa.click()
+    window.onload = PegarMetodosSelecionado()
+
+    /*function passarPTelaFinalizarPreVenda(){
+      console.log(dados)
+
+      if(dados == null){
+        alert('Selecione um método')
+      }else{
+        divSelecProdutos.style.display = 'block'
+        divSelecMetodos.style.display = 'none'
+        finalizarPreVenda.style.display = 'none'
+      }
+    }
+    alert('Fechou')
+    //btnFecharModalVendas.click()
+    passarPTelaFinalizarPreVenda()*/
+  })
+
+  divCol.classList.add('col')
+  divCard.classList.add('card')
+  divCard.classList.add('cardMetodospagamento')
+  divCardBody.classList.add('card-body')
+  nomeMetodoTxt.classList.add('card-title')
+  nomeMetodoTxt.style.fontSize = '22px'
+
+  divCol.appendChild(divCard)  
+  divCard.appendChild(divCardBody) 
+  divCardBody.appendChild(nomeMetodoTxt)  
+ 
+
+  metodosPagamentosMesa.appendChild(divCol)
+}
+
+function addAllItemsToTableMetodosP(metodos){
+  metodosPagamentosMesa.innerHTML = ''
+metodos.forEach(element => {
+  addItemToTableMetodosP(element.nomeMetodo)
+  });
+}
+
+function GetAllDataRealtimeMetodosP(){
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/todosMetodos')
+
+  onValue(dbRef, (snapshot) =>{
+      var todosMetodos = []
+
+      snapshot.forEach(childSnapshot => {
+        todosMetodos.push(childSnapshot.val())
+      })
+
+      addAllItemsToTableMetodosP(todosMetodos)
+  })
+}
+
+window.onload = GetAllDataRealtimeMetodosP()
 
 function addDetalhesMesa(){
   let divCol1 = document.createElement("div")
@@ -289,7 +488,7 @@ function addDetalhesMesa(){
   detalhesMesa.appendChild(divCol2)
 }
 
-function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
+function addProdutosMesa(nomeProd, precVenda, tipoMoeda, lucroProduto){
   let divCol = document.createElement("div")
   let divCard = document.createElement("div")
   let divCardBody = document.createElement("div")
@@ -317,7 +516,9 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
       nomeProduto: nomeProd,
       quantidadeProd: quantProduto - 1,
       precoProduto: precVenda,
-      tipoMoeda: tipoMoeda
+      tipoMoeda: tipoMoeda, 
+      lucroProduto: lucroProduto * (quantProduto - 1),
+      precoTotalProduto: precVenda * (quantProduto -1)
     });
 
     if(divCard.classList.contains("cardRegVendasSelecionado")){
@@ -329,8 +530,9 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
     let valorActual = 0 
     let valorSomado = 0
     let valorProduto = precVenda
-    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor')
+    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor')
 
+    //Pegando o Valor actual
     onValue(dbRef, (snapshot) => {
       var data = snapshot.val()
       valorActual = data.valorTotal
@@ -339,7 +541,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
 
     valorSomado = parseInt(valorProduto) + parseInt(valorActual)
       
-    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor'), {
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor'), {
       valorTotal: valorSomado
     });
   })
@@ -367,7 +569,7 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda){
 function addTdsProdutosMesa(produtos){
   selecProdutosMesa.innerHTML = ""
   produtos.forEach(element => {
-      addProdutosMesa(element.nomeProd, element.precVenda, element.tipoMoeda)
+      addProdutosMesa(element.nomeProd, element.precVenda, element.tipoMoeda, element.lucroProd)
   });
 }
 
@@ -385,15 +587,20 @@ function PegarTdsProdutosMesa(){
   })
 }
 
-window.onload = PegarTdsProdutosMesa()
+//window.onload = PegarTdsProdutosMesa()
 
 btnAdicionarProdutosMesa.addEventListener("click", ()=>{
+  PegarTdsProdutosMesa()
   if(divSelecProdutosMesa.style.display = "none"){
     divSelecProdutosMesa.style.display = "block"
   }else{
     divSelecProdutosMesa.style.display = "none"
   }
 })
+
+
+btnAdicionarMetodoMesa.setAttribute('data-bs-toggle', 'modal')
+btnAdicionarMetodoMesa.setAttribute('data-bs-target', '#modalSelecMetodosMesa')
   
 function addProdutosNoCard(nomeProduto, precoProduto, tipoMoeda, quantidadeProd){
   let divCol = document.createElement("div")
@@ -449,6 +656,8 @@ function PegarTdsProdutosSelecionados(){
       })
       console.log(todosProdutos)
       addTdsProdutosNaDiv(todosProdutos)
+  }, {
+    onlyOnce: false
   })
 }
 
@@ -462,7 +671,7 @@ btnFecharContaMesa.addEventListener("click", ()=>{
   
   PegarTdsProdutosMesa()
 
-  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/' + CodigoMesaClicado + '/selecProdutosValor')
+  const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor')
 
   onValue(dbRef, (snapshot)=>{
     const data = snapshot.val()
@@ -493,3 +702,276 @@ btnContinuarMesa.addEventListener("click", ()=>{
   //window.onload = PegarTdsProdutosSelecionados() 
   window.localStorage.removeItem("codMesaEscolhido"); 
 })
+
+btnCancelarMesa.addEventListener('click', ()=>{
+  regVendasNormal()
+  /*if(confirME == true){
+    regVendasNormal()
+    
+    window.localStorage.setItem('prodEscolhido', false);
+    window.localStorage.removeItem('valorTotalProdutos')
+    divSelecProdutos.style.display = 'block'
+    finalizarPreVenda.style.display = 'none'
+    divSelecMetodos.style.display = 'none'
+  }else{
+    //alert('Nada seleciondo')
+  }*/
+})
+
+var chaveVendasString
+var chaveVendas = 0
+var nrMovimentacoesString
+var nrMovimentacoes = 0
+var nrMovimentacoess = 0
+
+const commentsRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas');
+onChildAdded(commentsRef, (data) => {
+  chaveVendasString = data.key
+});
+
+var valorTotalProdutos
+//valorTotalProdutos = parseInt(window.localStorage.getItem('valorTotalProdutos'));
+var saldoInicial, saldoIniciall = 0
+var saldoFinal = 0
+const dbRefSaldo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo')
+const dbRefValorTtlProd = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor')
+
+onValue(dbRefValorTtlProd, (snapshot)=>{
+  const data = snapshot.val()
+
+  valorTotalProdutos = data.valorTotal
+})
+
+onValue(dbRefSaldo, (snapshot)=>{
+  const data = snapshot.val()
+  saldoInicial = data.saldo
+  nrMovimentacoesString = data.totalMovimentacoes
+  nrMovimentacoess = parseInt(nrMovimentacoesString)
+  saldoIniciall = parseInt(saldoInicial)
+}, {
+  onlyOnce: false
+})
+
+var valorLucroInicial, valorLucroIniciall = 0
+var valorLucroFinal = 0
+const dbRefLucro = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas')
+console.log(dbRefLucro)
+onValue(dbRefLucro, (snapshot)=>{
+  const data = snapshot.val()
+  valorLucroInicial = data.lucroTotal
+  
+  valorLucroIniciall = parseInt(valorLucroInicial)
+  console.log(valorLucroIniciall)
+}, {
+  onlyOnce: false
+})
+
+var valorTotalVendasInicial, valorTotalVendasIniciall = 0
+var valorTotalVendasFinal = 0
+const dbRefValorVendas = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/valorTotalVendas')
+
+onValue(dbRefValorVendas, (snapshot)=>{
+  const data = snapshot.val()
+  valorTotalVendasInicial = data.valorTotal
+  
+  valorTotalVendasIniciall = parseInt(valorTotalVendasInicial)
+}, {
+  onlyOnce: false
+})
+
+function reduzirQuantProduto(chaveProduto, quantidade){
+  const dbRefProdutos = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto)
+  let quantidadeActual = 0
+
+  try {
+    onValue(dbRefProdutos, (snapshot)=>{
+      const data = snapshot.val()
+      quantidadeActual = data.quantProdE
+
+      
+    })
+    
+    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto + '/quantProdE'), quantidadeActual - quantidade)
+
+    console.log("aceitou")
+    /*const postData = {
+      quantProdE: quantidadeActual - quantidade
+    };
+
+    const updates = {};
+    updates['estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto] = postData;
+    updates['estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto] = postData;
+
+    update(ref(db), updates)
+
+    /*set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto), {
+      quantProdE: quantidadeActual - quantidade
+    });*
+
+    db.ref('estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + chaveProduto).update({
+      quantProdE: quantidadeActual - quantidade
+    });
+  
+
+    /*set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto), {
+      quantProdE: quantidadeActual - quantidade
+    });*
+
+    db.ref('estabelecimentos/' + usuarioEstabelecimento + '/produtos/estoque/' + chaveProduto).update({
+      quantProdE: quantidadeActual - quantidade
+    });*/
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+var now = new Date
+
+btnRegVendaMesa.addEventListener('click', ()=>{
+  let produtosSelecionados = ''
+  let produtosSelecionadosMesas = ''
+  let metodoSelecionando = ''
+  let codMesaEscolhido = window.localStorage.getItem('codMesaEscolhido');
+  
+
+  const dbRefProdutos = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos')
+  const dbRefProdutosMesas = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + codMesaEscolhido + '')
+  const dbRefMetodo = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/metodosPagamento/metodoSelecionado')
+
+  let lucroInicialPorVenda = 0
+  let precoTotalVenda = 0
+  var quantidadeProduto = []
+
+  onValue(dbRefProdutosMesas, (snapshot)=>{
+    const data = snapshot.val()
+    produtosSelecionados = data
+    
+    var lucroPorProduto = []
+    var precoTotalPorProduto = []
+    
+
+    snapshot.forEach(childSnapshot => {
+      lucroPorProduto.push(childSnapshot.val().lucroProduto)
+    })
+
+    snapshot.forEach(childSnapshot => {
+      precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto)
+    })
+
+    snapshot.forEach(childSnapshot => {
+      quantidadeProduto.push(childSnapshot.val())
+
+      //reduzirQuantProduto(childSnapshot.val().nomeProduto, childSnapshot.val().quantidadeProd)
+    })
+
+    
+    
+    lucroPorProduto.forEach((val)=>{
+      lucroInicialPorVenda = lucroInicialPorVenda + val
+    })
+
+    precoTotalPorProduto.forEach((val)=>{
+      precoTotalVenda = precoTotalVenda + val
+    })
+    
+  }, {
+    onlyOnce: false
+  })
+
+  quantidadeProduto.forEach((val)=>{
+    reduzirQuantProduto(val.nomeProduto, val.quantidadeProd)
+  })
+
+
+  onValue(dbRefProdutosMesas, (snapshot)=>{
+    const data = snapshot.val()
+    produtosSelecionadosMesas = data
+  })
+
+  onValue(dbRefMetodo, (snapshot)=>{
+    const data = snapshot.val()
+    metodoSelecionando = data
+  })
+
+  var valorTotalProdutoss = parseInt(valorTotalProdutos)
+  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss
+  console.log(saldoIniciall + ' hd ' + valorTotalProdutoss)
+
+  nrMovimentacoes = parseInt(nrMovimentacoess) + 1
+
+  
+    chaveVendas = parseInt(chaveVendasString) + 1
+
+    let prodEscolhidoLocalStorage = window.localStorage.getItem('prodEscolhido');
+ 
+    if(prodEscolhidoLocalStorage == 'true'){
+      try {
+        onValue(dbRefProdutosMesas, (snapshot)=>{
+          const data = snapshot.val()
+          produtosSelecionados = data
+          
+          var lucroPorProduto = []
+          var precoTotalPorProduto = []
+      
+          snapshot.forEach(childSnapshot => {
+            lucroPorProduto.push(childSnapshot.val().lucroProduto)
+          })
+      
+          snapshot.forEach(childSnapshot => {
+            precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto)
+          })
+          
+          lucroPorProduto.forEach((val)=>{
+            lucroInicialPorVenda = lucroInicialPorVenda + val
+          })
+          
+          precoTotalPorProduto.forEach((val)=>{
+            precoTotalVenda = precoTotalVenda + val
+          })
+        }, {
+          onlyOnce: false
+        })
+        console.log(lucroInicialPorVenda)
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + chaveVendas), {
+          codigoMesa: codMesaEscolhido,
+          codigoVenda: chaveVendas,
+          //produtos: produtosSelecionados,
+          horaActual: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " - " + now.getDate() + "/" + now.getMonth() + "/" + now.getFullYear(),
+          metodoPagamento: metodoSelecionando,
+          produtosMesa: produtosSelecionadosMesas,
+          precoTotalVenda: precoTotalVenda/2,
+          lucroVenda:{
+            lucroVenda: lucroInicialPorVenda/2
+          } 
+        });
+  
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo'), {
+          saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
+          totalMovimentacoes: nrMovimentacoes
+        });
+        
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas'), {
+          lucroTotal: valorLucroIniciall + (lucroInicialPorVenda/2)
+        });
+  
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/valorTotalVendas'), {
+          valorTotal: valorTotalVendasIniciall + valorTotalProdutoss
+        });
+  
+        //botaoCancelar.click()
+        regVendasNormal()
+        //alert('Venda cadatrada com sucesso')
+        AlertaSucesso('Venda cadastrada com sucesso')
+        window.localStorage.removeItem('codMesaEscolhido');
+        window.localStorage.removeItem('valorTotalProdutos') 
+
+        //location.reload();
+      } catch (error) {
+        console.log(error)
+      }
+    }else{
+      //alert('Adicione um produto antes')
+      AlertaInfo('Adicione um produto antes')
+    }
+})
+
