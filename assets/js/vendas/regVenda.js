@@ -167,40 +167,63 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
     
 
     divCard.addEventListener('click', ()=>{
-      produQuantidade.innerHTML = 'Qtd ' + quantProduto++
-
       const db = getDatabase();
-      set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos/' + nomeProd), {
-        nomeProduto: nomeProd,
-        quantidadeProd: quantProduto - 1,
-        precoProduto: precVenda,
-        tipoMoeda: tipoMoeda, 
-        lucroProduto: lucroProduto * (quantProduto - 1),
-        precoTotalProduto: precVenda * (quantProduto -1)
-      });
+      let quantProdEDisponivel
+      const dbRefQuantProd = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProd)
 
-      if(divCard.classList.contains('cardRegVendasSelecionado')){
-        //
-      }else{
-        divCard.classList.add('cardRegVendasSelecionado')
-      }
+      let quantProdutoFinal = quantProduto++
 
-      let valorActual = 0 
-      let valorSomado = 0
-      let valorProduto = precVenda
-      const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor')
-
-      onValue(dbRef, (snapshot) => {
-        var data = snapshot.val()
-        valorActual = data.valorTotal
+      function AdicionarProdutos(){
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutos/' + nomeProd), {
+          nomeProduto: nomeProd,
+          quantidadeProd: quantProduto - 1,
+          precoProduto: precVenda,
+          tipoMoeda: tipoMoeda, 
+          lucroProduto: lucroProduto * (quantProduto - 1),
+          precoTotalProduto: precVenda * (quantProduto -1)
+        });
+  
+        produQuantidade.innerHTML = 'Qtd ' + quantProdutoFinal
         
+        if(divCard.classList.contains('cardRegVendasSelecionado')){
+          //
+        }else{
+          divCard.classList.add('cardRegVendasSelecionado')
+        }
+  
+        let valorActual = 0 
+        let valorSomado = 0
+        let valorProduto = precVenda
+        const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor')
+  
+        onValue(dbRef, (snapshot) => {
+          var data = snapshot.val()
+          valorActual = data.valorTotal
+          
+        })
+
+        valorSomado = parseInt(valorProduto) + parseInt(valorActual)
+          
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor/'), {
+          valorTotal: valorSomado
+        });
+      }
+      
+      onValue(dbRefQuantProd, (snapshot) =>{
+          const data = snapshot.val()
+
+        quantProdEDisponivel = data.quantProdE
+
+        console.log(quantProdEDisponivel)
+
+        if(quantProdEDisponivel > (quantProduto - 2)){
+          AdicionarProdutos()
+        }else{
+          AlertaInfo('Não tem produto suficiente no estoque')
+        }
       })
 
-      valorSomado = parseInt(valorProduto) + parseInt(valorActual)
-        
-      set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/selecProdutosValor/'), {
-        valorTotal: valorSomado
-      });
+      
     })
 
     divCol.classList.add('col')
@@ -226,7 +249,9 @@ function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto){
 function addAllItemsToTable(produtos){
   produtosAdicio.innerHTML = ''
     produtos.forEach(element => {
+      if(element.quantProdE > 0){
         addItemToTable(element.nomeProd, element.precVenda, element.tipoMoeda, element.lucroProd)
+      }
     });
 }
 

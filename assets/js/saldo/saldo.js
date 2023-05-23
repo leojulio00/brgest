@@ -99,7 +99,7 @@ onChildAdded(commentsRefTotalVendas, (data) => {
 
   nrTotalVendas = nrTotalVendasString
 
-  totalVendasTxt.innerHTML = nrTotalVendas
+  totalVendasTxt.innerHTML = nrTotalVendas 
 
   var lucroPorProduto = []
 
@@ -141,7 +141,7 @@ onValue(dbRefLucro, (snapshot)=>{
   
   valorLucroIniciall = parseInt(valorLucroInicial)
 
-  lucroTotalVendasTxt.innerHTML = valorLucroIniciall
+  lucroTotalVendasTxt.innerHTML = valorLucroIniciall + ' ' + TipoMoeda
 }, {
   onlyOnce: false
 })
@@ -156,7 +156,7 @@ onValue(dbRefValorVendas, (snapshot)=>{
   
   valorTotalVendasIniciall = parseInt(valorTotalVendasInicial)
 
-  valorTotalVendasTxt.innerHTML = valorTotalVendasIniciall
+  valorTotalVendasTxt.innerHTML = valorTotalVendasIniciall + ' ' + TipoMoeda
 }, {
   onlyOnce: false
 })
@@ -191,9 +191,9 @@ onValue(mostViewedPosts, (snapshot)=>{
 
     })
 
-    precoTotalCompraProdutosTxt.innerHTML = valorPrecoCompra
-    precoTotalVendaProdutosTxt.innerHTML = valorPrecoVenda
-    lucroTotalVendaProdutosTxt.innerHTML = valorPrecoVenda - valorPrecoCompra
+    precoTotalCompraProdutosTxt.innerHTML = valorPrecoCompra + ' ' + TipoMoeda
+    precoTotalVendaProdutosTxt.innerHTML = valorPrecoVenda + ' ' + TipoMoeda
+    lucroTotalVendaProdutosTxt.innerHTML = valorPrecoVenda - valorPrecoCompra + ' ' + TipoMoeda
 })
 
 btnRegEntradaCaixa.addEventListener('click', ()=>{

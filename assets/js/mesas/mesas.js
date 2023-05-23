@@ -144,15 +144,20 @@ function regVendasNormal(){
 }
 
 btnCadastrarMesa.addEventListener("click", ()=>{
+  if(codMesa.value != "" && tamanhoMesa.value != "" && formaMesaSelect.options[formaMesaSelect.selectedIndex].text != ""){
     set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/todasMesas/' + codMesa.value), {
-        codigoMesa: codMesa.value,
-        tamanho: tamanhoMesa.value,
-        foma: formaMesaSelect.options[formaMesaSelect.selectedIndex].text,
-        rotulo: rotuloMesa.value
+      codigoMesa: codMesa.value,
+      tamanho: tamanhoMesa.value,
+      foma: formaMesaSelect.options[formaMesaSelect.selectedIndex].text,
+      rotulo: rotuloMesa.value
     });
 
     //alert("Mesa cadastrada")
     AlertaSucesso('Mesa cadastrada com sucesso')
+  }else{
+    AlertaErro('Preencha todos capos por favor')
+  }
+    
 })
 
 
@@ -505,45 +510,63 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda, lucroProduto){
   
 
   divCard.addEventListener("click", ()=>{
-    produQuantidade.innerHTML = "Qtd " + quantProduto++
-
-    function getRandom(max) {
-      return Math.floor(Math.random() * max + 1)
-    }
-
     const db = getDatabase();
-    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + CodigoMesaClicado + '/' + nomeProd), {
-      nomeProduto: nomeProd,
-      quantidadeProd: quantProduto - 1,
-      precoProduto: precVenda,
-      tipoMoeda: tipoMoeda, 
-      lucroProduto: lucroProduto * (quantProduto - 1),
-      precoTotalProduto: precVenda * (quantProduto -1)
-    });
+      let quantProdEDisponivel
+      const dbRefQuantProd = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProd)
 
-    if(divCard.classList.contains("cardRegVendasSelecionado")){
-      //
-    }else{
-      divCard.classList.add("cardRegVendasSelecionado")
-    }
+      let quantProdutoFinal = quantProduto++
 
-    let valorActual = 0 
-    let valorSomado = 0
-    let valorProduto = precVenda
-    const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor')
-
-    //Pegando o Valor actual
-    onValue(dbRef, (snapshot) => {
-      var data = snapshot.val()
-      valorActual = data.valorTotal
+      function AdicionarProdutos(){
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutos/' + CodigoMesaClicado + '/' + nomeProd), {
+          nomeProduto: nomeProd,
+          quantidadeProd: quantProduto - 1,
+          precoProduto: precVenda,
+          tipoMoeda: tipoMoeda, 
+          lucroProduto: lucroProduto * (quantProduto - 1),
+          precoTotalProduto: precVenda * (quantProduto -1)
+        });
+  
+        produQuantidade.innerHTML = 'Qtd ' + quantProdutoFinal
+        
+        if(divCard.classList.contains('cardRegVendasSelecionado')){
+          //
+        }else{
+          divCard.classList.add('cardRegVendasSelecionado')
+        }
+  
+        let valorActual = 0 
+        let valorSomado = 0
+        let valorProduto = precVenda
+        const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor')
+    
+        //Pegando o Valor actual
+        onValue(dbRef, (snapshot) => {
+          var data = snapshot.val()
+          valorActual = data.valorTotal
+          
+        })
+    
+        valorSomado = parseInt(valorProduto) + parseInt(valorActual)
+          
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor'), {
+          valorTotal: valorSomado
+        });
+      }
       
-    })
+      onValue(dbRefQuantProd, (snapshot) =>{
+          const data = snapshot.val()
 
-    valorSomado = parseInt(valorProduto) + parseInt(valorActual)
-      
-    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/mesas/selecProdutosValor'), {
-      valorTotal: valorSomado
-    });
+        quantProdEDisponivel = data.quantProdE
+
+        console.log(quantProdEDisponivel)
+
+        if(quantProdEDisponivel > (quantProduto - 2)){
+          AdicionarProdutos()
+        }else{
+          AlertaInfo('Não tem produto suficiente no estoque')
+        }
+      })
+
   })
 
   divCol.classList.add("col")
@@ -569,7 +592,10 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda, lucroProduto){
 function addTdsProdutosMesa(produtos){
   selecProdutosMesa.innerHTML = ""
   produtos.forEach(element => {
+    if(element.quantProdE > 0){
       addProdutosMesa(element.nomeProd, element.precVenda, element.tipoMoeda, element.lucroProd)
+    }
+      
   });
 }
 
