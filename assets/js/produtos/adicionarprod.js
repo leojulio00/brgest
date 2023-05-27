@@ -84,9 +84,8 @@ function AlertaInfo(mensagem){
   }, 2500)
 }
 
+//FUNCAO PARA CALCULAR LUCRO E ADICIONAR NO INPUT
 precVendaR.addEventListener("keyup", ()=>{
-  //console.log("kdks")
-
   valorLucroVenda = Math.abs(precCompra.value - precVendaR.value)
 
   lucroVenda.value = valorLucroVenda

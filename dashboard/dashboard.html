@@ -193,14 +193,14 @@
                   <div class="col-sm">
                     <form class="">
                       <div class="">
-                        <label for="precoProduto" class="form-label">Digita o valor de entrada</label>
+                        <label for="idValorEntrada" class="form-label">Digita o valor de entrada</label>
                         <div class="input-group">
-                          <input type="number" class="form-control valorEntradaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                          <input type="number" class="form-control valorEntradaCaixa" id="idValorEntrada" aria-describedby="inputGroupPrepend3">
                           <span class="input-group-text">Mts</span>
                         </div>
                       </div>
                       <div class="">
-                        <label for="precoProduto" class="form-label">Digita o motivo</label>
+                        <label for="idMotivoEntrada" class="form-label">Digita o motivo</label>
                         <div class="input-group">
                           <textarea class="form-control motivoEntradaCaixa" aria-label="With textarea"></textarea>
                         </div>
@@ -214,14 +214,14 @@
                   <div class="col-sm">
                     <form class="">
                       <div class="">
-                        <label for="precoProduto" class="form-label">Digita o valor de saída</label>
+                        <label for="idValorSaida" class="form-label">Digita o valor de saída</label>
                         <div class="input-group">
-                          <input type="number" class="form-control valorSaidaCaixa" id="precoProduto" aria-describedby="inputGroupPrepend3">
+                          <input type="number" class="form-control valorSaidaCaixa" id="idValorSaida" aria-describedby="inputGroupPrepend3">
                           <span class="input-group-text">Mts</span>
                         </div>
                       </div>
                       <div class="">
-                        <label for="precoProduto" class="form-label">Digita o motivo</label>
+                        <label for="idMotivoSaida" class="form-label">Digita o motivo</label>
                         <div class="input-group">
                           <textarea class="form-control motivoSaidaCaixa" aria-label="With textarea"></textarea>
                         </div>
@@ -545,8 +545,8 @@
                     <input type="text" class="form-control quantProdE" id="quantProdEstoque">
                   </div>
                   <div class="col-md-6">
-                    <label for="lucroVendaProduto" class="form-label">Data de validade</label>
-                    <input type="text" class="form-control dataValidade" id="lucroVendaProduto" aria-describedby="inputGroupPrepend3" placeholder="Ex.: 30/12/2000">
+                    <label for="dataValidade" class="form-label">Data de validade</label>
+                    <input type="text" class="form-control dataValidade" id="dataValidade" aria-describedby="inputGroupPrepend3" placeholder="Ex.: 30/12/2000">
                   </div>
                   <div class="col-md-6">
                     <label for="horaRegRegEntradaActual" class="form-label">Hora actual</label>
@@ -568,19 +568,8 @@
                 <button class="btn btn-outline-primary btnRefresh" type="submit">Refresh</button>
               </div>-->
 
-              <div style="position: relative; width: 100%; overflow: scroll;">
-                <table class="table table-striped"  style="position: relative; width: 100%; max-width: max-content; overflow: scroll;">
-                  <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome do produto</th>
-                    <th scope="col">Quantidade disponivel</th>
-                    <th scope="col">Data de validade</th>
-                    <th scope="col">Ultima modificacao</th>
-                  </tr>
-                  </thead>
-                  <tbody class="bodyEstoque"></tbody>
-                </table>
+              <div style="">
+                <div class="bodyEstoque row  row-cols-1 row-cols-md-1 g-4"></div>
               </div>
             </div>
 
@@ -1111,6 +1100,90 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary btnCloseVerVendas" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modalProdutos">
+              <div class="modal fade modalDetalhesProdutos" id="modalDetalhesProdutos" tabindex="-1" aria-labelledby="modalDetalhesProdutosLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title h4 tituloModalProdutos" id="modalDetalhesProdutosLabel"></h5>
+                      <button type="button" class="btn-close btnCloseDetalhesprodutos" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="reviewProduto" style="margin: 10px 0px;">
+                        <div class="tituloReviewProduto" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 10px 0px;">
+                          <div>
+                            <h5>Detalhes do produto selecionado</h5>
+                          </div>
+                          <div>
+                            <button type="button" class="btn btn-secondary btnEditarProduto">Editar</button>
+                          </div>
+                        </div>
+                        <div class="divDetalhesProdutos row  row-cols-1 row-cols-md-1 g-4">
+                          
+                        </div>
+                      </div>
+                      <div class="editarProduto" style="display: none; margin: 10px 0px;">
+                        <div class="tituloEditarProduto" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 10px 0px;">
+                          <div>
+                            <h5>Editar</h5>
+                          </div>
+                          <div>
+                            <button type="button" class="btn btn-danger btnDeletarProduto" style="margin: 10px 10px 0px 10px">Deletar produto</button>
+                            <button type="button" class="btn btn-secondary btnSalvarAlteracoesProduto">Salvar</button>
+                          </div>
+                        </div>
+                        <div class="divEditarProdutos row  row-cols-1 row-cols-md-1 g-4">
+                          <form class="row g-3">
+                            <div class="col-md-12">
+                              <label for="nomeProdutoCadastroDetalheProduto" class="form-label">Nome do produto</label>
+                              <div class="input-group has-validation">
+                                <span class="input-group-text">@</span>
+                                <input type="text" class="form-control nomeProdDetalheProduto" id="nomeProdutoCadastroDetalheProduto" disabled>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="precoCompraProdutoDetalheProduto" class="form-label">Preço de compra /uni.</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control precCompraDetalheProduto" id="precoCompraProdutoDetalheProduto" required>
+                                <span class="input-group-text">Mts</span>
+                              </div>
+                              
+                            </div>
+                            <div class="col-md-6">
+                              <label for="precoVendaProdutoDetalheProduto" class="form-label">Preço para venda /uni.</label>
+                              <div class="input-group">
+                                <input type="text" class="form-control precVendaRDetalheProduto" id="precoVendaProdutoDetalheProduto" aria-describedby="inputGroupPrepend3" required>
+                                <span class="input-group-text">Mts</span>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="lucroVendaProdutoDetalheProduto" class="form-label">Lucro da venda /uni.</label>
+                              <div class="input-group">
+                                <input type="number" class="form-control lucroVendaDetalheProduto" id="lucroVendaProdutoDetalheProduto" aria-describedby="inputGroupPrepend3" disabled>
+                                <span class="input-group-text">Mts</span>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="quantProdEstoqueDetalheProduto" class="form-label">Quantidade</label>
+                              <input type="text" class="form-control quantProdEDetalheProduto" id="quantProdEstoqueDetalheProduto">
+                            </div>
+                            <div class="col-md-6">
+                              <label for="dataValidadeDetalheProduto" class="form-label">Data de validade</label>
+                              <input type="text" class="form-control dataValidadeDetalheProduto" id="dataValidadeDetalheProduto" aria-describedby="inputGroupPrepend3" placeholder="Ex.: 30/12/2000">
+                            </div>
+                            
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <!--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
                     </div>
                   </div>
                 </div>

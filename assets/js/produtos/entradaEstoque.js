@@ -19,6 +19,7 @@ var alertaSucesso = document.querySelector('.alerta-sucesso')
 const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
+//FUNCAO ALERTA DE SUCESSO
 function AlertaSucesso(mensagem){
   let info = document.createElement('p')
   info.style.margin = '0px'
@@ -32,6 +33,7 @@ function AlertaSucesso(mensagem){
   }, 2500)
 }
 
+//FUNCAO ALERTA DE ERRO
 function AlertaErro(mensagem){
   let info = document.createElement('p')
   info.style.margin = '0px'
@@ -45,6 +47,7 @@ function AlertaErro(mensagem){
   }, 2500)
 }
 
+//FUNÇÃO DE ALERTA DE INFORMAÇÃO
 function AlertaInfo(mensagem){
   let info = document.createElement('p')
   info.style.margin = '0px'
@@ -58,7 +61,7 @@ function AlertaInfo(mensagem){
   }, 2500)
 }
 
-
+//ADICIONANDO AÇÃO DE PESQUISA NO LABEL NOMEPRODE A CADA VEZ QUE O USUARIO CLICAR UMA TECLA 
 nomeProdE.addEventListener("keyup", ()=>{
     /*const starCountRef = ref(db, 'produtos/todosProdutos/' + nomeProdE.value);
 
@@ -71,13 +74,17 @@ nomeProdE.addEventListener("keyup", ()=>{
         horaRegA.value = data.horaReg
     });*/
 
+    //PEGANDO TODOS OS PRODUTOS CADASTRADOS
     const starCountRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos');
     var todosNomesProdutos = []
 
     onValue(starCountRef, (snapshot) =>{
+      //CARREGANDO AS CHAVES DE CADA NÓ DOS PRODUTOS CADASTRADOS NA ARRAY TODOSNOMESPRODUTOS
       snapshot.forEach(childSnapshot => {
         todosNomesProdutos.push(childSnapshot.key)
       })
+
+      //FAZENDO A PESQUISA DE CADA ELEMENTO NO ARRAY POR SEMELHANCA DE INICIO DE LETRA
       todosNomesProdutos.forEach((val, i, arr)=>{
         var pV = ""
         if(val.startsWith(nomeProdE.value) == true){
@@ -103,21 +110,31 @@ nomeProdE.addEventListener("keyup", ()=>{
     })
 })
 
+//ACÇÃO NO BOTAO ADICIONAR PRODUTO NO ESTOQUE
 btnAdiProdE.addEventListener("click", ()=>{
     function adicionarProd(nomeProdE, quantProdE, dataValidade, horaRegEst) {
         const db = getDatabase();
         let quantidadeInicial = 0
 
+        //PEGANDO A QUANTIDADE INICIAL DA BASE DE DADOS
         onValue(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE), (snapshot)=>{
           const data = snapshot.val()
           quantidadeInicial = data.quantProdE
         })
 
+        //SOMANDO A QUANTIDADE PRESENTE NA BASE DE DADOS E A NOVA QUANTIDADE
         let quantidadeFinal = parseInt(quantProdE) + parseInt(quantidadeInicial)
 
+        //ADICIONANDO O NOME DE PRODUTO NO NÓ TODOS OS PRODUTOS E O PRODUTO SELECIONANDO
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/nomeProd'),  nomeProdE)
+
+        //ADICIONANDO A QUANTIDADE FINAL NO NÓ TODOS OS PRODTOS E  O PRODUTO SELECIONADO
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/quantProdE'), quantidadeFinal )
+
+        ////ADICIONANDO NA BASE DE DADOS A DATA DE VALIDADE
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/dataValidade'),  dataValidade)
+
+        //ADICIONANDO NA BASE DE DADOS A HORA DE REGISTO
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos/' + nomeProdE + '/horaRegEst'),  horaRegEst)
 
 
@@ -125,7 +142,10 @@ btnAdiProdE.addEventListener("click", ()=>{
         AlertaSucesso("Produto adicionado ao estoque com sucesso")
       }
       if(nomeProdE.value != "" && quantProdE.value != "" && dataValidade.value != ""){
+        //EXECUTANDO A FUNÇÃO ADCIONARPROD
         adicionarProd(nomeProdE.value, quantProdE.value, dataValidade.value, horaRegEst.value)
+
+        //LIMPANDO OS CAMPOS DE ADIÇÃO DE TEXTO
         nomeProdE.value = ""
         quantProdE.value = ""
         dataValidade.value = ""

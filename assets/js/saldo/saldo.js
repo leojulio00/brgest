@@ -83,6 +83,7 @@ function AlertaInfo(mensagem){
   }, 2500)
 }
 
+
 const commentsRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/entrada');
 onChildAdded(commentsRef, (data) => {
   chaveSaldoEntradaString = data.key
@@ -173,7 +174,7 @@ onValue(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosP
     totalProdutosCadastradosTxt.innerHTML = valorTodosProdutos
 })
 
-
+//PEGANDO O PRECO DE COMPRA DE TODOS OS PRODUTOS CADASTRADOS
 const mostViewedPosts = query(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/todosProdutos'), orderByChild('precCompra'));
 
 onValue(mostViewedPosts, (snapshot)=>{
@@ -196,26 +197,36 @@ onValue(mostViewedPosts, (snapshot)=>{
     lucroTotalVendaProdutosTxt.innerHTML = valorPrecoVenda - valorPrecoCompra + ' ' + TipoMoeda
 })
 
+//ACCAO NO BOTÃO REGISTAR ENTRADA NO CAIXA
 btnRegEntradaCaixa.addEventListener('click', ()=>{
+  //CONDIÇÃO DE CAMPOS PREENCHIDOS PARA VALIDAR O REGISTO DE ENTRADA NO CAIXA
     if(valorEntradaCaixa.value != '' && motivoEntradaCaixa.value != ''){
+        //SOMANDO O SALDO INICIAL DA BASE DE DADOS E O SALDO INSERIDO PELO USUARIO
         saldoFinalEntrada = parseInt(valorEntradaCaixa.value) + parseInt(valorIniciall)
 
         chaveSaldoEntrada = parseInt(chaveSaldoEntradaString) + 1
         nrMovimentacoes = parseInt(nrMovimentacoesString) + 1
         
+       
         try {
+           //INCREMENTANDO NA BASE DE DADOS O NR DE MOCIMENTACOES NO CAIXA E ADICIONANDO O VALOR NO CAIXA
             set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo'), {
                 saldo: parseInt(saldoFinalEntrada),
                 totalMovimentacoes: nrMovimentacoes
             });
+
+            //REGISTANDO NA BASE DE DADOS A OPERACAO DE REGISTO DE ENTRADA NO CAIXA
             set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/entrada/' + chaveSaldoEntrada), {
                 saldoAdicionado: valorEntradaCaixa.value,
                 motivo: motivoEntradaCaixa.value,
                 timestamp: horaRegEst.value,
                 usuario: userLocalStorage
             });
-            //alert('Entrada no caixa registado com sucesso')
+
+            //FUNÇÃO DE ALERTA DE OPERACAO SUCEDIDA
             AlertaSucesso('Entrada no caixa registado com sucesso')
+
+            //LIMPANDO OS INPUT TEXTS
             valorEntradaCaixa.value = ''
             motivoEntradaCaixa.value = ''
         } catch (error) {
@@ -227,6 +238,7 @@ btnRegEntradaCaixa.addEventListener('click', ()=>{
     }
 })
 
+//ACCAO NO BOTÃO REGISTAR SAIDA NO CAIXA
 btnRegSaidaCaixa.addEventListener('click', ()=>{
     if(valorSaidaCaixa.value != '' && motivoSaidaCaixa.value != ''){
         saldoFinalSaida = Math.abs(parseInt(valorSaidaCaixa.value) - parseInt(valorIniciall))

@@ -60,8 +60,11 @@ function AlertaInfo(mensagem){
   }, 2500)
 }
 
+//ACÇÃO NO BOTÃO ENTRAR DO LOGIN
 btnEntrar.addEventListener("click", ()=>{
   // Função para simular a execução de uma tarefa demorada
+
+  //FUNÇÃO ABRIR O GIF PRELOADER
   function AbrirPreloader() {
     // Inicia o gif preloader
     var preloader = document.getElementById("preloader");
@@ -74,8 +77,10 @@ btnEntrar.addEventListener("click", ()=>{
     }, 3500);
   }
 
+  //CHAMANDO A FUNÇÃO PRELOADER
   AbrirPreloader()
 
+  //FUNÇÃO DE LOGIN COM SENHA E PASSWORD DO FIREBASE
   signInWithEmailAndPassword(auth, inputUser.value, inputPass.value).then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
@@ -89,7 +94,7 @@ btnEntrar.addEventListener("click", ()=>{
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
       //updateStarCount(postElement, data);
-      console.log(data)
+      
       usuarioMail = data.emailColab
       usuarioNome = data.nomeColab
       usuarioTel = data.telColab
@@ -103,10 +108,9 @@ btnEntrar.addEventListener("click", ()=>{
       //alert("login feito com sucesso")
       AlertaSucesso('Login feito com sucesso')
 
+
+      //REDIRECIONANDO PARA DASHBOARD
       window.location.href = "dashboard/dashboard.html"
-
-      
-
 
     });
   })

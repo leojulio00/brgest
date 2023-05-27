@@ -42,12 +42,12 @@ onValue(most, (snapshot)=>{
     console.log(snapshot.val())
 })*/
 
-
+//ADICIONANDO OS ATRIBUTOS PARA ABIR O MODAL DO CARD TOTAL VENDAS
 cardTotalVendas.setAttribute("data-bs-toggle", "modal")
 cardTotalVendas.setAttribute("data-bs-target", "#modalVerVendas")
 
 
-
+//FUNÇÃO PARA APRESENTAR DETALHES DE CADA VENDA EFECTUADA
 function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
     let divCol = document.createElement('div')
     let divCard = document.createElement('div')
@@ -60,12 +60,15 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
     rotuloMesaTxt.innerHTML = 'val.: ' + precoTotalVenda + ' MZN'
     tamanhoMesaTxt.innerHTML =  horaActual
   
-    //divCard.setAttribute('data-bs-dismiss', 'modal')
+    divCard.setAttribute('data-bs-dismiss', 'modal')
+    
+    divCard.setAttribute("data-bs-toggle", "modal")
+    divCard.setAttribute("data-bs-target", "#modalVerVendasDetalhado")
   
+    //ADICIONANDO ACÇÃO DE CLIC EM CADA DIV GERADA NA FUNÇÃO
     divCard.addEventListener('click', async ()=>{
+        //FECHANDO O MODAL PRINCIPAL E ABRINDO O NOVO COM INFORMAÇÕES DE CADA VENDA
         divCard.setAttribute('data-bs-dismiss', 'modal')
-        divCard.setAttribute("data-bs-toggle", "modal")
-        divCard.setAttribute("data-bs-target", "#modalVerVendasDetalhado")
 
         
         /*function addMetodoDivVerProdutos(nomeMetodo){
@@ -99,8 +102,8 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
           divVendasEfectuadasDetalhadoMetodo.appendChild(divCol)
         }*/
 
+        //PEGANDO METODO DE PAGAMENTO EFECTUADO NA VENDA
         const dbRefProdE = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/metodoPagamento')
-
         onValue(dbRefProdE, (snapshot)=>{
           const data = snapshot.val()
 
@@ -119,6 +122,7 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
           onlyOnce: true
         })
 
+        //FUNÇÃO PARA LISTAR TODOS OS PRODUTOS VENDIDOS
         function addVendasNaDiv(nomeProduto, quantidadeProd, precoProduto, precoTotalProduto){
             let divCol = document.createElement('div')
             let divCard = document.createElement('div')
@@ -174,9 +178,11 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
           
           function PegarTdsVendas(){
             const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtos')
+
+            const dbRefMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtosMesa')
           
             onValue(dbRef, (snapshot) =>{
-                var todasMesas = []
+                let todasMesas = []
           
                 snapshot.forEach(childSnapshot => {
                   todasMesas.push(childSnapshot.val())
@@ -184,6 +190,16 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
           
                 addTdaVendasNaDiv(todasMesas)
             })
+
+            onValue(dbRefMesa, (snapshot) =>{
+              let todasMesas = []
+        
+              snapshot.forEach(childSnapshot => {
+                todasMesas.push(childSnapshot.val())
+              })
+        
+              addTdaVendasNaDiv(todasMesas)
+          })
           }
 
           PegarTdsVendas()
