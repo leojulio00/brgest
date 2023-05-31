@@ -4,6 +4,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebas
 import { getDatabase, set, ref, onValue } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var nomeUsuario = window.localStorage.getItem('nomeUser')
 var nomeProd = document.querySelector(".nomeProd")
 var precVendaR = document.querySelector(".precVendaR")
 var precCompra = document.querySelector(".precCompra")
@@ -11,8 +12,6 @@ var lucroVenda = document.querySelector(".lucroVenda")
 var dataValidade = document.querySelector(".dataValidade")
 var horaReg = document.querySelector(".horaRegCadProd")
 var btnRegProd = document.querySelector(".btnRegProd")
-var btnAlterProd = document.querySelector(".btnAlterProd")
-var btnApagProd = document.querySelector(".btnApagProd")
 var tipoMoeda = ""
 var valorLucroVenda = 0
 var alertaInfo = document.querySelector('.alerta-info')
@@ -106,7 +105,8 @@ btnRegProd.addEventListener("click", ()=>{
         lucroProd: lucroProd,
         tipoMoeda: tipoMoeda,
         horaReg: horaReg,
-        quantProdE: 0
+        quantProdE: 0,
+        responsavel: nomeUsuario
       });
     }
     
@@ -126,22 +126,3 @@ btnRegProd.addEventListener("click", ()=>{
     }
   });
 })
-
-btnAlterProd.addEventListener("click", ()=>{
-  function adicionarProd(codProd, nomeProd, precVenda, horaReg,) {
-    const db = getDatabase();
-    set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/produtos/' + codProd), {
-      nomeProd: nomeProd,
-      precVenda: precVenda,
-      horaReg: horaReg
-    });
-  }
-  
-  adicionarProd(codProd.value, nomeProd.value, precVenda.value, horaReg.value)
-  
-      //alert("Produto cadastrado com sucesso")
-      AlertaSucesso("Produto cadastrado com sucesso")
-      codProd.value = ""
-      nomeProd.value = ""
-      precVenda.value = ""
-  })

@@ -7,6 +7,7 @@ import { getDatabase, ref, remove, onValue, set, onChildAdded, update } from "ht
 import { getFirestore, collection, addDoc, setDoc, doc, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js'
 
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var nomeUsuario = window.localStorage.getItem('nomeUser')
 var produtosEscolhidoFinal = document.querySelector(".produtosEscolhidoFinal")
 var metodoPagamentoEscolhido = document.querySelector(".metodoPagamentoEscolhido")
 var produtosAdicio = document.querySelector(".produtosAdicio")
@@ -895,7 +896,7 @@ function reduzirQuantProduto(chaveProduto, quantidade){
 }
 
 var now = new Date
-
+console.log(nomeUsuario)
 
 btnRegVenda.addEventListener('click', ()=>{
   let produtosSelecionados = ''
@@ -1016,12 +1017,20 @@ btnRegVenda.addEventListener('click', ()=>{
           precoTotalVenda: precoTotalVenda/2,
           lucroVenda:{
             lucroVenda: lucroInicialPorVenda
-          } 
+          },
+          responsavel: nomeUsuario
         });
   
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo'), {
           saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
           totalMovimentacoes: nrMovimentacoes
+        });
+
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo/todasMovimentacoes/' + nrMovimentacoes), {
+          saldoMovimentado:valorTotalProdutoss,
+          motivo: 'Venda de produtos',
+          horaActual: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " - " + now.getDate() + "/" + now.getMonth() + "/" + now.getFullYear(),
+          responsavel: nomeUsuario
         });
         
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas'), {

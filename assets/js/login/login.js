@@ -12,6 +12,7 @@ export var usuarioTel = ""
 export var usuarioEnder = ""
 export var usuarioCargo = ""
 export var usuarioEstabelecimento = ""
+export var nomeUsuario = ''
 export var usuarioId = ""
 var alertaInfo = document.querySelector('.alerta-info')
 var alertaErro = document.querySelector('.alerta-erro')
@@ -101,7 +102,9 @@ btnEntrar.addEventListener("click", ()=>{
       usuarioEnder = data.enderColab
       usuarioCargo = data.catgColab
       usuarioEstabelecimento = data.usuarioEstabelecimento
+      nomeUsuario = data.nomeColab
       window.localStorage.setItem('usuarioEstabelecimento', usuarioEstabelecimento)
+      window.localStorage.setItem("nomeUser", nomeUsuario)
       console.log(usuarioMail + " " + usuarioMail + " " + usuarioNome + " " + usuarioTel + " " + usuarioEnder + " " + usuarioCargo + " " + usuarioEstabelecimento)
       
 

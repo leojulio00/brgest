@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="pt-PT">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7P30PF86QN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7P30PF86QN');
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -495,12 +504,6 @@
                 <div class=" d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3" style="margin: 20px 0px ;">
                   <div class="col-4">
                     <button class="btn btn-primary btnRegProd" type="submit">Registar Produto</button>
-                  </div>
-                  <div class="col-4">
-                    <button class="btn btn-primary btnAlterProd" type="submit">Alterar Produto</button>
-                  </div>
-                  <div class="col-4">
-                    <button class="btn btn-primary btnApagProd" type="submit" disabled>Apagar Produto</button>
                   </div>
                 </div>
 
@@ -1055,7 +1058,7 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <div class="divVendasEfectuadas">
+                      <div class="divVendasEfectuadas"  style="display: flex; flex-direction: column-reverse; justify-content: space-between; margin-top: 10px;">
                         
                       </div>
                     </div>
@@ -1096,6 +1099,9 @@
 
                       <div class="divVendasEfectuadasDetalhado">
                         
+                      </div>
+                      <div class="divVendasEfectuadasDetalhadoMesa">
+
                       </div>
                     </div>
                     <div class="modal-footer">

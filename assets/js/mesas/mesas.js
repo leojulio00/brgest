@@ -6,6 +6,7 @@ import { getDatabase, ref, remove, onValue, set, onChildAdded} from "https://www
 
 
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var nomeUsuario = window.localStorage.getItem('nomeUser')
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 var codMesa = document.querySelector(".codMesa")
@@ -149,7 +150,8 @@ btnCadastrarMesa.addEventListener("click", ()=>{
       codigoMesa: codMesa.value,
       tamanho: tamanhoMesa.value,
       foma: formaMesaSelect.options[formaMesaSelect.selectedIndex].text,
-      rotulo: rotuloMesa.value
+      rotulo: rotuloMesa.value,
+      responsavel: nomeUsuario
     });
 
     //alert("Mesa cadastrada")
@@ -968,12 +970,20 @@ btnRegVendaMesa.addEventListener('click', ()=>{
           precoTotalVenda: precoTotalVenda/2,
           lucroVenda:{
             lucroVenda: lucroInicialPorVenda/2
-          } 
+          },
+          responsavel: nomeUsuario 
         });
   
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo'), {
           saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
           totalMovimentacoes: nrMovimentacoes
+        });
+
+        set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo/todasMovimentacoes/' + nrMovimentacoes), {
+          saldoMovimentado: parseInt(saldoIniciall) + valorTotalProdutoss,
+          motivo: 'Venda de produtos',
+          horaActual: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + " - " + now.getDate() + "/" + now.getMonth() + "/" + now.getFullYear(),
+          responsavel: nomeUsuario
         });
         
         set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/lucroTotalVendas'), {

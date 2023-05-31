@@ -12,6 +12,7 @@ const db = getDatabase(app);
 var cardTotalVendas = document.querySelector('.cardTotalVendas')
 var divVendasEfectuadas = document.querySelector('.divVendasEfectuadas')
 var divVendasEfectuadasDetalhado = document.querySelector('.divVendasEfectuadasDetalhado')
+var divVendasEfectuadasDetalhadoMesa = document.querySelector('.divVendasEfectuadasDetalhadoMesa')
 var btnCloseVerVendas = document.querySelectorAll('.btnCloseVerVendas')
 var divVendasEfectuadasDetalhadoMetodo = document.querySelector('.divVendasEfectuadasDetalhadoMetodo')
 var tituloCardMetodo = document.querySelector('.tituloCardMetodo')
@@ -167,42 +168,109 @@ function addVendasNaDiv(codigoVenda, precoTotalVenda, horaActual){
             divCardBody.appendChild(precoTotalProdutoTxt) 
           
             divVendasEfectuadasDetalhado.appendChild(divCol)
-          }
-          
-          function addTdaVendasNaDiv(produtos){
-            divVendasEfectuadasDetalhado.innerHTML = ''
-            produtos.forEach(element => {
-                addVendasNaDiv(element.nomeProduto, element.quantidadeProd, element.precoProduto, element.precoTotalProduto)
-            });
-          }
-          
-          function PegarTdsVendas(){
-            const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtos')
+            //divVendasEfectuadasDetalhadoMesa.appendChild(divCol)
+        }
 
-            const dbRefMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtosMesa')
-          
-            onValue(dbRef, (snapshot) =>{
-                let todasMesas = []
-          
-                snapshot.forEach(childSnapshot => {
-                  todasMesas.push(childSnapshot.val())
-                })
-          
-                addTdaVendasNaDiv(todasMesas)
-            })
-
-            onValue(dbRefMesa, (snapshot) =>{
-              let todasMesas = []
+        //FUNÇÃO PARA LISTAR TODOS OS PRODUTOS VENDIDOS
+        function addVendasNaDivMesa(nomeProduto, quantidadeProd, precoProduto, precoTotalProduto){
+          let divCol = document.createElement('div')
+          let divCard = document.createElement('div')
+          let divCardBody = document.createElement('div')
+          let nomeProdutoTxt = document.createElement('p')
+          let quantidadeProdutoTxt = document.createElement('p')
+          let precoProdutoTxt = document.createElement('p')
+          let precoTotalProdutoTxt = document.createElement('p')
         
+          nomeProdutoTxt.innerHTML = nomeProduto
+          quantidadeProdutoTxt.innerHTML = quantidadeProd
+          precoProdutoTxt.innerHTML =  precoProduto + ' MZN'
+          precoTotalProdutoTxt.innerHTML =  precoTotalProduto + ' MZN'
+        
+          //divCard.setAttribute('data-bs-dismiss', 'modal')
+        
+        
+          divCol.classList.add('col')
+          divCol.style.margin = '5px 0px'
+          divCard.classList.add('card')
+          divCard.classList.add('cardRegVendasSelecionado')
+          divCardBody.classList.add('card-body')
+          divCardBody.style.display = 'flex'
+          divCardBody.style.flexDirection = 'row'
+          divCardBody.style.flexWrap = 'nowrap'
+          divCardBody.style.justifyContent = 'space-between'
+          divCardBody.style.margin = '5px 0px'
+          nomeProdutoTxt.classList.add('card-title')
+          nomeProdutoTxt.style.margin = '0px 5px'
+          quantidadeProdutoTxt.classList.add('card-title')
+          quantidadeProdutoTxt.style.margin = '0px 5px'
+          precoProdutoTxt.classList.add('card-text')
+          precoProdutoTxt.style.margin = '0px 5px'
+          precoTotalProdutoTxt.classList.add('card-text')
+          precoTotalProdutoTxt.style.margin = '0px 5px'
+        
+          divCol.appendChild(divCard)  
+          divCard.appendChild(divCardBody) 
+          divCardBody.appendChild(nomeProdutoTxt)  
+          divCardBody.appendChild(quantidadeProdutoTxt)
+          divCardBody.appendChild(precoProdutoTxt)  
+          divCardBody.appendChild(precoTotalProdutoTxt) 
+        
+          //divVendasEfectuadasDetalhado.appendChild(divCol)
+          divVendasEfectuadasDetalhadoMesa.appendChild(divCol)
+      }
+          
+        function addTdaVendasNaDiv(produtos){
+          divVendasEfectuadasDetalhado.innerHTML = ''
+          produtos.forEach(element => {
+              addVendasNaDiv(element.nomeProduto, element.quantidadeProd, element.precoProduto, element.precoTotalProduto)
+          });
+
+          /*produtos.forEach(element => {
+              addVendasNaDivMesa(element.nomeProduto, element.quantidadeProd, element.precoProduto, element.precoTotalProduto)
+          });*/
+        }
+
+        function addTdaVendasNaDivMesa(produtos){
+          divVendasEfectuadasDetalhadoMesa.innerHTML = ''
+          /*produtos.forEach(element => {
+              addVendasNaDiv(element.nomeProduto, element.quantidadeProd, element.precoProduto, element.precoTotalProduto)
+          });*/
+
+          produtos.forEach(element => {
+              addVendasNaDivMesa(element.nomeProduto, element.quantidadeProd, element.precoProduto, element.precoTotalProduto)
+          });
+        }
+          
+        function PegarTdsVendas(){
+          const dbRef = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtos')
+
+          let todasVendas = []
+        
+          onValue(dbRef, (snapshot) =>{
               snapshot.forEach(childSnapshot => {
-                todasMesas.push(childSnapshot.val())
+                todasVendas.push(childSnapshot.val())
               })
         
-              addTdaVendasNaDiv(todasMesas)
+              addTdaVendasNaDiv(todasVendas)
           })
-          }
+        }
 
-          PegarTdsVendas()
+        function PegarTdsVendasMesa(){
+          const dbRefMesa = ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/vendas/todasVendas/' + codigoVenda + '/produtosMesa')
+
+          let todasMesas = []
+
+          onValue(dbRefMesa, (snapshot) =>{
+            snapshot.forEach(childSnapshot => {
+              todasMesas.push(childSnapshot.val())
+            })
+      
+            addTdaVendasNaDivMesa(todasMesas)
+          })
+        }
+
+        PegarTdsVendas()
+        PegarTdsVendasMesa()
     })
   
     divCol.classList.add('col')

@@ -7,6 +7,7 @@ import { getFirestore, collection, addDoc, setDoc, doc, where, getDocs } from 'h
 
 
 var usuarioEstabelecimento = window.localStorage.getItem('usuarioEstabelecimento')
+var nomeUsuario = window.localStorage.getItem('nomeUser')
 var saldoContaTxt = document.querySelector('.saldoContaTxt')
 var totalMovimentacoesTxt = document.querySelector('.totalMovimentacoesTxt')
 var valorEntradaCaixa = document.querySelector('.valorEntradaCaixa')
@@ -215,6 +216,13 @@ btnRegEntradaCaixa.addEventListener('click', ()=>{
                 totalMovimentacoes: nrMovimentacoes
             });
 
+            set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo/todasMovimentacoes/' + nrMovimentacoes), {
+              saldoMovimentado: parseInt(valorEntradaCaixa.value),
+              motivo: motivoEntradaCaixa.value,
+              horaActual: horaRegEst.value,
+              responsavel: nomeUsuario
+            });
+
             //REGISTANDO NA BASE DE DADOS A OPERACAO DE REGISTO DE ENTRADA NO CAIXA
             set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/entrada/' + chaveSaldoEntrada), {
                 saldoAdicionado: valorEntradaCaixa.value,
@@ -251,6 +259,14 @@ btnRegSaidaCaixa.addEventListener('click', ()=>{
                 saldo: parseInt(saldoFinalSaida), 
                 totalMovimentacoes: nrMovimentacoes
             });
+
+            set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saldo/todasMovimentacoes/' + nrMovimentacoes), {
+              saldoMovimentado: parseInt(valorSaidaCaixa.value),
+              motivo: motivoSaidaCaixa.value,
+              horaActual: horaRegEst.value,
+              responsavel: nomeUsuario
+            });
+
             set(ref(db, 'estabelecimentos/' + usuarioEstabelecimento + '/saldo/saida/' + chaveSaldoSaida), {
                 saldoRetirado: valorSaidaCaixa.value,
                 motivo: motivoSaidaCaixa.value,
