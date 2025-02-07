@@ -1,0 +1,103 @@
+.cardNumGerais {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0px;
+}
+
+.cardNumGerais .col-sm {
+  position: relative;
+  margin: 10px 0px;
+  padding: 10px;
+}
+
+.cardSaldo {
+  min-width: 150px;
+  max-width: 100%;
+  background: #fafafa;
+  color: black;
+  border: 0px solid #000;
+  border-radius: 5px;
+  box-shadow: 1px 1px  4px #000;
+  text-align: left;
+  align-items: left;
+}
+
+.cardSaldo h5, .cardSaldo div h1{
+  text-align: left;
+}
+
+.cardSaldo button{
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  background-color: #ddd;
+  padding: 5px;
+}
+
+.cardSaldoSaldo {
+  margin-bottom: 20px;
+}
+
+.saldoContaTxt {
+  font-size: 3rem;
+  text-align: left;
+}
+
+.cardGanho {
+  min-width: 100px;
+  min-height: 200px;
+  background: #fafafa;
+  color: black;
+  border-radius: 10px;
+  box-shadow:  1px 1px  4px #000;
+}
+
+.cardGanho div{
+  margin: 10px;
+}
+
+.cardGanho button {
+  background: #423dcc;
+}
+
+cardGanhoGanho {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.saldoGanhoTxt {
+  font-size: 3rem;
+}
+
+.cardTxtSaldo {
+  visibility: visible;
+}
+
+.divResulVendas .col-sm {
+  max-width: 100%;
+  position: relative;
+  margin: 10px 0px;
+  text-align: center;
+  padding: 10px;
+}
+
+.produtosCategoria{
+  margin-top: 0px;
+}
+
+@media (min-width: 550px) {
+  .cardNumGerais .col-sm {
+    margin: 0px 20px;
+  }
+  .divResulVendas .col-sm {
+    margin: 0px 10px;
+  }
+
+  .cardSaldoSaldo {
+    margin-right: 20px;
+  }
+}

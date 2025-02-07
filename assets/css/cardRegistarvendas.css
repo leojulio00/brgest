@@ -1,0 +1,30 @@
+.cardRegVendas:hover{
+    background: #423DCC;
+    color: white;
+}
+
+.cardMetodospagamento:hover{
+    background: #423DCC;
+    color: white;
+}
+
+.cardRegVendasSelecionado{
+    background: #423DCC;
+    color: white;
+}
+
+.cardNenhumProd{
+    background: #423DCC;
+    color: white;
+}
+
+.cardBodyStyle{
+    margin: 10px 0px;
+}
+
+.posicaoFlex{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

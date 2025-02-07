@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formulário de Inscrição BR Gest.</title>
+    <!-- Bootstrap 5 CSS ->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-PTwKgryNND+kBlWMJyXXbdHfNV1EIRKzi+xD+bP0ZzJpdpwHjKzryMk0nX9V1GY31Jrv3d+7p4tKK5By5OX5Jw==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/5.0/examples/sign-in/"
+    />
+    <link
+      rel="shortcut icon"
+      href="../assets/img/BR Gest favicon 01.png"
+      type="image/x-icon"
+    />
+
+    <!-- Bootstrap core CSS -->
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      /* Estilos para o gif preloader e o fundo branco */
+      #preloader {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fff;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .alerta {
+        position: fixed;
+        display: none;
+        right: 15px;
+        bottom: 15px;
+        z-index: 996;
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="../assets/css/signin.css" rel="stylesheet" />
+  </head>
+  <body class="text-center">
+    <main class="form-signin">
+      <img
+        class="mb-4"
+        src="../assets/img/BR Gest logo 01.png"
+        alt="Logotipo da companhia e-bar&rest"
+        style="width: 200px"
+      />
+      <h1 class="h3 mb-3 fw-normal">Formulário de Inscrição</h1>
+      <form>
+        <div class="dadosAdm">
+          <p><strong>Dados do Administrador</strong></p>
+
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="nomeCompleto"
+              name="nomeCompleto"
+              placeholder=" "
+              required
+            />
+            <label for="nomeCompleto">Nome completo</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="endereco"
+              name="endereco"
+              placeholder=" "
+              required
+            />
+            <label for="endereco" class="form-label">Endereço</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="nome@exemplo.com"
+              required
+            />
+            <label for="email" class="form-label">E-mail</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="tel"
+              class="form-control"
+              id="telefone"
+              name="telefone"
+              placeholder=" "
+              required
+            />
+            <label for="telefone" class="form-label">Número de telefone</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="password"
+              class="form-control"
+              id="senha"
+              name="senha"
+              placeholder=" "
+              required
+            />
+            <label for="senha" class="form-label">Insira uma senha forte</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <select
+              class="form-select"
+              id="cargo"
+              name="cargo"
+              placeholder=" "
+              required
+            >
+              <option value="administrador" selected>Administrador</option>
+              <option value="gerente">Gerente</option>
+              <option value="Caixa">Caixa</option>
+              <option value="vendedor">vendedor</option>
+              <option value="garcom">Garçom</option>
+            </select>
+            <label for="cargo" class="form-label">Cargo na empresa</label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-100 btn btn-lg btn-primary btnProximo"
+            style="background-color: #423dcc"
+          >
+            Próximo
+          </button>
+        </div>
+        <div class="dadosEmpresa" style="display: none">
+          <p><strong>Dados da Empresa</strong></p>
+
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="nomeEmpresa"
+              name="nomeEmpresa"
+              placeholder=" "
+              required
+            />
+            <label for="nomeEmpresa" class="form-label">Nome da empresa</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="text"
+              class="form-control"
+              id="localizacaoEmpresa"
+              name="localizacaoEmpresa"
+              placeholder=" "
+              required
+            />
+            <label for="localizacaoEmpresa" class="form-label"
+              >Localização da empresa</label
+            >
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="email"
+              class="form-control"
+              id="emailEmpresa"
+              name="emailEmpresa"
+              placeholder="nome@exemplo.com"
+              required
+            />
+            <label for="emailEmpresa" class="form-label"
+              >E-mail da empresa</label
+            >
+          </div>
+          <div class="mb-3 form-floating">
+            <input
+              type="tel"
+              class="form-control"
+              id="telefoneEmpresa"
+              name="telefoneEmpresa"
+              placeholder=" "
+              required
+            />
+            <label for="telefoneEmpresa" class="form-label"
+              >Telefone da empresa</label
+            >
+          </div>
+          <div class="mb-3 form-floating">
+            <select
+              class="form-select"
+              id="tipoEmpresa"
+              name="tipoEmpresa"
+              placeholder=" "
+              required
+            >
+              <option value="" selected disabled>-- Selecione --</option>
+              <option value="bar">Bar</option>
+              <option value="restaurante">Restaurante</option>
+              <option value="foodtruck">Foodtruck (Take-Away)</option>
+              <option value="lanchonete">Lanchonete</option>
+              <option value="mercearia">Mercearia</option>
+              <option value="loja de bijuterias">Loja de bijuterias</option>
+              <option value="loja de eletrodomesticos e mais">
+                Loja de eletrodomesticos e mais
+              </option>
+              <option value="Loja de venda a grosso">
+                Loja de venda a grosso
+              </option>
+              <option value="outro">Outro</option>
+            </select>
+            <label for="tipoEmpresa" class="form-label">Tipo de empresa</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <select
+              class="form-select"
+              id="planoEscolhido"
+              name="planoEscolhido"
+              placeholder=" "
+              required
+            >
+              <option value="" selected disabled>-- Selecione --</option>
+              <option value="mensal">Mensal</option>
+              <option value="semestral">Semestral</option>
+              <option value="anual">Anual</option>
+            </select>
+            <label for="planoEscolhido" class="form-label"
+              >Plano de pagamento escolhido</label
+            >
+          </div>
+        </div>
+      </form>
+
+      <button
+        class="w-100 btn btn-lg btn-primary btnEnviar"
+        style="background-color: #423dcc; display: none"
+      >
+        Enviar
+      </button>
+      <a href="http://painel.brgest.com/index.html"
+        ><button
+          class="w-100 btn btn-lg btn-secondary"
+          style="
+            background: none;
+            border: 2px solid #423dcc;
+            margin: 10px 0px;
+            color: #423dcc;
+          "
+        >
+          Já estou cadastrado
+        </button></a
+      >
+
+      <p class="mt-5 mb-3 text-muted">
+        &copy; 2023 BR Gest. Todos os direitos reservados
+      </p>
+    </main>
+
+    <div
+      class="alert alert-success alert-dismissible alerta alerta-sucesso fade show"
+      role="alert"
+    >
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
+    <div
+      class="alert alert-danger alert-dismissible alerta alerta-erro fade show"
+      role="alert"
+    >
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
+    <div
+      class="alert alert-info alert-dismissible alerta alerta-info fade show"
+      role="alert"
+    >
+      <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    </div>
+
+    <div id="preloader">
+      <img src="../assets/img/preloader.gif" alt="Gif preloader animado" />
+    </div>
+
+    <!-- Bootstrap 5 JS (opcional) ->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js" integrity="sha512-Tz8nLnGcXONF95fJFlb2wU6ZPv6BjO6T1T6QsW8MSvO9FpU6jnxUiaqwPw8m3ETgg3ezHHDDd/VcF+JW8zvC9Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
+
+    <!-- Links de Ficheiros JavaScript -->
+    <script src="../assets/js/singup/singup.js" type="module"></script>
+    <script src="../assets/js/layout/preloader.js"></script>
+    <!--<script src="../assets/js/colaboradores/alterarSenhaUser.js" type="module"></script>-->
+  </body>
+</html>
