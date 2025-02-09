@@ -101,6 +101,7 @@ function AlertaInfo(mensagem) {
   info.innerHTML = mensagem;
   alertaInfo.appendChild(info);
   alertaInfo.style.display = "block";
+  alertaInfo.style.zIndex = "1000"
   setTimeout(() => {
     alertaInfo.style.display = "none";
     info.innerHTML = "";
@@ -366,6 +367,8 @@ function AdicionarProdutosDiv() {
 
       
       listItem.textContent = `${categoria.nomeCategoria}`;
+
+
       
       divCol.addEventListener("click", () => {
 
@@ -382,7 +385,7 @@ function AdicionarProdutosDiv() {
           snapshot.forEach((childSnapshot) => {
             const produtos = childSnapshot.val();
             
-            if (categoria.nomeCategoria == produtos.categoriaProd) {
+            if (categoria.nomeCategoria == produtos.categoriaProd && produtos.quantProdE >= 0) {
               let divCol = document.createElement("div");
               let divCard = document.createElement("div");
               let divCardBody = document.createElement("div");
@@ -395,88 +398,94 @@ function AdicionarProdutosDiv() {
               produNome.innerHTML = produtos.nomeProd;
               produPreco.innerHTML = produtos.precVenda + " " + produtos.tipoMoeda;
 
-              divCard.addEventListener("click", () => {
-                const db = getDatabase();
-                let quantProdEDisponivel;
-                const dbRefQuantProd = ref(
-                  db,
-                  "estabelecimentos/" +
-                    usuarioEstabelecimento +
-                    "/produtos/todosProdutos/" +
-                    produtos.nomeProd
-                );
-
-                let quantProdutoFinal = quantProduto++;
-
-                function AdicionarProdutos() {
-                  set(
-                    ref(
-                      db,
-                      "estabelecimentos/" +
-                        usuarioEstabelecimento +
-                        "/produtos/selecProdutos/" +
-                        produtos.nomeProd
-                    ),
-                    {
-                      nomeProduto: produtos.nomeProd,
-                      quantidadeProd: quantProduto - 1,
-                      precoProduto: produtos.precVenda,
-                      tipoMoeda: produtos.tipoMoeda,
-                      lucroProduto: produtos.lucroProd * (quantProduto - 1),
-                      precoTotalProduto: produtos.precVenda * (quantProduto - 1),
-                    }
-                  );
-
-                  produQuantidade.innerHTML = "Qtd " + quantProdutoFinal;
-
-                  if (divCard.classList.contains("cardRegVendasSelecionado")) {
-                    //
-                  } else {
-                    divCard.classList.add("cardRegVendasSelecionado");
-                  }
-
-                  let valorActual = 0;
-                  let valorSomado = 0;
-                  let valorProduto = produtos.precVenda;
-                  const dbRef = ref(
+              if (produtos.quantProdE >= 0) {
+                divCard.addEventListener("click", () => {
+                  const db = getDatabase();
+                  let quantProdEDisponivel;
+                  const dbRefQuantProd = ref(
                     db,
                     "estabelecimentos/" +
                       usuarioEstabelecimento +
-                      "/produtos/selecProdutosValor"
+                      "/produtos/todosProdutos/" +
+                      produtos.nomeProd
                   );
-
-                  onValue(dbRef, (snapshot) => {
-                    var data = snapshot.val();
-                    valorActual = data.valorTotal;
-                  });
-
-                  valorSomado = parseInt(valorProduto) + parseInt(valorActual);
-
-                  set(
-                    ref(
+  
+                  let quantProdutoFinal = quantProduto++;
+  
+                  function AdicionarProdutos() {
+                    set(
+                      ref(
+                        db,
+                        "estabelecimentos/" +
+                          usuarioEstabelecimento +
+                          "/produtos/selecProdutos/" +
+                          produtos.nomeProd
+                      ),
+                      {
+                        nomeProduto: produtos.nomeProd,
+                        quantidadeProd: quantProduto - 1,
+                        precoProduto: produtos.precVenda,
+                        tipoMoeda: produtos.tipoMoeda,
+                        lucroProduto: produtos.lucroProd * (quantProduto - 1),
+                        precoTotalProduto: produtos.precVenda * (quantProduto - 1),
+                      }
+                    );
+  
+                    produQuantidade.innerHTML = "Qtd " + quantProdutoFinal;
+  
+                    if (divCard.classList.contains("cardRegVendasSelecionado")) {
+                      //
+                    } else {
+                      divCard.classList.add("cardRegVendasSelecionado");
+                    }
+  
+                    let valorActual = 0;
+                    let valorSomado = 0;
+                    let valorProduto = produtos.precVenda;
+                    const dbRef = ref(
                       db,
                       "estabelecimentos/" +
                         usuarioEstabelecimento +
-                        "/produtos/selecProdutosValor/"
-                    ),
-                    {
-                      valorTotal: valorSomado,
-                    }
-                  );
-                }
-
-                onValue(dbRefQuantProd, (snapshot) => {
-                  const data = snapshot.val();
-
-                  quantProdEDisponivel = data.quantProdE;
-
-                  if (quantProdEDisponivel > quantProduto - 2) {
-                    AdicionarProdutos();
-                  } else {
-                    AlertaInfo("Não tem produto suficiente no estoque");
+                        "/produtos/selecProdutosValor"
+                    );
+  
+                    onValue(dbRef, (snapshot) => {
+                      var data = snapshot.val();
+                      valorActual = data.valorTotal;
+                    });
+  
+                    valorSomado = parseInt(valorProduto) + parseInt(valorActual);
+  
+                    set(
+                      ref(
+                        db,
+                        "estabelecimentos/" +
+                          usuarioEstabelecimento +
+                          "/produtos/selecProdutosValor/"
+                      ),
+                      {
+                        valorTotal: valorSomado,
+                      }
+                    );
                   }
+  
+                  onValue(dbRefQuantProd, (snapshot) => {
+                    const data = snapshot.val();
+  
+                    quantProdEDisponivel = data.quantProdE;
+  
+                    if (quantProdEDisponivel > quantProduto - 2) {
+                      AdicionarProdutos();
+                    } else {
+                      AlertaInfo("Estoque do produto " + data.nomeProd + " está no nivel crítico");
+                    }
+                  });
                 });
-              });
+              } else {
+                
+                AlertaInfo("Não tem produto suficiente no estoque");
+              }
+              
 
               divCol.classList.add("col");
               divCard.classList.add("card");
@@ -1590,12 +1599,12 @@ btnRegVenda.addEventListener("click", () => {
             " - " +
             now.getDate() +
             "/" +
-            now.getMonth() +
+            (now.getMonth() + 1) +
             "/" +
             now.getFullYear(),
           precoTotalVenda: precoTotalVenda / 2,
           lucroVenda: {
-            lucroVenda: lucroInicialPorVenda,
+            lucroVenda: lucroInicialPorVenda / 2,
           },
           responsavel: nomeUsuario,
           troco: valorTrocoGlobal.toFixed(2),
@@ -1632,7 +1641,7 @@ btnRegVenda.addEventListener("click", () => {
             " - " +
             now.getDate() +
             "/" +
-            now.getMonth() +
+            (now.getMonth() + 1) +
             "/" +
             now.getFullYear(),
           responsavel: nomeUsuario,

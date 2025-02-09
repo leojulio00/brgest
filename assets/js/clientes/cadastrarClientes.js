@@ -88,7 +88,9 @@ function atualizarDataCadastro() {
 }
 
 // Atualizar data ao carregar a página
-window.onload = atualizarDataCadastro;
+setInterval(()=>{
+  window.onload = atualizarDataCadastro();
+}), 1000
 
 // Função para cadastrar cliente
 function cadastrarCliente(
@@ -206,5 +208,6 @@ function carregarClientesNoModal() {
 }
 
 // Carregar clientes no modal ao abrir
-const modalListaClientes = document.getElementById("modalListaClientes");
+/*const modalListaClientes = document.getElementById("modalListaClientes");
 modalListaClientes.addEventListener("show.bs.modal", carregarClientesNoModal);
+*/

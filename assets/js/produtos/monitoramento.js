@@ -51,8 +51,8 @@ onValue(produtosRef, (snapshot) => {
 
       // Criar elemento de lista para cada produto
       const listItem = document.createElement("div");
-      listItem.textContent = `Nome do produto: ${produto.nomeProd},
-             Quantidade: ${produto.quantProdE}`;
+      listItem.innerHTML = "<strong>" + "Nome do produto: " + "</strong>" + `${produto.nomeProd},` + "</br>" +
+             "<strong>" + "Quantidade: " + "</strong>" + `${produto.quantProdE}` + "</br>" + "</br>";
       divVerProdutosAbaixo.appendChild(listItem);
     }
   });
