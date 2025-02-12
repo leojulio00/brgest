@@ -64,6 +64,21 @@ var alertaInfo = document.querySelector(".alerta-info");
 var alertaErro = document.querySelector(".alerta-erro");
 var alertaSucesso = document.querySelector(".alerta-sucesso");
 
+
+var now =  new Date();
+var horaActual =
+now.getHours() +
+":" +
+now.getMinutes() +
+":" +
+now.getSeconds() +
+" - " +
+now.getDate() +
+"/" +
+(now.getMonth() + 1) +
+"/" +
+now.getFullYear()
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbFt = getFirestore(app);
@@ -325,8 +340,8 @@ btnRegEntradaCaixa.addEventListener("click", () => {
         {
           saldoAdicionado: valorEntradaCaixa.value,
           motivo: motivoEntradaCaixa.value,
-          timestamp: horaRegEst.value,
-          usuario: userLocalStorage,
+          horaActual: horaActual,
+          usuario: nomeUsuario,
         }
       );
 
@@ -391,8 +406,8 @@ btnRegSaidaCaixa.addEventListener("click", () => {
         {
           saldoRetirado: valorSaidaCaixa.value,
           motivo: motivoSaidaCaixa.value,
-          timestamp: horaRegEst.value,
-          usuario: userLocalStorage,
+          horaActual: horaActual,
+          usuario: nomeUsuario,
         }
       );
       //alert('Retirada no caixa registado com sucesso')

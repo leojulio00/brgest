@@ -1063,7 +1063,7 @@ btnFinalizarVenda.addEventListener("click", () => {
 
     window.localStorage.setItem("prodEscolhido", true);
 
-    set(
+    /*set(
       ref(
         db,
         "estabelecimentos/" +
@@ -1073,7 +1073,10 @@ btnFinalizarVenda.addEventListener("click", () => {
       {
         valorTotal: valorTotal,
       }
-    );
+    );*/
+  },
+  {
+    onlyOnce: true,
   });
 
   
@@ -1279,6 +1282,12 @@ onValue(dbRefValorTtlProd, (snapshot) => {
   const data = snapshot.val();
 
   valorTotalProdutos = data.valorTotal;
+
+  
+  console.log(valorTotalProdutos)
+},
+{
+  onlyOnce: true,
 });
 
 onValue(
@@ -1535,8 +1544,13 @@ btnRegVenda.addEventListener("click", () => {
     metodoSelecionando = data;
   });
 
-  var valorTotalProdutoss = parseInt(valorTotalProdutos);
-  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss;
+  let valorTotalProdutosLocal = window.localStorage.getItem("valorTotalProdutos");
+
+  console.log(valorTotalProdutosLocal)
+  var valorTotalProdutoss = (parseInt(valorTotalProdutos) / 2);
+  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutosLocal;
+  
+  console.log(valorTotalProdutoss)
 
   nrMovimentacoes = parseInt(nrMovimentacoess) + 1;
 
@@ -1616,7 +1630,7 @@ btnRegVenda.addEventListener("click", () => {
       set(
         ref(db, "estabelecimentos/" + usuarioEstabelecimento + "/saldo/saldo"),
         {
-          saldo: parseInt(saldoIniciall) + valorTotalProdutoss / 2,
+          saldo: parseInt(saldoIniciall) + parseInt(valorTotalProdutosLocal),
           totalMovimentacoes: nrMovimentacoes,
         }
       );
@@ -1630,7 +1644,7 @@ btnRegVenda.addEventListener("click", () => {
             nrMovimentacoes
         ),
         {
-          saldoMovimentado: valorTotalProdutoss,
+          saldoMovimentado: parseInt(valorTotalProdutosLocal),
           motivo: "Venda de produtos",
           horaActual:
             now.getHours() +
@@ -1668,7 +1682,7 @@ btnRegVenda.addEventListener("click", () => {
             "/vendas/valorTotalVendas"
         ),
         {
-          valorTotal: valorTotalVendasIniciall + valorTotalProdutoss / 2,
+          valorTotal: valorTotalVendasIniciall + parseInt(valorTotalProdutosLocal),
         }
       );
 
@@ -1687,7 +1701,18 @@ btnRegVenda.addEventListener("click", () => {
         produtos: produtosSelecionados,
         valorCompra: precoTotalVenda,
         lucroVenda: lucroInicialPorVenda,
-        dataHora: new Date().toISOString(),
+        horaActual:
+          now.getHours() +
+          ":" +
+          now.getMinutes() +
+          ":" +
+          now.getSeconds() +
+          " - " +
+          now.getDate() +
+          "/" +
+          (now.getMonth() + 1) +
+          "/" +
+          now.getFullYear(),
       });
 
       // Adicionar informações da venda como entrada no caixa
@@ -1709,9 +1734,21 @@ btnRegVenda.addEventListener("click", () => {
                 chaveSaldoEntrada
             ),
             {
-              valorVenda: precoTotalVenda,
+              saldoAdicionado: precoTotalVenda,
+              motivo: "venda",
               produtos: produtosSelecionados,
-              dataHora: new Date().toISOString(),
+              horaActual:
+                now.getHours() +
+                ":" +
+                now.getMinutes() +
+                ":" +
+                now.getSeconds() +
+                " - " +
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
               nomeCliente: nomeCliente,
               responsavel: nomeUsuario,
             }
