@@ -24,6 +24,8 @@ let btnSideCriarClientes = document.querySelector(".btnSideCriarClientes");
 let btnSideVerClientes = document.querySelector(".btnSideVerClientes");
 
 let sectionDashboard = document.querySelector(".dashboard");
+let sectionFluxoCaixa = document.querySelector(".fluxoCaixa");
+let sectionRelatorios = document.querySelector(".relatorios");
 let sectionVendas = document.querySelector(".vendas");
 let sectionCaixa = document.querySelector(".caixa");
 let sectionProdutos = document.querySelector(".produtos");
@@ -35,6 +37,8 @@ let btnVendas = document.querySelector(".btnVendas");
 let btnCaixa = document.querySelector(".btnCaixa");
 let btnProdutos = document.querySelector(".btnProdutos");
 let btnColaboradores = document.querySelector(".btnColaboradores");
+let btnSideFluxoCaixa = document.querySelector(".btnSideFluxoCaixa");
+var btnSideRelatoriosDiarios = document.querySelector(".btnSideRelatoriosDiarios");
 let btnUsuario = document.querySelector(".btnUsuario");
 var btnSidebar = document.querySelector(".navbar-toggler");
 var menuLateral = document.querySelector(".menuLateral");
@@ -46,6 +50,20 @@ btnSidePaginaInicial.addEventListener("click", () => {
     val.style.display = "none";
   });
   sectionDashboard.style.display = "block";
+});
+
+btnSideFluxoCaixa.addEventListener("click", () => {
+  tdsSection.forEach((val) => {
+    val.style.display = "none";
+  });
+  sectionFluxoCaixa.style.display = "block";
+});
+
+btnSideRelatoriosDiarios.addEventListener("click", () => {
+  tdsSection.forEach((val) => {
+    val.style.display = "none";
+  });
+  sectionRelatorios.style.display = "block";
 });
 
 btnSideRegistarVenda.addEventListener("click", () => {

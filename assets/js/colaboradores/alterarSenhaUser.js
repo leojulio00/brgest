@@ -68,27 +68,30 @@ function AlertaInfo(mensagem) {
   }, 2500);
 }
 
-btnAlterPass.addEventListener("click", () => {
-  const starCountRef = ref(
-    db,
-    "estabelecimentos/" + usuarioEstabelecimento + "/users/" + userLocalStorage
-  );
 
-  if (
-    (actualPass.value != "") &
-    (novaPass.value != "") &
-    (confirPass.value != "")
-  ) {
-    onValue(starCountRef, (snapshot) => {
-      const data = snapshot.val();
-      //updateStarCount(postElement, data);
-      usuarioMail = data.emailColab;
+const starCountRef = ref(
+  db,
+  "estabelecimentos/" + usuarioEstabelecimento + "/users/" + userLocalStorage
+);
 
+
+onValue(starCountRef, (snapshot) => {
+  const data = snapshot.val();
+  //updateStarCount(postElement, data);
+  usuarioMail = data.emailColab;
+  console.log(usuarioMail)
+  
+  btnAlterPass.addEventListener("click", () => {
+
+    if (
+      (actualPass.value != "") &
+      (novaPass.value != "") &
+      (confirPass.value != "")
+    ) {
       signInWithEmailAndPassword(auth, usuarioMail, actualPass.value)
         .then((userCredential) => {
           // Signed in
           const userA = userCredential.user;
-          // ...
 
           const user = auth.currentUser;
           /*const newPassword = getASecureRandomPassword();*/
@@ -106,21 +109,23 @@ btnAlterPass.addEventListener("click", () => {
               .catch((error) => {
                 // An error ocurred
                 // ...
-                AlertaErro("A nova senha tem de ser igual");
+                console.log(error)
                 //alert("err:  2" + error)
               });
           } else {
             //alert("")
+            AlertaErro("A nova senha tem de ser igual");
           }
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           AlertaErro("Senha que inseriu não é correta");
+          console.log(errorMessage)
           //alert("erro:   1" + errorMessage)
         });
-    });
-  } else {
-    AlertaInfo("Preencha todos os campos por favor");
-  }
+    } else {
+      AlertaInfo("Preencha todos os campos por favor");
+    }
+  });
 });

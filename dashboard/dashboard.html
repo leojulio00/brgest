@@ -108,6 +108,16 @@
                   </ul>
                 </div>
               </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed btnDashboard" data-bs-toggle="collapse" data-bs-target="#fluxo-collapse" aria-expanded="true">
+                  Fluxo de caixa
+                </button>
+                <div class="collapse show" id="fluxo-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#sectionFluxoCaixa" class="link-dark rounded"><button class="btnSidebar btnSideFluxoCaixa">Movimentações no caixa</button></a></li>
+                  </ul>
+                </div>
+              </li>
               <li class="mb-1 liSeccVendas">
                 <button class="btn btn-toggle align-items-center rounded collapsed btnVendas" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
                   Vendas
@@ -167,6 +177,16 @@
                   <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                     <li><a href="#sectionCriarClientes" class="link-dark rounded"><button class="btnSidebar btnSideCriarClientes">Cadastrar clientes</button></a></li>
                     <li><a href="#sectionVerClientes" class="link-dark rounded"><button class="btnSidebar btnSideVerClientes">Ver clientes</button></a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="mb-1">
+                <button class="btn btn-toggle align-items-center rounded collapsed btnDashboard" data-bs-toggle="collapse" data-bs-target="#relatorios-collapse" aria-expanded="true">
+                  Relatórios
+                </button>
+                <div class="collapse show" id="relatorios-collapse">
+                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="#sectionRelatorios" class="link-dark rounded"><button class="btnSidebar btnSideRelatoriosDiarios">Relatórios diários</button></a></li>
                   </ul>
                 </div>
               </li>
@@ -366,6 +386,99 @@
             </div>
           </section>
 
+          <section class="fluxoCaixa tdsSection" style="display: none; padding: 10px;">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="sectionFluxoCaixa">
+              <h1 class="h2">Fluxo de caixa</h1>
+            </div>
+            
+            <div class="cardNumGerais row" style="margin: 0px;">
+              <div class="col-sm cardSaldo cardSaldoSaldo">
+                <div class="row">
+                  <div class="col-8">
+                    <h3 class="card-title">Entradas no caixa</h3>
+                  </div>
+                  <!--<div class="col-2">
+                    <div class="row" style="display: flex; flex-direction: row;">
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaHoje">Hoje</button>
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaSempre">De sempre</button>
+                    </div>
+                    
+                  </div>-->
+                </div>
+
+                <div class="row divTodasEntradasCaixa" style="padding: 20px;">
+
+                </div>
+                
+              </div>  
+              
+            </div>
+
+            <div class="cardNumGerais row" style="margin-top: 40px;">
+              <div class="col-sm cardSaldo cardSaldoSaldo">
+                <div class="row">
+                  <div class="col-8">
+                    <h3 class="card-title">Saidas no caixa</h3>
+                  </div>
+                  <!--<div class="col-2">
+                    <div class="row" style="display: flex; flex-direction: row;">
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaHoje">Hoje</button>
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaSempre">De sempre</button>
+                    </div>
+                    
+                  </div>-->
+                </div>
+
+                <div class="row divTodasSaidasCaixa" style="padding: 20px;">
+
+                </div>
+                
+              </div>  
+              
+            </div>
+
+          </section>
+          
+          <section class="relatorios tdsSection" style="display: none; padding: 10px;">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="sectionRelatorios">
+              <div class="col">
+                <div class="row" style="white-space: nowrap;">
+                  <span style="display: inline-block;"><h1 class="h2" >Relatórios</h1></span>
+                  <span style="display: inline-block;"><h5 class="spanDataActual" style="display: inline-block; font-style: italic; font-weight: 100;">15/02/2025</h5></span>
+                </div>
+              </div>
+              <div class="col d-flex justify-content-end">
+                <button type="button" class="btn btn-primary btnRegistarRelatorioDia">Registar Relatório do dia</button>
+              </div>
+              
+            </div>
+            
+            <div class="cardNumGerais row" style="margin: 0px;">
+              <div class="col-sm cardSaldo cardSaldoSaldo">
+                <div class="row">
+                  <div class="col-8">
+                    <h3 class="card-title">Histórico de relatórios diários</h3>
+                  </div>
+                  <!--<div class="col-2">
+                    <div class="row" style="display: flex; flex-direction: row;">
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaHoje">Hoje</button>
+                      <button style="margin: 0px;" class="btn btn-primary justify-content-end btnMovimentosEntradaSempre">De sempre</button>
+                    </div>
+                    
+                  </div>-->
+                </div>
+
+                <div class="row divTodosRelatorios" style="padding: 20px;">
+
+                </div>
+                
+              </div>  
+              
+            </div>
+
+
+          </section>
+
           <section class="clientes tdsSection" style="display: none; padding: 10px;">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom" id="sectionCriarClientes">
               <h1 class="h2">Cadastro de Clientes</h1>
@@ -557,6 +670,7 @@
                   
                   <div class="col-12">
                     <button class="btn btn-primary btnRegVenda align-right" type="submit">Registar Venda</button>
+                    <!--<button class="btn btn-primary btnTesteRegVenda align-right" type="submit">teste</button>-->
                     <button type="button" class="btn btn-danger btnCancelar" data-bs-dismiss="modal">Cancelar</button>
                   </div>
                 </div>
@@ -1138,31 +1252,32 @@
                           <form>
         
                             <div class="row mb-3">
-                              <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label  senhaActual">Senha Actual</label>
+                              <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label  ">Senha Actual</label>
                               <div class="col-md-8 col-lg-9">
-                                <input name="password" type="password" class="form-control" id="currentPassword">
+                                <input name="password" type="password" class="form-control senhaActual" id="currentPassword">
                               </div>
                             </div>
         
                             <div class="row mb-3">
-                              <label for="newPassword" class="col-md-4 col-lg-3 col-form-label novaSenha">Nova senha</label>
+                              <label for="newPassword" class="col-md-4 col-lg-3 col-form-label ">Nova senha</label>
                               <div class="col-md-8 col-lg-9">
-                                <input name="newpassword" type="password" class="form-control" id="newPassword">
+                                <input name="newpassword" type="password" class="form-control novaSenha" id="newPassword">
                               </div>
                             </div>
         
                             <div class="row mb-3">
-                              <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label confSenha">Confirmar senha</label>
+                              <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Confirmar senha</label>
                               <div class="col-md-8 col-lg-9">
-                                <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                                <input name="renewpassword" type="password" class="form-control confSenha" id="renewPassword">
                               </div>
                             </div>
         
-                            <div class="text-center">
-                              <button type="submit" class="btn btn-primary btnAlterarSenha">Alterar senha</button>
-                            </div>
+                            
                           </form><!-- End Change Password Form -->
-        
+
+                          <div class="text-center">
+                            <button type="button" class="btn btn-primary btnAlterarSenha">Alterar senha</button>
+                          </div>
                         </div>
         
                       </div><!-- End Bordered Tabs -->
@@ -1802,25 +1917,254 @@
                   </div>
                 </div>
               </div>
-              
 
-              <div class="modal fade modalModalAdicionarCategoria" id="modalModalAdicionarCategoria" tabindex="-1" aria-labelledby="modalModalAdicionarCategoriaLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Digite o nome da categoria</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="modalModalAdicionarCategoria" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <input class="form-control inputNomeCategoria" type="text" value="" ria-describedby="inputGroupPrepend3" required>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-target="modalModalAdicionarCategoria">Fechar</button>
-                      <button type="button" class="btn btn-primary btnCadastrarCategoria">Salvar</button>
-                    </div>
+            <div class="modal fade modalModalAdicionarCategoria" id="modalModalAdicionarCategoria" tabindex="-1" aria-labelledby="modalModalAdicionarCategoriaLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Digite o nome da categoria</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="modalModalAdicionarCategoria" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input class="form-control inputNomeCategoria" type="text" value="" ria-describedby="inputGroupPrepend3" required>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-target="modalModalAdicionarCategoria">Fechar</button>
+                    <button type="button" class="btn btn-primary btnCadastrarCategoria">Salvar</button>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div class="modal fade modalVerRelatorios" id="modalVerRelatorios" tabindex="-1" aria-labelledby="modalVerRelatorios" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title h4" id="modalVerRelatoriosLabel">Detalhes do relatório selecionado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="selecionarMPagamentoMesa">
+                      <div class="divVerRelatorios row">
+                        <div class="divDadosFecho text-align-center">
+                          <h2 class="txtNomeEstabelecimento" style="text-align: center;"></h2>
+                          <h5 class="txtLocalizacaoEstabelecimento" style="text-align: center; font-weight: 200;"></h5>
+                          <h5 class="txtEmailEstabelecimento" style="text-align: center; font-size: 15px; font-weight: 300;"></h5>
+                          <h5 class="txtTelEstabelecimento" style="text-align: center; font-size: 15px; font-weight: 300;"></h5>
+                          <h5 class="txtDataHora" style="text-align: right; font-size: 15px; font-weight: 300;"></h5>
+                        </div>
+                        <div class="border-top my-3"></div>
+                        <div class="divRelatoriosVenda">
+                          <h3>Relatorios de todas as vendas do dia</h3>
+                          <span>
+                            <strong>
+                              <h5>Número total de vendas: </h5>
+                            </strong>
+                            <p class="txtNumeroVendas"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Valor total das vendas: </h5>
+                            </strong>
+                            <p class="txtTotalVendas"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Lucro total de vendas: </h5>
+                            </strong>
+                            <p class="txtLucroTotalVendas"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Média de vendas: </h5>
+                            </strong>
+                            <p class="txtMediaVendas"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Maior valor vendido: </h5>
+                            </strong>
+                            <p class="txtMaiorValorVendido"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Menor valor vendido: </h5>
+                            </strong>
+                            <p class="txtMenorValorVendido"></p>
+                          </span>
+                        </div>
+                        <div class="border-top my-3"></div>
+                        <div class="divMetodosPagemento">
+                          <h3>Quantidade de vezes que os métodos de pagamento foram escolhidos no dia</h3>
+                          <span>
+                            <strong>
+                              <h5>Cartão de crédito: </h5>
+                            </strong>
+                            <p class="txtVezesCartaoCredito"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Cartão de débito: </h5>
+                            </strong>
+                            <p class="txtVezesCartaoDebito"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Dinheiro: </h5>
+                            </strong>
+                            <p class="txtVezesDinheiro"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Crédito: </h5>
+                            </strong>
+                            <p class="txtVezesCredito"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>E-Mola: </h5>
+                            </strong>
+                            <p class="txtVezesEmola"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>M-Pesa: </h5>
+                            </strong>
+                            <p class="txtVezesMpesa"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>mKesh: </h5>
+                            </strong>
+                            <p class="txtVezesMkesh"><p>
+                          </span>
+                        </div>
+                        <div class="border-top my-3"></div>
+                        <div class="divFluxoCaixa">
+                          <h3>Movimentações de entrada e saida no caixa</h3>
+                          <div>
+                            <h4>Entrada no caixa</h4>
+                            
+                            <span>
+                              <strong>
+                                <h5>Número total movimentações de entrada: </h5>
+                              </strong>
+                              <p class="txtVezesEntradaCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Valor total entrada no caixa: </h5>
+                              </strong>
+                              <p class="txtValorTotalEntradaCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Média de valores introduzidos no caixa: </h5>
+                              </strong>
+                              <p class="txtMediaValoresIntroduzidoCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Maior valor introduzido no caixa: </h5>
+                              </strong>
+                              <p class="txtMaiorValorIntroduzidoCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Menor valor introduzido no caixa: </h5>
+                              </strong>
+                              <p class="txtMenorValorIntroduzidoCaixa"></p>
+                            </span>
+                          </div>
+                          
+                          <div>
+                            <h4>Saida no caixa</h4>
+                            
+                            <span>
+                              <strong>
+                                <h5>Número total movimentações de saidaa: </h5>
+                              </strong>
+                              <p class="txtVezesSaidaCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Valor total saidaa no caixa: </h5>
+                              </strong>
+                              <p class="txtValorTotalSaidaCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Média de valores retirados no caixa: </h5>
+                              </strong>
+                              <p class="txtMediaValoresRetiradosCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Maior valor retirados no caixa: </h5>
+                              </strong>
+                              <p class="txtMaiorValorRetiradosCaixa"></p>
+                            </span>
+                            <span>
+                              <strong>
+                                <h5>Menor valor retirados no caixa: </h5>
+                              </strong>
+                              <p class="txtMenorValorRetiradosCaixa"></p>
+                            </span>
+                          </div>
+                          <span>
+                            <strong>
+                              <h5>Total de movimentações no caixa do dia: </h5>
+                            </strong>
+                            <p class="txtTotalmovimentacoesCaixa"></p>
+                          </span>
+                          <span>
+                            <strong>
+                              <h5>Valor total de movimentações no caixa do dia: </h5>
+                            </strong>
+                            <p class="txtValorTotalmovimentacoesCaixa"></p>
+                          </span>
+
+                        </div>
+                        <div class="border-top my-3"></div>
+                        <div class="divSaldo">
+                          <h3>Registo de saldo final no caixa</h3>
+                          <span>
+                            <strong>
+                              <h5>Saldo total do dia: </h5>
+                            </strong>
+                            <p class="txtSaldoTotalDia"></p>
+                          </span>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btnFecharModalVendasMesa" data-bs-dismiss="modal">Fechar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade modalModalEnviarRecibo" id="modalModalEnviarRecibo" tabindex="-1" aria-labelledby="modalModalEnviarReciboLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Venda registada com sucesso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="modalModalEnviarRecibo" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="divImg" style="display: flex; justify-content: center;">
+                      <img src="../assets/img/certoImg.png" alt="Certo" srcset="" style="width: 150px;">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btnFecharModalConformacaovenda" data-bs-dismiss="modal" data-bs-target="modalModalAdicionarCategoria">Fechar</button>
+                    <button type="button" class="btn btn-primary btnEnviarReciboCliente">Enviar recibo ao cliente</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
 
 
@@ -1850,7 +2194,22 @@
 
       
     <!---------------  SCRIPT RELATORIOS  ---------------->
-    <script src="../assets/js/relatorios/relatorioDiario.js" type="module"></script>
+    <script src="../assets/js/relatorios/relatorioDiario.js" type="module"></script> 
+    <script src="../assets/js/relatorios/verRelatorios.js" type="module"></script> 
+
+
+
+
+    
+    <!---------------  SCRIPT RELATORIOS  ---------------->
+    <script src="../assets/js/fluxoCaixa/fluxoCaixa.js" type="module"></script>
+
+
+    
+    
+    <!---------------  SCRIPT RECIBO  ---------------->
+    <script src="../assets/js/recibo/reciboEletronico.js" type="module"></script>
+
 
 
     <!---------------  SCRIPT LOGICO  ---------------->
@@ -1925,7 +2284,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
     <script src="dashboard.js"></script>
 
-    <script src="../assets/js/testes." type="module"></script>
 
         <!---------------  SCRIPT LOGICO  ---------------->
         <script src="../assets/js/logico/horaReg.js"></script>

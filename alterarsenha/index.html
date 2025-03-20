@@ -12,10 +12,10 @@
     </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign-in BR Gest.</title>
+    <title>Alterar senha BR Gest.</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
-    <link rel="shortcut icon" href="assets/img/BR Gest favicon 01.png" type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/img/BR Gest favicon 01.png" type="image/x-icon">
 
     
 
@@ -35,7 +35,7 @@
           z-index: 9999;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: center; 
         }
         
       .bd-placeholder-img {
@@ -62,11 +62,11 @@
     </style>
 
 
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="../manifest.json">
 
     
     <!-- Custom styles for this template -->
-    <link href="assets/css/signin.css" rel="stylesheet">
+    <link href="../assets/css/signin.css" rel="stylesheet">
 
     <script>
       if(typeof navigator.serviceWorker !== 'undefined'){
@@ -78,16 +78,26 @@
     
 <main class="form-signin">
   <form>
-    <img class="mb-4" src="assets/img/BR Gest logo 01.png" alt="Logotipo da companhia e-bar&rest" style="width: 200px;">
-    <h1 class="h3 mb-3 fw-normal">Por favor insira suas credenciais</h1>
+    <img class="mb-4" src="../assets/img/BR Gest logo 01.png" alt="Logotipo da companhia e-bar&rest" style="width: 200px;">
+    <h1 class="h3 mb-3 fw-normal">Por favor insira suas credenciais para alterar sua senha</h1>
 
     <div class="form-floating" style="margin: 10px 0px">
-      <input type="email" class="form-control inputUser" id="floatingInput" placeholder="nome@exemplo.com">
-      <label for="floatingInput">E-mail</label>
+      <input type="email" class="form-control emailUsuarioAltSenha" id="floatingInput" placeholder="nome@exemplo.com">
+      <label class="emailUsuarioAltSenha" for="floatingInput">E-mail</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control inputPass" id="floatingPassword" placeholder="Senha">
-      <label for="floatingPassword">Senha</label>
+      <input type="password" class="form-control inputPassAntiga" id="floatingPassword" placeholder="Senha">
+      <label for="floatingPassword">Senha actual</label>
+    </div>
+    
+    <div class="form-floating">
+      <input type="password" class="form-control inputPassNova" id="floatingPassword" placeholder="Senha">
+      <label for="floatingPassword">Senha nova</label>
+    </div>
+    
+    <div class="form-floating">
+      <input type="password" class="form-control inputConfirmarSenha" id="floatingPassword" placeholder="Senha">
+      <label for="floatingPassword">Confirmar senha</label>
     </div>
 
     <div class="checkbox mb-3 d-none">
@@ -96,7 +106,7 @@
       </label>
     </div>
   </form>
-  <button class="w-100 btn btn-lg btn-primary btnEntrar" type="submit" style="background-color: #423DCC;">ENTRAR</button>
+  <button class="w-100 btn btn-lg btn-primary btnAlterarSenha" type="submit" style="background-color: #423DCC;">CONFIRMAR</button>
   <a href="http://painel.brgest.com/singup/index.html"><button class="w-100 btn btn-lg btn-secondary" style="background: none; border: 2px solid #423DCC; margin: 10px 0px; color: #423DCC;">Não estou cadastrado</button></a>
   
   <p class="mt-5 mb-3 text-muted">&copy; 2023 BR Gest. Todos os direitos reservados</p>
@@ -115,18 +125,18 @@
 </div>
 
 <div id="preloader">
-  <img src="./assets/img/preloader.gif" alt="Gif preloader animado">
+  <img src="../assets/img/preloader.gif" alt="Gif preloader animado">
 </div>
 
   <!--<script src="js/app.js" type="module"></script>
   <script src="js/autenticacao.js" type="module"></script>-->
 
   
-  <script src="assets/js/logico/app.js" type="module"></script>
-  <script src="assets/js/login/autenticacao.js" type="module"></script>
-  <script src="assets/js/login/login.js" type="module"></script>
-  <script src="assets/js/login/userLogadoLogin.js" type="module"></script>
-  <script src="./assets/js/layout/preloader.js"></script>
+  <script src="../assets/js/logico/app.js" type="module"></script>
+  <script src="../assets/js/login/autenticacao.js" type="module"></script>
+  <script src="../assets/js/login/alterarSenha.js" type="module"></script>
+  <script src="../assets/js/login/userLogadoLogin.js" type="module"></script>
+  <script src="../assets/js/layout/preloader.js"></script>
     
 </body>
 </html>
