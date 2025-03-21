@@ -315,6 +315,7 @@ function addItemToTable(
         );
 
         AlertaSucesso("Informações actualizadas com sucesso");
+        window.location.reload()
       } catch (error) {
         console.log(error);
         AlertaErro("Ocorreu algum erro durante o processo");
@@ -334,7 +335,7 @@ function addItemToTable(
         );
 
         AlertaSucesso("Informações actualizadas com sucesso");
-
+        window.location.reload()
         btnCloseDetalhesprodutos.click();
       } catch (error) {
         console.log(error);

@@ -1,10 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 //import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { firebaseConfig } from "../logico/firebaseConfig.js";
+import { AlertaSucesso, AlertaErro, AlertaInfo } from "../logico/alertas.js";
 import {
   getDatabase,
   ref,
   onValue,
+  set
 } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 
@@ -15,8 +17,10 @@ var usuarioEstabelecimento = window.localStorage.getItem(
   "usuarioEstabelecimento"
 );
 var dataActual = ""
+var dataActualRef = ""
 var horaActual = ""
 var usuarioFecho = window.localStorage.getItem("nomeUser");
+var btnRegistarRelatorioDia = document.querySelector(".btnRegistarRelatorioDia")
 
 // Referência para todas as vendas do cliente Edma Julio
 const todasVendasRef = ref(
@@ -50,10 +54,27 @@ const saldoSaidaRef = ref(
     "/saldo/saida"
 );
 
+//Referencia de saldo de entrada
+const usuariosRef = ref(
+  db,
+  "estabelecimentos/" +
+    usuarioEstabelecimento +
+    "/users"
+);
+
+
+//Referencia de data cadastro do estabelecimento
+const dataRegistoRef = ref(
+  db,
+  "estabelecimentos/" +
+    usuarioEstabelecimento +
+    "/dadosEmpresa/dataInscricao"
+);
+
 
 function calcularEstatisticas(numeros) {
   return numeros.reduce((acc, num) => {
-      acc.soma += num;
+      acc.soma += parseInt(num);
       acc.maior = Math.max(acc.maior, num);
       acc.menor = Math.min(acc.menor, num);
       return acc;
@@ -70,14 +91,20 @@ dataActual =
   (now.getMonth() + 1) +
   "/" +
   now.getFullYear();
+
+dataActualRef =
+  now.getDate() +
+  "-" +
+  (now.getMonth() + 1) +
+  "-" +
+  now.getFullYear();
+
 horaActual = 
   now.getHours() +
   ":" +
   now.getMinutes() +
   ":" +
   now.getSeconds()
-
-console.log(dataActual)
 
 //Passando a localizacao, email e telefone do estabelecimento para as respectivas variaveis
 onValue(dadosEmpresaRef, (snapshot) => {
@@ -86,28 +113,98 @@ onValue(dadosEmpresaRef, (snapshot) => {
   window.localStorage.setItem("localEstabelecimento", data.localizacaoEstabelecimento);
   window.localStorage.setItem("emailEstabelecimento", data.emailEstabelecimento);
   window.localStorage.setItem("telefoneEstabelecimento", data.telefoneEstabelecimento);
-  
 })
 
 var localEstabelecimento = window.localStorage.getItem("localEstabelecimento");
-var emailEstabelecimento = window.localStorage.getItem("localEstabelecimento");
+var emailEstabelecimento = window.localStorage.getItem("emailEstabelecimento");
 var telefoneEstabelecimento = window.localStorage.getItem("telefoneEstabelecimento");
 
 
 
-/*
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("Usuário está logado:", user);
-  } else {
-    console.log("Nenhum usuário logado.");
-  }
-});*/
 
+function registarRelatoriosPreset(dataInscricao) {
+  try {
+    set(
+      ref(
+        db,
+        "estabelecimentos/" +
+          usuarioEstabelecimento +
+          "/relatorios/" + dataInscricao
+      ),
+      {
+        dadosFecho: {
+          nomeEstabelecimento: "NOME DA EMPRESA",
+          localizacaoEstabelecimento: "LOCALIZAÇÃO",
+          emailEstabelecimento: "E-MAIL",
+          telefoneEstabelecimento: "TELEFONE",
+          responsavelFecho: "RESPONSAVEL DA OPERAÇÃO",
+          dataFecho: dataInscricao,
+          horaFecho: dataInscricao
+        },
+        vendas: {
+          numerosVendas: 0,
+          maiorValorVendido: 0,
+          menorValorVendido: 0,
+          mediaVendas: 0,
+          totalVendas: 0,
+          lucroTotalVendas: 0
+        },
+        metodosPagamento: {
+          dinheiro: 0,
+          cartaoCredito: 0,
+          cartaoDebito: 0,
+          credito: 0,
+          mpesa: 0,
+          mkesh: 0,
+          emola: 0
+        },
+        fluxoCaixa: {
+          totalMovimentacoesEntradaCaixa: 0,
+          valorTotalEntradasCaixa: 0,
+          maiorValorIntroduzidoCaixa: 0,
+          menorValorIntroduzidoCaixa: 0,
+          mediaValorIntroduzidoCaixa: 0,
+          totalMovimentacoesSaidaCaixa: 0,
+          valorTotalSaidaCaixa: 0,
+          maiorValorRetiradoCaixa: 0,
+          menorValorRetiradoCaixa: 0,
+          mediaValoresRetiradoCaixa: 0,
+          totalMovimentacoesCaixa: 0,
+          valorTotalMovimentadoCaixa: 0
+        },
+        saldoCaixa:{
+          saldoDia: 0,
+        }
+      }
+    );
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+
+// Buscar a data de registo do estabelecimento
+onValue(dataRegistoRef, (snapshot) => {
+  let dado = snapshot.val();
+  const dataInscricao = dado.replace(/\//g, "-")
+  if (dataInscricao) {
+    registarRelatoriosPreset(dataInscricao)
+  }
+},
+{
+  onlyOnce: true,
+});
 
 // Buscar e exibir as compras no console
 onValue(todasVendasRef, (snapshot) => {
   let nrVendasDiarias = 0
+  let totalLucroVendas = 0
+  let todosLucrosVenda = []
+  let nrEntradasCaixa = 0
+  let nrSaidasCaixa = 0
+  let saldoInicialDia = 0
   let valorTotalVendasDiarias = 0
   let nrTotalMetodoDinheiro = 0
   let todosValoresVenda = []
@@ -117,9 +214,11 @@ onValue(todasVendasRef, (snapshot) => {
   let todoSaldoAdicionado = []
   let todoSaldoRetirado = []
   let nrTotalMetodoCartaoCredito = 0
-  let nrTotalMetodoCartaoDebito =0
+  let nrTotalMetodoCartaoDebito = 0
+  let nrTotalMetodoCredito = 0
   let nrTotalMetodoMpesa = 0
   let nrTotalMetodoEmola = 0
+  let nrTotalMetodoMkesh = 0
 
 
   snapshot.forEach((childSnapshot) => {
@@ -133,13 +232,38 @@ onValue(todasVendasRef, (snapshot) => {
             nrVendasDiarias ++
             valorTotalVendasDiarias = valorTotalVendasDiarias + compra.precoTotalVenda
             let todosValores = compra.precoTotalVenda
+            let lucrosVendaTotal = compra.lucroVenda.lucroVenda
+            todosLucrosVenda.push(lucrosVendaTotal)
             todosValoresVenda.push(todosValores)
 
             let metodoPagamento = compra.metodoPagamento
-            //console.log(compra);
     
-            /*if (Object.keys(metodoPagamento)[0] == "Dinheiro") {
+            if (Object.keys(metodoPagamento)[0] == "Dinheiro") {
                 nrTotalMetodoDinheiro ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "Cartão de Crédito") {
+              nrTotalMetodoCartaoCredito ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "Cartão de débito") {
+              nrTotalMetodoCartaoDebito ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "Crédito (Dívida)") {
+              nrTotalMetodoCredito ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "eMola") {
+              nrTotalMetodoEmola ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "mKesh") {
+              nrTotalMetodoMkesh ++
+            }
+
+            if (Object.keys(metodoPagamento)[0] == "m-Pesa") {
+              nrTotalMetodoMpesa ++
             }
             /*let metodos = compra.metodoPagamento
             metodos.forEach((childSnapshot) => {
@@ -150,8 +274,6 @@ onValue(todasVendasRef, (snapshot) => {
         }else{
         }
     }
-
-
   });
 
   // Buscar e exibir as compras no console
@@ -167,7 +289,6 @@ onValue(todasVendasRef, (snapshot) => {
 
         if (dataEntrada == dataActual) {
           todoSaldoAdicionado.push(saldoEntrada.saldoAdicionado)
-          console.log(saldoEntrada)
           
         }
       }
@@ -186,29 +307,151 @@ onValue(todasVendasRef, (snapshot) => {
         let dataEntrada = horaActualSaida.split(" - ")[1] 
 
         if (dataEntrada == dataActual) {
-          todoSaldoAdicionado.push(saldoSaida.saldoRetirado)
-          console.log(saldoSaida)
+          todoSaldoRetirado.push(saldoSaida.saldoRetirado)
           
         }
       }
     })
   })
+
   
-  console.log(todoSaldoAdicionado)
+  let estatisticasLucroVenda = calcularEstatisticas(todosLucrosVenda)
+
   let estatisticas = calcularEstatisticas(todosValoresVenda);
-  estatisticas.media = estatisticas.soma / todosValoresVenda.length;
+  estatisticas.media = (estatisticas.maior == -Infinity ? 0 : estatisticas.soma  / nrVendasDiarias);
+  
   let estatisticasSaldoEntrada = calcularEstatisticas(todoSaldoAdicionado);
-  estatisticasSaldoEntrada.media = estatisticasSaldoEntrada.soma / todoSaldoAdicionado.length;
+  nrEntradasCaixa = todoSaldoAdicionado.length == undefined ? 0 : todoSaldoAdicionado.length
+  estatisticasSaldoEntrada.media = (estatisticasSaldoEntrada.maior == -Infinity ? 0 : estatisticasSaldoEntrada.soma / nrEntradasCaixa) ;
   
   let estatisticasSaldoSaida = calcularEstatisticas(todoSaldoRetirado);
-  estatisticasSaldoSaida.media = estatisticasSaldoSaida.soma / todoSaldoRetirado.length;
+  nrSaidasCaixa = todoSaldoRetirado.length == undefined ? 0 : todoSaldoRetirado.length
+  estatisticasSaldoSaida.media = (estatisticasSaldoSaida.maior == -Infinity ? 0 : estatisticasSaldoSaida.soma / nrSaidasCaixa) ;
 
-  console.log("numero total de compras com o metodo de pa gamento Dinheiro feito pela cliente Beatriz e: " + nrTotalMetodoDinheiro);
-  console.log("numero total de compras da  Beatriz e: " + nrVendasDiarias);
-  console.log("O valor total de vendas e: " + valorTotalVendasDiarias);
 
   
-  console.log(
+
+
+  btnRegistarRelatorioDia.addEventListener("click", ()=>{
+    // verificando se o usuario e adm
+    onValue(usuariosRef, (snapshot) => {
+      let cargo = ""
+
+      function registarRelatoriosDoDia() {
+        try {
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/relatorios/" + dataActualRef
+            ),
+            {
+              dadosFecho: {
+                nomeEstabelecimento: usuarioEstabelecimento,
+                localizacaoEstabelecimento: localEstabelecimento,
+                emailEstabelecimento: emailEstabelecimento,
+                telefoneEstabelecimento: telefoneEstabelecimento,
+                responsavelFecho: usuarioFecho,
+                dataFecho: dataActual,
+                horaFecho: horaActual
+              },
+              vendas: {
+                numerosVendas: nrVendasDiarias,
+                maiorValorVendido: (estatisticas.maior == -Infinity ? 0 : estatisticas.maior),
+                menorValorVendido: (estatisticas.menor == Infinity ? 0 : estatisticas.menor),
+                mediaVendas: (estatisticas.media).toFixed(2),
+                totalVendas: estatisticas.soma,
+                lucroTotalVendas: estatisticasLucroVenda.soma
+              },
+              metodosPagamento: {
+                dinheiro: nrTotalMetodoDinheiro,
+                cartaoCredito: nrTotalMetodoCartaoCredito,
+                cartaoDebito: nrTotalMetodoCartaoDebito,
+                credito: nrTotalMetodoCredito,
+                mpesa: nrTotalMetodoMpesa,
+                mkesh: nrTotalMetodoMkesh,
+                emola: nrTotalMetodoEmola
+              },
+              fluxoCaixa: {
+                totalMovimentacoesEntradaCaixa: nrEntradasCaixa,
+                valorTotalEntradasCaixa: (estatisticasSaldoEntrada.soma ? estatisticasSaldoEntrada.soma : 0),
+                maiorValorIntroduzidoCaixa: (estatisticasSaldoEntrada.maior == -Infinity ? 0 : estatisticasSaldoEntrada.maior),
+                menorValorIntroduzidoCaixa: (estatisticasSaldoEntrada.menor == Infinity ? 0 : estatisticasSaldoEntrada.menor),
+                mediaValorIntroduzidoCaixa: (estatisticasSaldoEntrada.media).toFixed(2),
+                totalMovimentacoesSaidaCaixa: nrSaidasCaixa,
+                valorTotalSaidaCaixa: (estatisticasSaldoSaida.soma ? estatisticasSaldoSaida.soma : 0),
+                maiorValorRetiradoCaixa: (estatisticasSaldoSaida.maior == -Infinity ? 0 : estatisticasSaldoSaida.maior),
+                menorValorRetiradoCaixa: (estatisticasSaldoSaida.menor == Infinity ? 0 : estatisticasSaldoSaida.menor),
+                mediaValoresRetiradoCaixa: (estatisticasSaldoSaida.media).toFixed(2),
+                totalMovimentacoesCaixa: nrEntradasCaixa + nrSaidasCaixa,
+                valorTotalMovimentadoCaixa: (estatisticasSaldoEntrada.soma ? estatisticasSaldoEntrada.soma : 0) + (estatisticasSaldoSaida.soma ? estatisticasSaldoSaida.soma : 0)
+              },
+              saldoCaixa:{
+                saldoDia: (valorTotalVendasDiarias + (estatisticasSaldoEntrada.soma ? estatisticasSaldoEntrada.soma : 0)) - (estatisticasSaldoSaida.soma ? estatisticasSaldoSaida.soma : 0),
+              }
+            }
+          );
+          
+          AlertaSucesso("relatorio registado com sucesso")
+        } catch (error) {
+          console.log(error)
+        }
+        
+      }
+
+      //registarRelatoriosDoDia()
+
+      snapshot.forEach((childSnapshot) => {
+        const usuarios = childSnapshot.val();
+
+        if (usuarioFecho == usuarios.nomeColab) {
+          if (usuarios.catgColab == "Administrador" || "Gerente") {
+
+            try {
+              onValue(ref(
+                db,
+                "estabelecimentos/" +
+                  usuarioEstabelecimento +
+                  "/relatorios"
+              ), (snapshot) => {
+  
+                snapshot.forEach((childSnapshot) => {
+                  const relatorios = childSnapshot.val();
+                  let dataDoFecho  = relatorios.dadosFecho.dataFecho
+
+                  if (dataDoFecho) {
+                    if (dataDoFecho != dataActual) {
+                      registarRelatoriosDoDia()
+                    } else {
+                      AlertaInfo("Ja existe um relatorio para a data de hoje")
+                    }
+                  } else {
+                    //registarRelatoriosDoDia()
+                  }
+                })
+  
+              },
+              {
+                onlyOnce: true,
+              });
+              
+            } catch (error) {
+              console.log(error)
+            }
+          } else {
+            AlertaErro("Não está autorizado a realizar esta operação")
+          }
+        }
+      })
+    },
+    {
+      onlyOnce: true,
+    });
+
+  })
+  
+  /*console.log(
     'Nome do estabelecimento: ' + usuarioEstabelecimento + 
     '      Localizacao do estabelecimento: ' + localEstabelecimento + 
     '      Email: ' + emailEstabelecimento + 
@@ -216,21 +459,22 @@ onValue(todasVendasRef, (snapshot) => {
     "      Usuario que realizou o fecho: " + usuarioFecho +
     '      data e data do fecho: ' + dataActual + " - " + horaActual + 
     "      Numero total de vendas: " + nrVendasDiarias  + 
-    '      Maior valor vendido: ' + estatisticas.maior + 
-    '      Menor valor vendido: ' + estatisticas.menor + 
+    '      Maior valor vendido: ' + (estatisticas.maior == -Infinity ? 0 : estatisticas.maior) + 
+    '      Menor valor vendido: ' + (estatisticas.menor == Infinity ? 0 : estatisticas.menor) + 
     '      media de vendas: ' + (estatisticas.media).toFixed(2) + 
-    '      Total vendas: ' + estatisticas.soma + 
-    '      Total de movimentacoes de entrada no caixa: ' + estatisticasSaldoEntrada.length +  + 
-    '      Valor total de entradas no caixa: ' + estatisticasSaldoEntrada.soma  + 
-    '      Maior valor introduzido no caixa: ' + estatisticasSaldoEntrada.maior  +  
-    '      Menor valor introduzido no caixa: ' + estatisticasSaldoEntrada.menor +  
-    '      Media dos valores introduzidos no caixa: ' + estatisticasSaldoEntrada.media  + 
-    '      Total de movimentacoes de saida no caixa: ' + estatisticasSaldoSaida.length  + 
-    '      Valor total de saidas no caixa: ' + estatisticasSaldoSaida.soma  + 
-    '      Maior valor retirado no caixa: ' + estatisticasSaldoSaida.maior +  
-    '      Menor valor retirados no caixa: ' + estatisticasSaldoSaida.menor +  
-    '      Media dos valores iretirados no caixa: ' + estatisticasSaldoSaida.media 
-  )
+    '      Total vendas: ' + estatisticas.soma +  
+    '      Lucro das vendas: ' + estatisticasLucroVenda.soma + 
+    '      Total de movimentacoes de entrada no caixa: ' + nrEntradasCaixa  + 
+    '      Valor total de entradas no caixa: ' + (estatisticasSaldoEntrada.soma ? estatisticasSaldoEntrada.soma : 0) + 
+    '      Maior valor introduzido no caixa: ' + (estatisticasSaldoEntrada.maior == -Infinity ? 0 : estatisticasSaldoEntrada.maior) +  
+    '      Menor valor introduzido no caixa: ' + (estatisticasSaldoEntrada.menor == Infinity ? 0 : estatisticasSaldoEntrada.menor)  +  
+    '      Media dos valores introduzidos no caixa: ' + (estatisticasSaldoEntrada.media).toFixed(2)  + 
+    '      Total de movimentacoes de saida no caixa: ' + nrSaidasCaixa  + 
+    '      Valor total de saidas no caixa: ' + (estatisticasSaldoSaida.soma ? estatisticasSaldoSaida.soma : 0)   + 
+    '      Maior valor retirado no caixa: ' + (estatisticasSaldoSaida.maior == -Infinity ? 0 : estatisticasSaldoSaida.maior)  +  
+    '      Menor valor retirados no caixa: ' + (estatisticasSaldoSaida.menor == Infinity ? 0 : estatisticasSaldoSaida.menor)  +  
+    '      Media dos valores iretirados no caixa: ' + (estatisticasSaldoSaida.media).toFixed(2)  
+  )*/
 
 
   /*console.log(estatisticas); // { soma: 80, maior: 30, menor: 5, media: 16 }
@@ -238,8 +482,156 @@ onValue(todasVendasRef, (snapshot) => {
   todosValoresVenda.sort((a, b) => a - b);
   todosValoresVenda.reverse()
   console.log("Maior valor vendido do dia: " + todosValoresVenda[0]);*/
+},
+{
+  onlyOnce: false,
 });
 
 
 
 
+
+
+
+
+
+
+
+
+/*import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+import { firebaseConfig } from "../logico/firebaseConfig.js";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  query,
+  orderByChild,
+  equalTo,
+} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+
+// Constantes para configuração
+const STORAGE_KEYS = {
+  ESTABELECIMENTO: "usuarioEstabelecimento",
+  USUARIO: "nomeUser",
+  LOCAL: "localEstabelecimento",
+  EMAIL: "emailEstabelecimento",
+  TELEFONE: "telefoneEstabelecimento",
+};
+
+class RelatorioDiario {
+  constructor() {
+    this.initFirebase();
+    this.dataAtual = this.obterDataAtual();
+    this.horaAtual = this.obterHoraAtual();
+    this.dadosEstabelecimento = this.carregarDadosEstabelecimento();
+  }
+
+  initFirebase() {
+    try {
+      const app = initializeApp(firebaseConfig);
+      this.db = getDatabase(app);
+    } catch (error) {
+      this.registrarErro("Erro ao inicializar Firebase", error);
+    }
+  }
+
+  registrarErro(mensagem, erro) {
+    console.error(`${mensagem}: `, erro);
+    // Opcional: Implementar log de erros em serviço externo
+  }
+
+  obterDataAtual() {
+    const now = new Date();
+    return `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+  }
+
+  obterHoraAtual() {
+    const now = new Date();
+    return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+  }
+
+  carregarDadosEstabelecimento() {
+    try {
+      return {
+        nome: localStorage.getItem(STORAGE_KEYS.ESTABELECIMENTO),
+        local: localStorage.getItem(STORAGE_KEYS.LOCAL),
+        email: localStorage.getItem(STORAGE_KEYS.EMAIL),
+        telefone: localStorage.getItem(STORAGE_KEYS.TELEFONE),
+        usuarioFecho: localStorage.getItem(STORAGE_KEYS.USUARIO),
+      };
+    } catch (error) {
+      this.registrarErro("Erro ao carregar dados do estabelecimento", error);
+      return {};
+    }
+  }
+
+  calcularEstatisticas(numeros) {
+    if (!numeros || numeros.length === 0) return null;
+
+    return numeros.reduce(
+      (acc, num) => {
+        acc.soma += num;
+        acc.maior = Math.max(acc.maior, num);
+        acc.menor = Math.min(acc.menor, num);
+        return acc;
+      },
+      { soma: 0, maior: -Infinity, menor: Infinity, media: 0 }
+    );
+  }
+
+  processarVendasDiarias() {
+    const vendasRef = ref(
+      this.db,
+      `estabelecimentos/${this.dadosEstabelecimento.nome}/vendas/todasVendas`
+    );
+
+    onValue(
+      vendasRef,
+      (snapshot) => {
+        const vendasDoDia = [];
+
+        snapshot.forEach((childSnapshot) => {
+          const venda = childSnapshot.val();
+          if (this.validarVendaDoDia(venda)) {
+            vendasDoDia.push(venda);
+          }
+        });
+
+        this.gerarRelatorioDiario(vendasDoDia);
+      },
+      (error) => {
+        this.registrarErro("Erro ao processar vendas", error);
+      }
+    );
+  }
+
+  validarVendaDoDia(venda) {
+    return (
+      venda.horaActual && venda.horaActual.split(" - ")[1] === this.dataAtual
+    );
+  }
+
+  gerarRelatorioDiario(vendasDoDia) {
+    const estatisticasVendas = this.calcularEstatisticas(
+      vendasDoDia.map((venda) => venda.precoTotalVenda)
+    );
+
+    console.log("Relatório Diário", {
+      estabelecimento: this.dadosEstabelecimento,
+      dataHora: `${this.dataAtual} - ${this.horaAtual}`,
+      totalVendas: vendasDoDia.length,
+      estatisticasVendas,
+    });
+  }
+
+  iniciar() {
+    this.processarVendasDiarias();
+  }
+}
+
+// Inicialização
+document.addEventListener("DOMContentLoaded", () => {
+  const relatorioDiario = new RelatorioDiario();
+  relatorioDiario.iniciar();
+});
+*/

@@ -16,9 +16,14 @@ var usuarioEstabelecimento = window.localStorage.getItem(
 var bodyClientes = document.querySelector(".bodyClientes");
 var divDetalhesCliente = document.querySelector(".divDetalhesCliente");
 var tituloModalCliente = document.querySelector(".tituloModalCliente");
-var saldoDividaCliente = document.querySelector(".saldoDividaCliente");
+var saldoDividaCliente = document.querySelector(".saldoDividaClienteTxt");
+var btnVercomprasCliente = document.querySelector(".btnVercomprasCliente")
+var btnVerComprasCreditoCliente = document.querySelector(".btnVerComprasCreditoCliente")
 var frequenciaComprasCliente = document.querySelector(
   ".frequenciaComprasCliente"
+);
+var frequenciaComprasClienteCredito = document.querySelector(
+  ".frequenciaComprasClienteCredito"
 );
 
 // Função para adicionar cliente na lista
@@ -43,6 +48,7 @@ function addClienteNaLista(nomeCliente, endereco, telefone, email) {
   divCol.classList.add("col-md-4", "mb-3");
   divCard.classList.add("card", "cardCliente");
   divCard.style.cursor = "pointer";
+  divCard.style.marginBottom = "10px";
   divCardBody.classList.add("card-body");
   nomeClienteTxt.classList.add("card-title");
   nomeClienteTxt.style.fontSize = "18px";
@@ -52,7 +58,10 @@ function addClienteNaLista(nomeCliente, endereco, telefone, email) {
   divCard.appendChild(divCardBody);
   divCardBody.appendChild(nomeClienteTxt);
 
-  bodyClientes.appendChild(divCol);
+  if(nomeCliente != undefined){
+    bodyClientes.appendChild(divCol);
+    
+  }
 }
 
 // Função para adicionar detalhes do cliente no modal
@@ -72,8 +81,12 @@ function addDetalhesClienteModal(cliente) {
   `;
 
   divDetalhesCliente.innerHTML = detalhesHTML;
-  saldoDividaCliente.innerHTML = cliente.saldoDivida + " " + TipoMoeda;
+  saldoDividaCliente.innerHTML = cliente.saldoDivida;
+  frequenciaComprasClienteCredito.innerHTML = cliente.frequenciaComprasCredito
   frequenciaComprasCliente.innerHTML = cliente.frequenciaCompras + " compras";
+  /*cliente.historicoCompras.forEach((e)=>{
+    console.log(e)
+  })*/
 }
 
 // Função para carregar detalhes do cliente do Firebase

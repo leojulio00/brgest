@@ -1,4 +1,5 @@
 import { firebaseConfig } from "../logico/firebaseConfig.js";
+import { geradorRecibos } from "../recibo/reciboEletronico.js";
 import { TipoMoeda } from "../saldo/tipoMoeda.js";
 import { usuarioMail, usuarioNome, usuarioTel } from "../login/login.js";
 import { CodigoMesaClicado } from "../mesas/mesas.js";
@@ -50,6 +51,10 @@ var btnRegVenda = document.querySelector(".btnRegVenda");
 var btnAdicionarProdutos = document.querySelector(".btnAdicionarProdutos");
 var btnAdicionarMetodo = document.querySelector(".btnAdicionarMetodo");
 var btnFecharModalVendas = document.querySelector(".btnFecharModalVendas");
+var btnEnviarReciboCliente = document.querySelector(".btnEnviarReciboCliente");
+var btnFecharModalConformacaovenda = document.querySelector(
+  ".btnFecharModalConformacaovenda"
+);
 var cardNenhumProd = document.querySelector(".cardNenhumProd");
 var alertaInfo = document.querySelector(".alerta-info");
 var alertaErro = document.querySelector(".alerta-erro");
@@ -58,6 +63,7 @@ var divCalculoTroco = document.querySelector(".divCalculoTroco");
 var valorTotalVenda = document.querySelector(".valorTotalVenda");
 var valorPagoCliente = document.querySelector(".valorPagoCliente");
 var trocoCliente = document.querySelector(".trocoCliente");
+var inputTroco = document.querySelector(".inputTroco");
 const txtAdicionarClientes = document.querySelector(".txtAdicionarClientes");
 const btnVoltarCategorias = document.querySelector(".btnVoltarCategorias");
 
@@ -101,13 +107,13 @@ function AlertaInfo(mensagem) {
   info.innerHTML = mensagem;
   alertaInfo.appendChild(info);
   alertaInfo.style.display = "block";
-  alertaInfo.style.zIndex = "1000"
+  alertaInfo.style.zIndex = "1000";
   setTimeout(() => {
     alertaInfo.style.display = "none";
     info.innerHTML = "";
   }, 2500);
 }
-
+/*
 divSelecProdutos.style.display = "block";
 divSelecMetodos.style.display = "none";
 finalizarPreVenda.style.display = "none";
@@ -123,6 +129,7 @@ set(
     valorTotal: 0,
   }
 );
+*/
 
 function regVendasNormal() {
   set(
@@ -141,6 +148,7 @@ function regVendasNormal() {
     db,
     "estabelecimentos/" + usuarioEstabelecimento + "/produtos/selecProdutos"
   );
+
   const dbRefMethSelect = ref(
     db,
     "estabelecimentos/" +
@@ -148,8 +156,36 @@ function regVendasNormal() {
       "/metodosPagamento/metodoSelecionado"
   );
 
+  const dbRefCliente = ref(
+    db,
+    "estabelecimentos/" +
+      usuarioEstabelecimento +
+      "/produtos/clienteSelecionado/nomeCliente"
+  );
+
+  const dbRefTrocoVenda = ref(
+    db,
+    "estabelecimentos/" +
+      usuarioEstabelecimento +
+      "/produtos/trocoVendaSelecionada/trocoVenda"
+  );
+
+  try {
+  } catch (error) {
+    console.error(error);
+  }
+
   remove(dbRefProdSelect);
   remove(dbRefMethSelect);
+  remove(dbRefCliente);
+  remove(dbRefTrocoVenda);
+
+  localStorage.removeItem("produtosSelecionados");
+  localStorage.removeItem("metodoPagamento");
+  localStorage.removeItem("valorTotalVenda");
+  localStorage.removeItem("troco");
+  localStorage.removeItem("cliente");
+  localStorage.removeItem("metodoCreditoEscolhido");
 
   let divCol = document.createElement("div");
   let divCard = document.createElement("div");
@@ -160,9 +196,9 @@ function regVendasNormal() {
   let divCardBody2 = document.createElement("div");
   let nomeProdTxt = document.createElement("p");
 
-  produtosCategoria.innerHTML = ""
-  produtosAdicio.innerHTML = ""
-  AdicionarProdutosDiv()
+  produtosCategoria.innerHTML = "";
+  produtosAdicio.innerHTML = "";
+  AdicionarProdutosDiv();
 
   nomeMetodoTxt.innerHTML = "Nenhum método Escolhido";
   nomeProdTxt.innerHTML = "Nenhum produto Escolhido";
@@ -209,9 +245,14 @@ function regVendasNormal() {
   divSelecMetodos.style.display = "none";
   finalizarPreVenda.style.display = "none";
 
+  window.localStorage.setItem("prodEscolhido", false);
+  window.localStorage.removeItem("valorTotalProdutos");
+  divSelecProdutos.style.display = "block";
+  finalizarPreVenda.style.display = "none";
+  divSelecMetodos.style.display = "none";
+
   btnFecharModalVendas.click();
 }
-
 
 /*function addItemToTable(nomeProd, precVenda, tipoMoeda, lucroProduto) {
   let divCol = document.createElement("div");
@@ -341,7 +382,7 @@ function AdicionarProdutosDiv() {
     // Limpar a div antes de adicionar novos elementos
     produtosCategoria.innerHTML = "";
     produtosAdicio.style.display = "none";
-    produtosCategoria.style.display = "block"
+    produtosCategoria.style.display = "block";
 
     snapshot.forEach((childSnapshot) => {
       const categoria = childSnapshot.val();
@@ -365,163 +406,172 @@ function AdicionarProdutosDiv() {
       listItem.classList.add("card-title");
       listItem.style.margin = "0px 5px";
 
-      
       listItem.textContent = `${categoria.nomeCategoria}`;
 
-
-      
       divCol.addEventListener("click", () => {
-
         // Carregar e exibir todas as categorias cadastradas
-        onValue(ref(
-          db,
-          "estabelecimentos/" + usuarioEstabelecimento + "/produtos/todosProdutos"
-          ), (snapshot) => {
-          // Limpar a div antes de adicionar novos elementos
-          produtosAdicio.innerHTML = "";
-          produtosCategoria.style.display = "none";
-          produtosAdicio.style.display = "block";
+        onValue(
+          ref(
+            db,
+            "estabelecimentos/" +
+              usuarioEstabelecimento +
+              "/produtos/todosProdutos"
+          ),
+          (snapshot) => {
+            // Limpar a div antes de adicionar novos elementos
+            produtosAdicio.innerHTML = "";
+            produtosCategoria.style.display = "none";
+            produtosAdicio.style.display = "block";
 
-          snapshot.forEach((childSnapshot) => {
-            const produtos = childSnapshot.val();
-            
-            if (categoria.nomeCategoria == produtos.categoriaProd && produtos.quantProdE >= 0) {
-              let divCol = document.createElement("div");
-              let divCard = document.createElement("div");
-              let divCardBody = document.createElement("div");
-              let produNome = document.createElement("h3");
-              let produQuantidade = document.createElement("h5");
-              let produPreco = document.createElement("h1");
-              let quantProduto = 1;
-              //produQuantidade.innerHTML = 'Qtd ' + quantProduto
+            snapshot.forEach((childSnapshot) => {
+              const produtos = childSnapshot.val();
 
-              produNome.innerHTML = produtos.nomeProd;
-              produPreco.innerHTML = produtos.precVenda + " " + produtos.tipoMoeda;
+              if (
+                categoria.nomeCategoria == produtos.categoriaProd &&
+                produtos.quantProdE >= 0
+              ) {
+                let divCol = document.createElement("div");
+                let divCard = document.createElement("div");
+                let divCardBody = document.createElement("div");
+                let produNome = document.createElement("h3");
+                let produQuantidade = document.createElement("h5");
+                let produPreco = document.createElement("h1");
+                let quantProduto = 1;
+                //produQuantidade.innerHTML = 'Qtd ' + quantProduto
 
-              if (produtos.quantProdE >= 0) {
-                divCard.addEventListener("click", () => {
-                  const db = getDatabase();
-                  let quantProdEDisponivel;
-                  const dbRefQuantProd = ref(
-                    db,
-                    "estabelecimentos/" +
-                      usuarioEstabelecimento +
-                      "/produtos/todosProdutos/" +
-                      produtos.nomeProd
-                  );
-  
-                  let quantProdutoFinal = quantProduto++;
-  
-                  function AdicionarProdutos() {
-                    set(
-                      ref(
-                        db,
-                        "estabelecimentos/" +
-                          usuarioEstabelecimento +
-                          "/produtos/selecProdutos/" +
-                          produtos.nomeProd
-                      ),
-                      {
-                        nomeProduto: produtos.nomeProd,
-                        quantidadeProd: quantProduto - 1,
-                        precoProduto: produtos.precVenda,
-                        tipoMoeda: produtos.tipoMoeda,
-                        lucroProduto: produtos.lucroProd * (quantProduto - 1),
-                        precoTotalProduto: produtos.precVenda * (quantProduto - 1),
-                      }
-                    );
-  
-                    produQuantidade.innerHTML = "Qtd " + quantProdutoFinal;
-  
-                    if (divCard.classList.contains("cardRegVendasSelecionado")) {
-                      //
-                    } else {
-                      divCard.classList.add("cardRegVendasSelecionado");
-                    }
-  
-                    let valorActual = 0;
-                    let valorSomado = 0;
-                    let valorProduto = produtos.precVenda;
-                    const dbRef = ref(
+                produNome.innerHTML = produtos.nomeProd;
+                produPreco.innerHTML =
+                  produtos.precVenda + " " + produtos.tipoMoeda;
+
+                if (produtos.quantProdE >= 0) {
+                  divCard.addEventListener("click", () => {
+                    const db = getDatabase();
+                    let quantProdEDisponivel;
+                    const dbRefQuantProd = ref(
                       db,
                       "estabelecimentos/" +
                         usuarioEstabelecimento +
-                        "/produtos/selecProdutosValor"
+                        "/produtos/todosProdutos/" +
+                        produtos.nomeProd
                     );
-  
-                    onValue(dbRef, (snapshot) => {
-                      var data = snapshot.val();
-                      valorActual = data.valorTotal;
-                    });
-  
-                    valorSomado = parseInt(valorProduto) + parseInt(valorActual);
-  
-                    set(
-                      ref(
+
+                    let quantProdutoFinal = quantProduto++;
+
+                    function AdicionarProdutos() {
+                      set(
+                        ref(
+                          db,
+                          "estabelecimentos/" +
+                            usuarioEstabelecimento +
+                            "/produtos/selecProdutos/" +
+                            produtos.nomeProd
+                        ),
+                        {
+                          nomeProduto: produtos.nomeProd,
+                          quantidadeProd: quantProduto - 1,
+                          precoProduto: produtos.precVenda,
+                          tipoMoeda: produtos.tipoMoeda,
+                          lucroProduto: produtos.lucroProd * (quantProduto - 1),
+                          precoTotalProduto:
+                            produtos.precVenda * (quantProduto - 1),
+                        }
+                      );
+
+                      produQuantidade.innerHTML = "Qtd " + quantProdutoFinal;
+
+                      if (
+                        divCard.classList.contains("cardRegVendasSelecionado")
+                      ) {
+                        //
+                      } else {
+                        divCard.classList.add("cardRegVendasSelecionado");
+                      }
+
+                      let valorActual = 0;
+                      let valorSomado = 0;
+                      let valorProduto = produtos.precVenda;
+                      const dbRef = ref(
                         db,
                         "estabelecimentos/" +
                           usuarioEstabelecimento +
-                          "/produtos/selecProdutosValor/"
-                      ),
-                      {
-                        valorTotal: valorSomado,
-                      }
-                    );
-                  }
-  
-                  onValue(dbRefQuantProd, (snapshot) => {
-                    const data = snapshot.val();
-  
-                    quantProdEDisponivel = data.quantProdE;
-  
-                    if (quantProdEDisponivel > quantProduto - 2) {
-                      AdicionarProdutos();
-                    } else {
-                      AlertaInfo("Estoque do produto " + data.nomeProd + " está no nivel crítico");
+                          "/produtos/selecProdutosValor"
+                      );
+
+                      onValue(dbRef, (snapshot) => {
+                        var data = snapshot.val();
+                        valorActual = data.valorTotal;
+                      });
+
+                      valorSomado =
+                        parseInt(valorProduto) + parseInt(valorActual);
+
+                      set(
+                        ref(
+                          db,
+                          "estabelecimentos/" +
+                            usuarioEstabelecimento +
+                            "/produtos/selecProdutosValor/"
+                        ),
+                        {
+                          valorTotal: valorSomado,
+                        }
+                      );
                     }
+
+                    onValue(dbRefQuantProd, (snapshot) => {
+                      const data = snapshot.val();
+
+                      quantProdEDisponivel = data.quantProdE;
+
+                      if (quantProdEDisponivel > quantProduto - 2) {
+                        AdicionarProdutos();
+                      } else {
+                        AlertaInfo(
+                          "Estoque do produto " +
+                            data.nomeProd +
+                            " está no nivel crítico"
+                        );
+                      }
+                    });
                   });
-                });
+                } else {
+                  AlertaInfo("Não tem produto suficiente no estoque");
+                }
+
+                divCol.classList.add("col");
+                divCard.classList.add("card");
+                divCard.classList.add("cardRegVendas");
+                divCardBody.classList.add("card-body");
+                produNome.classList.add("card-title");
+                produNome.style.fontSize = "18px";
+                produPreco.classList.add("card-title");
+                produPreco.style.fontSize = "26px";
+                produQuantidade.classList.add("card-text");
+                produQuantidade.style.fontSize = "16px";
+
+                divCol.appendChild(divCard);
+                divCard.appendChild(divCardBody);
+                divCardBody.appendChild(produNome);
+                divCardBody.appendChild(produPreco);
+                divCardBody.appendChild(produQuantidade);
+
+                produtosAdicio.appendChild(divCol);
               } else {
-                
-                AlertaInfo("Não tem produto suficiente no estoque");
               }
-              
-
-              divCol.classList.add("col");
-              divCard.classList.add("card");
-              divCard.classList.add("cardRegVendas");
-              divCardBody.classList.add("card-body");
-              produNome.classList.add("card-title");
-              produNome.style.fontSize = "18px";
-              produPreco.classList.add("card-title");
-              produPreco.style.fontSize = "26px";
-              produQuantidade.classList.add("card-text");
-              produQuantidade.style.fontSize = "16px";
-
-              divCol.appendChild(divCard);
-              divCard.appendChild(divCardBody);
-              divCardBody.appendChild(produNome);
-              divCardBody.appendChild(produPreco);
-              divCardBody.appendChild(produQuantidade);
-
-              produtosAdicio.appendChild(divCol);
-            } else {
-              
-            }
-          });
-        });
+            });
+          }
+        );
       });
 
       divCol.appendChild(divCard);
       divCard.appendChild(divCardBody);
       divCardBody.appendChild(listItem);
       produtosCategoria.appendChild(divCol);
-      
     });
   });
 }
 
-
+regVendasNormal();
 
 /*function addAllItemsToTable(produtos) {
   var categoriaEscolhida = ""
@@ -741,6 +791,17 @@ function PegarMetodosSelecionado() {
   const metodoDinheiro = Array.from(metodosEscolhidos).some((card) =>
     card.textContent.toLowerCase().includes("dinheiro")
   );
+
+  // Verificar se é pagamento em credito e validar o troco
+  const metodoCredito = Array.from(metodosEscolhidos).some((card) =>
+    card.textContent.toLowerCase().includes("crédito (dívida)")
+  );
+
+  if (metodoCredito) {
+    window.localStorage.setItem("metodoCreditoEscolhido", true);
+  } else {
+    console.log("metod credito nao escolhido");
+  }
 
   // Mostrar ou esconder div de troco baseado no método
   if (metodoDinheiro) {
@@ -1052,18 +1113,20 @@ btnFinalizarVenda.addEventListener("click", () => {
       "/produtos/selecProdutosValor"
   );
 
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
+  onValue(
+    dbRef,
+    (snapshot) => {
+      const data = snapshot.val();
 
-    valorTotal = data.valorTotal;
-    
-    spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda;
+      valorTotal = data.valorTotal;
 
-    window.localStorage.setItem("valorTotalProdutos", valorTotal);
+      spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda;
 
-    window.localStorage.setItem("prodEscolhido", true);
+      window.localStorage.setItem("valorTotalProdutos", valorTotal);
 
-    /*set(
+      window.localStorage.setItem("prodEscolhido", true);
+
+      /*set(
       ref(
         db,
         "estabelecimentos/" +
@@ -1074,12 +1137,11 @@ btnFinalizarVenda.addEventListener("click", () => {
         valorTotal: valorTotal,
       }
     );*/
-  },
-  {
-    onlyOnce: true,
-  });
-
-  
+    },
+    {
+      onlyOnce: true,
+    }
+  );
 });
 
 const dbRef = ref(
@@ -1116,10 +1178,9 @@ botaoProximo.addEventListener("click", () => {
 
   produtosCategoria.style.display = "block";
   produtosAdicio.style.display = "none";
-    
+
   btnFinalizarVenda.click();
 
-  
   //passarPTelaMetodos()
   window.onload = PegarTdsProdutosSelecionados();
 });
@@ -1182,7 +1243,6 @@ btnAdicionarProdutos.addEventListener("click", () => {
     divSelecMetodos.style.display = "none";
     produtosCategoria.style.display = "block";
     produtosAdicio.style.display = "none";
-    
   } else {
     //alert('Adicione um metodo')
   }
@@ -1207,25 +1267,20 @@ btnAdicionarMetodo.addEventListener("click", () => {
 botaoCancelar.addEventListener("click", () => {
   let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
 
+  regVendasNormal();
+  //alert('Cancelado com sucesso')
+  AlertaInfo("Cancelado com sucesso");
+
   if (prodEscolhidoLocalStorage == "true") {
-    regVendasNormal();
-    //alert('Cancelado com sucesso')
-    AlertaInfo("Cancelado com sucesso");
-    window.localStorage.setItem("prodEscolhido", false);
-    window.localStorage.removeItem("valorTotalProdutos");
-    divSelecProdutos.style.display = "block";
-    finalizarPreVenda.style.display = "none";
-    divSelecMetodos.style.display = "none";
   } else {
     //alert('Nada seleciondo')
-    AlertaInfo("Cancelado com sucesso");
+    AlertaErro("Algo deu errado");
   }
 
   // Ocultar a div mostrarTroco após cancelar a venda
   document.querySelector(".mostrarTroco").style.display = "none";
 
   txtAdicionarClientes.innerHTML = "Cliente Selecionado: ";
-  
 });
 
 botaoCancelar2.addEventListener("click", () => {
@@ -1242,12 +1297,9 @@ botaoCancelar2.addEventListener("click", () => {
   }
 });
 
-
 btnVoltarCategorias.addEventListener("click", () => {
-  
   produtosCategoria.style.display = "block";
   produtosAdicio.style.display = "none";
-
 });
 
 var chaveVendasString;
@@ -1278,17 +1330,19 @@ const dbRefValorTtlProd = ref(
   "estabelecimentos/" + usuarioEstabelecimento + "/produtos/selecProdutosValor"
 );
 
-onValue(dbRefValorTtlProd, (snapshot) => {
-  const data = snapshot.val();
+onValue(
+  dbRefValorTtlProd,
+  (snapshot) => {
+    const data = snapshot.val();
 
-  valorTotalProdutos = data.valorTotal;
+    valorTotalProdutos = data.valorTotal;
 
-  
-  console.log(valorTotalProdutos)
-},
-{
-  onlyOnce: true,
-});
+    //console.log(valorTotalProdutos);
+  },
+  {
+    onlyOnce: true,
+  }
+);
 
 onValue(
   dbRefSaldo,
@@ -1409,11 +1463,8 @@ var now = new Date();
 
 // Adicionar evento para calcular troco em tempo real
 document.addEventListener("DOMContentLoaded", function () {
-  const inputTroco = document.querySelector(".inputTroco");
-
   if (inputTroco) {
     inputTroco.addEventListener("input", function () {
-
       const valorTotal = parseFloat(
         spanTotalVenda.innerHTML.replace(/[^0-9.-]+/g, "")
       );
@@ -1422,11 +1473,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
       valorTrocoGlobal = troco; // Armazenar o troco na variável global
 
-
       if (troco >= 0) {
         document.querySelector(".mostrarTroco p").innerHTML =
           "Troco: " + troco.toFixed(2) + " " + TipoMoeda;
         document.querySelector(".mostrarTroco p").style.color = "#198754"; // Verde para troco positivo
+
+        try {
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/produtos/trocoVendaSelecionada"
+            ),
+            {
+              trocoVenda: troco.toFixed(2),
+            }
+          );
+        } catch (error) {
+          console.error(error);
+        }
       } else {
         document.querySelector(".mostrarTroco p").innerHTML =
           "Valor insuficiente";
@@ -1434,309 +1500,334 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   } else {
-    console.log("Input troco não encontrado!"); // Debug se o elemento não for encontrado
+    //console.log("Input troco não encontrado!"); // Debug se o elemento não for encontrado
   }
 });
 
 btnRegVenda.addEventListener("click", () => {
-  // Capturar o nome do cliente selecionado
-
-  const nomeCliente = txtAdicionarClientes
-    ? txtAdicionarClientes.textContent.replace("Cliente Selecionado: ", "")
-    : "";
-
-  if (nomeCliente) {
-    // Referência para a frequência de compras do cliente
-    const frequenciaComprasRef = ref(
-      db,
-      "estabelecimentos/" +
-        usuarioEstabelecimento +
-        "/clientes/" +
-        nomeCliente +
-        "/frequenciaCompras"
-    );
-
-    // Incrementar a frequência de compras
-    onValue(
-      frequenciaComprasRef,
-      (snapshot) => {
-        const frequenciaAtual = snapshot.val() || 0;
-        set(frequenciaComprasRef, frequenciaAtual + 1);
-      },
-      { onlyOnce: true }
-    );
-  }
-
-  let produtosSelecionados = "";
-  let produtosSelecionadosMesas = "";
-  let metodoSelecionando = "";
-  let codMesaEscolhido = window.localStorage.getItem("codMesaEscolhido");
-
-  const dbRefProdutos = ref(
-    db,
-    "estabelecimentos/" + usuarioEstabelecimento + "/produtos/selecProdutos"
+  let metodoCreditoEscolhido = window.localStorage.getItem(
+    "metodoCreditoEscolhido"
   );
-  const dbRefProdutosMesas = ref(
-    db,
-    "estabelecimentos/" +
-      usuarioEstabelecimento +
-      "/mesas/selecProdutos/" +
-      codMesaEscolhido
-  );
-  const dbRefMetodo = ref(
-    db,
-    "estabelecimentos/" +
-      usuarioEstabelecimento +
-      "/metodosPagamento/metodoSelecionado"
-  );
-
-  let lucroInicialPorVenda = 0;
-  let precoTotalVenda = 0;
-  var quantidadeProduto = [];
-
-  onValue(
-    dbRefProdutos,
-    (snapshot) => {
-      const data = snapshot.val();
-      produtosSelecionados = data;
-
-      var lucroPorProduto = [];
-      var precoTotalPorProduto = [];
-
-      snapshot.forEach((childSnapshot) => {
-        lucroPorProduto.push(childSnapshot.val().lucroProduto);
-      });
-
-      snapshot.forEach((childSnapshot) => {
-        quantidadeProduto.push(childSnapshot.val());
-
-        //reduzirQuantProduto(childSnapshot.val().nomeProduto, childSnapshot.val().quantidadeProd)
-      });
-
-      lucroPorProduto.forEach((val) => {
-        lucroInicialPorVenda = lucroInicialPorVenda + val;
-      });
-
-      snapshot.forEach((childSnapshot) => {
-        precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto);
-      });
-
-      precoTotalPorProduto.forEach((val) => {
-        precoTotalVenda = precoTotalVenda + val;
-      });
-    },
-    {
-      onlyOnce: false,
-    }
-  );
-
-  quantidadeProduto.forEach((val) => {
-    reduzirQuantProduto(val.nomeProduto, val.quantidadeProd);
-  });
-
-  onValue(dbRefProdutosMesas, (snapshot) => {
-    const data = snapshot.val();
-    produtosSelecionadosMesas = data;
-  });
-
-  onValue(dbRefMetodo, (snapshot) => {
-    const data = snapshot.val();
-    metodoSelecionando = data;
-  });
-
-  let valorTotalProdutosLocal = window.localStorage.getItem("valorTotalProdutos");
-
-  console.log(valorTotalProdutosLocal)
-  var valorTotalProdutoss = (parseInt(valorTotalProdutos) / 2);
-  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutosLocal;
+  let nomeClienteEscolhido = window.localStorage.getItem("cliente");
   
-  console.log(valorTotalProdutoss)
+  function RegVenda() {
+    // Capturar o nome do cliente selecionado
+    const nomeCliente = txtAdicionarClientes
+      ? txtAdicionarClientes.textContent.replace("Cliente Selecionado: ", "")
+      : "";
 
-  nrMovimentacoes = parseInt(nrMovimentacoess) + 1;
-
-  chaveVendas = parseInt(chaveVendasString) + 1;
-
-  let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
-
-  if (prodEscolhidoLocalStorage == "true") {
-    try {
-      onValue(
-        dbRefProdutos,
-        (snapshot) => {
-          const data = snapshot.val();
-          produtosSelecionados = data;
-
-          var lucroPorProduto = [];
-          var precoTotalPorProduto = [];
-
-          snapshot.forEach((childSnapshot) => {
-            lucroPorProduto.push(childSnapshot.val().lucroProduto);
-          });
-
-          lucroPorProduto.forEach((val) => {
-            lucroInicialPorVenda = lucroInicialPorVenda + val;
-          });
-
-          snapshot.forEach((childSnapshot) => {
-            precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto);
-          });
-
-          precoTotalPorProduto.forEach((val) => {
-            precoTotalVenda = precoTotalVenda + val;
-          });
-        },
-        {
-          onlyOnce: false,
-        }
-      );
-
-      set(
-        ref(
-          db,
-          "estabelecimentos/" +
-            usuarioEstabelecimento +
-            "/vendas/todasVendas/" +
-            chaveVendas
-        ),
-        {
-          codigoMesa: codMesaEscolhido,
-          produtos: produtosSelecionados,
-          codigoVenda: chaveVendas,
-          metodoPagamento: metodoSelecionando,
-          //produtosMesa: produtosSelecionadosMesas,
-          horaActual:
-            now.getHours() +
-            ":" +
-            now.getMinutes() +
-            ":" +
-            now.getSeconds() +
-            " - " +
-            now.getDate() +
-            "/" +
-            (now.getMonth() + 1) +
-            "/" +
-            now.getFullYear(),
-          precoTotalVenda: precoTotalVenda / 2,
-          lucroVenda: {
-            lucroVenda: lucroInicialPorVenda / 2,
-          },
-          responsavel: nomeUsuario,
-          troco: valorTrocoGlobal.toFixed(2),
-          timestamp: new Date().toISOString(),
-          cliente: nomeCliente,
-        }
-      );
-
-      set(
-        ref(db, "estabelecimentos/" + usuarioEstabelecimento + "/saldo/saldo"),
-        {
-          saldo: parseInt(saldoIniciall) + parseInt(valorTotalProdutosLocal),
-          totalMovimentacoes: nrMovimentacoes,
-        }
-      );
-
-      set(
-        ref(
-          db,
-          "estabelecimentos/" +
-            usuarioEstabelecimento +
-            "/saldo/saldo/todasMovimentacoes/" +
-            nrMovimentacoes
-        ),
-        {
-          saldoMovimentado: parseInt(valorTotalProdutosLocal),
-          motivo: "Venda de produtos",
-          horaActual:
-            now.getHours() +
-            ":" +
-            now.getMinutes() +
-            ":" +
-            now.getSeconds() +
-            " - " +
-            now.getDate() +
-            "/" +
-            (now.getMonth() + 1) +
-            "/" +
-            now.getFullYear(),
-          responsavel: nomeUsuario,
-        }
-      );
-
-      set(
-        ref(
-          db,
-          "estabelecimentos/" +
-            usuarioEstabelecimento +
-            "/vendas/lucroTotalVendas"
-        ),
-        {
-          lucroTotal: valorLucroIniciall + lucroInicialPorVenda / 2,
-        }
-      );
-
-      set(
-        ref(
-          db,
-          "estabelecimentos/" +
-            usuarioEstabelecimento +
-            "/vendas/valorTotalVendas"
-        ),
-        {
-          valorTotal: valorTotalVendasIniciall + parseInt(valorTotalProdutosLocal),
-        }
-      );
-
-      // Adicionar informações no histórico de compras do cliente
-      const dbRefHistoricoCliente = ref(
+    if (nomeCliente) {
+      // Referência para a frequência de compras do cliente
+      const frequenciaComprasRef = ref(
         db,
         "estabelecimentos/" +
           usuarioEstabelecimento +
           "/clientes/" +
           nomeCliente +
-          "/historicoCompras/" +
-          chaveVendas
+          "/frequenciaCompras"
       );
 
-      set(dbRefHistoricoCliente, {
-        produtos: produtosSelecionados,
-        valorCompra: precoTotalVenda,
-        lucroVenda: lucroInicialPorVenda,
-        horaActual:
-          now.getHours() +
-          ":" +
-          now.getMinutes() +
-          ":" +
-          now.getSeconds() +
-          " - " +
-          now.getDate() +
-          "/" +
-          (now.getMonth() + 1) +
-          "/" +
-          now.getFullYear(),
-      });
-
-      // Adicionar informações da venda como entrada no caixa
-      const saldoEntradaRef = ref(
+      // Referência para a frequência de compras do cliente a credito
+      const frequenciaComprasCreditoRef = ref(
         db,
-        "estabelecimentos/" + usuarioEstabelecimento + "/saldo/entrada"
+        "estabelecimentos/" +
+          usuarioEstabelecimento +
+          "/clientes/" +
+          nomeCliente +
+          "/frequenciaComprasCredito"
       );
 
-      onValue(
-        saldoEntradaRef,
-        (snapshot) => {
-          const chaveSaldoEntrada = snapshot.size + 1;
+      // Incrementar a frequência de compras
+      if (metodoCreditoEscolhido == null) {
+        onValue(
+          frequenciaComprasRef,
+          (snapshot) => {
+            const frequenciaAtual = snapshot.val() || 0;
+            set(frequenciaComprasRef, frequenciaAtual + 1);
+          },
+          { onlyOnce: true }
+        );
+      } else {
+        onValue(
+          frequenciaComprasCreditoRef,
+          (snapshot) => {
+            const frequenciaAtual = snapshot.val() || 0;
+            set(frequenciaComprasCreditoRef, frequenciaAtual + 1);
+          },
+          { onlyOnce: true }
+        );
+      }
+    }
+
+    let produtosSelecionados = "";
+    let produtosSelecionadosMesas = "";
+    let metodoSelecionando = "";
+    let codMesaEscolhido = window.localStorage.getItem("codMesaEscolhido");
+
+    const dbRefProdutos = ref(
+      db,
+      "estabelecimentos/" + usuarioEstabelecimento + "/produtos/selecProdutos"
+    );
+    const dbRefProdutosMesas = ref(
+      db,
+      "estabelecimentos/" +
+        usuarioEstabelecimento +
+        "/mesas/selecProdutos/" +
+        codMesaEscolhido
+    );
+    const dbRefMetodo = ref(
+      db,
+      "estabelecimentos/" +
+        usuarioEstabelecimento +
+        "/metodosPagamento/metodoSelecionado"
+    );
+
+    let lucroInicialPorVenda = 0;
+    let precoTotalVenda = 0;
+    var quantidadeProduto = [];
+
+    onValue(
+      dbRefProdutos,
+      (snapshot) => {
+        const data = snapshot.val();
+        produtosSelecionados = data;
+
+        var lucroPorProduto = [];
+        var precoTotalPorProduto = [];
+
+        snapshot.forEach((childSnapshot) => {
+          lucroPorProduto.push(childSnapshot.val().lucroProduto);
+        });
+
+        snapshot.forEach((childSnapshot) => {
+          quantidadeProduto.push(childSnapshot.val());
+
+          //reduzirQuantProduto(childSnapshot.val().nomeProduto, childSnapshot.val().quantidadeProd)
+        });
+
+        lucroPorProduto.forEach((val) => {
+          lucroInicialPorVenda = lucroInicialPorVenda + val;
+        });
+
+        snapshot.forEach((childSnapshot) => {
+          precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto);
+        });
+
+        precoTotalPorProduto.forEach((val) => {
+          precoTotalVenda = precoTotalVenda + val;
+        });
+      },
+      {
+        onlyOnce: true,
+      }
+    );
+
+    quantidadeProduto.forEach((val) => {
+      reduzirQuantProduto(val.nomeProduto, val.quantidadeProd);
+    });
+
+    onValue(dbRefProdutosMesas, (snapshot) => {
+      const data = snapshot.val();
+      produtosSelecionadosMesas = data;
+    });
+
+    onValue(dbRefMetodo, (snapshot) => {
+      const data = snapshot.val();
+      metodoSelecionando = data;
+    });
+
+    let valorTotalProdutosLocal =
+      window.localStorage.getItem("valorTotalProdutos");
+
+    //console.log(valorTotalProdutosLocal);
+    var valorTotalProdutoss = parseInt(valorTotalProdutos) / 2;
+    saldoFinal = parseInt(saldoIniciall) + valorTotalProdutosLocal;
+
+    //console.log(valorTotalProdutoss);
+
+    nrMovimentacoes = parseInt(nrMovimentacoess) + 1;
+
+    chaveVendas = parseInt(chaveVendasString) + 1;
+
+    const recibo = geradorRecibos();
+    //console.log(recibo); // Aqui você pode usar o recibo como quiser
+    // Exemplo: exibir o recibo em um elemento HTML
+    //document.getElementById("recibo").innerText = recibo;
+    const mensagem = recibo;
+
+    function isMobileDevice() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+    }
+
+    if (isMobileDevice()) {
+      //Abrindo o modalEnviar recibo
+      const modal = new bootstrap.Modal(
+        document.getElementById("modalModalEnviarRecibo")
+      );
+      //  Pegar o nome do cliente do localStorage
+      const nomeCliente = localStorage.getItem("cliente");
+      //console.log(nomeCliente);
+
+      if (nomeCliente === null || nomeCliente === undefined) {
+        btnEnviarReciboCliente.style.display = "none";
+        btnFecharModalConformacaovenda.addEventListener("click", () => {
+          localStorage.removeItem("produtosSelecionados");
+          localStorage.removeItem("metodoPagamento");
+          localStorage.removeItem("valorTotalVenda");
+          localStorage.removeItem("troco");
+          localStorage.removeItem("cliente");
+        });
+      } else {
+        btnEnviarReciboCliente.style.display = "block";
+        const clienteRef = ref(
+          db,
+          `estabelecimentos/${usuarioEstabelecimento}/clientes/${nomeCliente}`
+        );
+        onValue(
+          clienteRef,
+          (snapshot) => {
+            const clientes = snapshot.val();
+            //console.log(clientes);
+            let telefoneCliente = clientes.telefone;
+
+            //console.log(telefoneCliente);
+
+            // Exemplo de uso da função
+            async function exemploUso() {
+              const smsLink = `sms:${telefoneCliente}?body=${encodeURIComponent(
+                mensagem
+              )}`;
+
+              btnEnviarReciboCliente.addEventListener("click", () => {
+                window.location.href = smsLink;
+
+                localStorage.removeItem("produtosSelecionados");
+                localStorage.removeItem("metodoPagamento");
+                localStorage.removeItem("valorTotalVenda");
+                localStorage.removeItem("troco");
+                localStorage.removeItem("cliente");
+
+                modal.hide();
+              });
+            }
+
+            exemploUso();
+          },
+          { onlyOnce: true }
+        );
+      }
+
+      modal.show();
+    } else {
+      //console.log("O usuário está usando um computador.");
+    }
+
+    let prodEscolhidoLocalStorage =
+      window.localStorage.getItem("prodEscolhido");
+
+    if (prodEscolhidoLocalStorage == "true") {
+      try {
+        onValue(
+          dbRefProdutos,
+          (snapshot) => {
+            const data = snapshot.val();
+            produtosSelecionados = data;
+
+            var lucroPorProduto = [];
+            var precoTotalPorProduto = [];
+
+            snapshot.forEach((childSnapshot) => {
+              lucroPorProduto.push(childSnapshot.val().lucroProduto);
+            });
+
+            lucroPorProduto.forEach((val) => {
+              lucroInicialPorVenda = lucroInicialPorVenda + val;
+            });
+
+            snapshot.forEach((childSnapshot) => {
+              precoTotalPorProduto.push(childSnapshot.val().precoTotalProduto);
+            });
+
+            precoTotalPorProduto.forEach((val) => {
+              precoTotalVenda = precoTotalVenda + val;
+            });
+          },
+          {
+            onlyOnce: true,
+          }
+        );
+
+        // Adicionar informações no histórico de compras do cliente
+        const dbRefHistoricoCliente = ref(
+          db,
+          "estabelecimentos/" +
+            usuarioEstabelecimento +
+            "/clientes/" +
+            nomeCliente +
+            "/historicoCompras/" +
+            chaveVendas
+        );
+
+        // Adicionar informações no histórico de compras do cliente
+        const dbRefHistoricoCreditoCliente = ref(
+          db,
+          "estabelecimentos/" +
+            usuarioEstabelecimento +
+            "/clientes/" +
+            nomeCliente +
+            "/historicoComprasCredito/" +
+            chaveVendas
+        );
+
+        // Referência para a saldo de compras a credito do cliente
+        const saldoCreditoComprasRef = ref(
+          db,
+          "estabelecimentos/" +
+            usuarioEstabelecimento +
+            "/clientes/" +
+            nomeCliente +
+            "/saldoDivida"
+        );
+
+        if (metodoCreditoEscolhido == "true") {
+          set(dbRefHistoricoCreditoCliente, {
+            produtos: produtosSelecionados,
+            valorCompraCredito: precoTotalVenda / 2,
+            lucroVendaCredito: lucroInicialPorVenda / 2,
+            horaActual:
+              now.getHours() +
+              ":" +
+              now.getMinutes() +
+              ":" +
+              now.getSeconds() +
+              " - " +
+              now.getDate() +
+              "/" +
+              (now.getMonth() + 1) +
+              "/" +
+              now.getFullYear(),
+            recibo: recibo,
+          });
+
+          
+
           set(
             ref(
               db,
               "estabelecimentos/" +
                 usuarioEstabelecimento +
-                "/saldo/entrada/" +
-                chaveSaldoEntrada
+                "/vendas/todasVendas/" +
+                chaveVendas
             ),
             {
-              saldoAdicionado: precoTotalVenda,
-              motivo: "venda",
+              codigoMesa: codMesaEscolhido,
               produtos: produtosSelecionados,
+              tipo: "Credito",
+              codigoVenda: chaveVendas,
+              metodoPagamento: metodoSelecionando,
+              //produtosMesa: produtosSelecionadosMesas,
               horaActual:
                 now.getHours() +
                 ":" +
@@ -1749,34 +1840,257 @@ btnRegVenda.addEventListener("click", () => {
                 (now.getMonth() + 1) +
                 "/" +
                 now.getFullYear(),
-              nomeCliente: nomeCliente,
+              precoTotalVenda: precoTotalVenda / 2,
+              LucroVenda: lucroInicialPorVenda / 2,
+              lucroVenda: {
+                lucroVenda: lucroInicialPorVenda / 2,
+              },
+              responsavel: nomeUsuario,
+              troco: valorTrocoGlobal.toFixed(2),
+              timestamp: new Date().toISOString(),
+              cliente: nomeCliente,
+              recibo: recibo,
+            }
+          );
+
+          onValue(
+            saldoCreditoComprasRef,
+            (snapshot) => {
+              const saldoDivida = snapshot.val() || 0;
+              set(
+                saldoCreditoComprasRef,
+                parseInt(saldoDivida) + parseInt(precoTotalVenda / 2)
+              );
+            },
+            { onlyOnce: true }
+          );
+        } else {
+          set(dbRefHistoricoCliente, {
+            produtos: produtosSelecionados,
+            valorCompra: precoTotalVenda / 2,
+            lucroVenda: lucroInicialPorVenda / 2,
+            horaActual:
+              now.getHours() +
+              ":" +
+              now.getMinutes() +
+              ":" +
+              now.getSeconds() +
+              " - " +
+              now.getDate() +
+              "/" +
+              (now.getMonth() + 1) +
+              "/" +
+              now.getFullYear(),
+            recibo: recibo,
+          });
+
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/vendas/todasVendas/" +
+                chaveVendas
+            ),
+            {
+              codigoMesa: codMesaEscolhido,
+              produtos: produtosSelecionados,
+              codigoVenda: chaveVendas,
+              metodoPagamento: metodoSelecionando,
+              //produtosMesa: produtosSelecionadosMesas,
+              horaActual:
+                now.getHours() +
+                ":" +
+                now.getMinutes() +
+                ":" +
+                now.getSeconds() +
+                " - " +
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
+              precoTotalVenda: precoTotalVenda / 2,
+              LucroVenda: lucroInicialPorVenda / 2,
+              lucroVenda: {
+                lucroVenda: lucroInicialPorVenda / 2,
+              },
+              responsavel: nomeUsuario,
+              troco: valorTrocoGlobal.toFixed(2),
+              timestamp: new Date().toISOString(),
+              cliente: nomeCliente,
+              recibo: recibo,
+            }
+          );
+
+          set(
+            ref(
+              db,
+              "estabelecimentos/" + usuarioEstabelecimento + "/saldo/saldo"
+            ),
+            {
+              saldo:
+                parseInt(saldoIniciall) + parseInt(valorTotalProdutosLocal),
+              totalMovimentacoes: nrMovimentacoes,
+            }
+          );
+
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/saldo/saldo/todasMovimentacoes/" +
+                nrMovimentacoes
+            ),
+            {
+              saldoMovimentado: parseInt(valorTotalProdutosLocal),
+              motivo: "Venda de produtos",
+              horaActual:
+                now.getHours() +
+                ":" +
+                now.getMinutes() +
+                ":" +
+                now.getSeconds() +
+                " - " +
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
               responsavel: nomeUsuario,
             }
           );
-        },
-        { onlyOnce: true }
-      );
 
-      //botaoCancelar.click()
-      regVendasNormal();
-      //alert('Venda cadatrada com sucesso')
-      AlertaSucesso("Venda cadastrada com sucesso");
-      window.localStorage.removeItem("codMesaEscolhido");
-      window.localStorage.removeItem("valorTotalProdutos");
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/vendas/lucroTotalVendas"
+            ),
+            {
+              lucroTotal: valorLucroIniciall + lucroInicialPorVenda / 2,
+            }
+          );
 
-      //location.reload();
-    } catch (error) {
-      console.log(error);
+          set(
+            ref(
+              db,
+              "estabelecimentos/" +
+                usuarioEstabelecimento +
+                "/vendas/valorTotalVendas"
+            ),
+            {
+              valorTotal:
+                valorTotalVendasIniciall + parseInt(valorTotalProdutosLocal),
+            }
+          );
+
+          // Adicionar informações da venda como entrada no caixa
+          const saldoEntradaRef = ref(
+            db,
+            "estabelecimentos/" + usuarioEstabelecimento + "/saldo/entrada"
+          );
+
+          onValue(
+            saldoEntradaRef,
+            (snapshot) => {
+              const chaveSaldoEntrada = snapshot.size + 1;
+              set(
+                ref(
+                  db,
+                  "estabelecimentos/" +
+                    usuarioEstabelecimento +
+                    "/saldo/entrada/" +
+                    chaveSaldoEntrada
+                ),
+                {
+                  saldoAdicionado: precoTotalVenda / 2,
+                  motivo: "venda",
+                  produtos: produtosSelecionados,
+                  horaActual:
+                    now.getHours() +
+                    ":" +
+                    now.getMinutes() +
+                    ":" +
+                    now.getSeconds() +
+                    " - " +
+                    now.getDate() +
+                    "/" +
+                    (now.getMonth() + 1) +
+                    "/" +
+                    now.getFullYear(),
+                  nomeCliente: nomeCliente,
+                  responsavel: nomeUsuario,
+                }
+              );
+            },
+            { onlyOnce: true }
+          );
+        }
+
+        //botaoCancelar.click()
+        regVendasNormal();
+        //alert('Venda cadatrada com sucesso')
+        AlertaSucesso("Venda cadastrada com sucesso");
+        window.localStorage.removeItem("codMesaEscolhido");
+        window.localStorage.removeItem("valorTotalProdutos");
+
+        //location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      //alert('Adicione um produto antes')
+      AlertaInfo("Adicione um produto antes");
     }
-  } else {
-    //alert('Adicione um produto antes')
-    AlertaInfo("Adicione um produto antes");
+
+    // Ocultar a div mostrarTroco após registrar a venda
+    document.querySelector(".mostrarTroco").style.display = "none";
+
+    txtAdicionarClientes.innerHTML = "Cliente Selecionado: ";
+
+    () => {
+      let prodEscolhidoLocalStorage =
+        window.localStorage.getItem("prodEscolhido");
+
+      if (prodEscolhidoLocalStorage == "true") {
+        regVendasNormal();
+        //alert('Cancelado com sucesso')
+        //AlertaInfo("Cancelado com sucesso");
+        window.localStorage.setItem("prodEscolhido", false);
+        window.localStorage.removeItem("valorTotalProdutos");
+        divSelecProdutos.style.display = "block";
+        finalizarPreVenda.style.display = "none";
+        divSelecMetodos.style.display = "none";
+      } else {
+        //alert('Nada seleciondo')
+        //AlertaInfo("Cancelado com sucesso");
+      }
+
+      // Ocultar a div mostrarTroco após cancelar a venda
+      document.querySelector(".mostrarTroco").style.display = "none";
+
+      txtAdicionarClientes.innerHTML = "Cliente Selecionado: ";
+
+      inputTroco.value = "";
+      valorPagoCliente.value = "";
+    };
   }
 
-  // Ocultar a div mostrarTroco após registrar a venda
-  document.querySelector(".mostrarTroco").style.display = "none";
+  if (metodoCreditoEscolhido == "true") {
+    if (nomeClienteEscolhido != null) {
+      RegVenda();
+    } else {
+      alert("Cliente nao selecionado para o metodo credito");
+    }
+  } else {
+    RegVenda();
+  }
 
-  txtAdicionarClientes.innerHTML = "Cliente Selecionado: ";
+  //botaoCancelar.click()
+  //botaoCancelar2.click()
 });
 
 /*
@@ -2025,7 +2339,25 @@ function carregarClientesNaDiv() {
         );
         if (txtAdicionarClientes) {
           txtAdicionarClientes.innerHTML =
-            "Cliente Selecionado: " + "<strong>" + cliente.nomeCliente + "</strong>";
+            "Cliente Selecionado: " +
+            "<strong>" +
+            cliente.nomeCliente +
+            "</strong>";
+          try {
+            set(
+              ref(
+                db,
+                "estabelecimentos/" +
+                  usuarioEstabelecimento +
+                  "/produtos/clienteSelecionado"
+              ),
+              {
+                nomeCliente: cliente.nomeCliente,
+              }
+            );
+          } catch (error) {
+            console.error(error);
+          }
         } else {
           console.error(
             "Elemento com a classe 'txtAdicionarClientes' não encontrado."

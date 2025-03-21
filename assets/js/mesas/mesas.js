@@ -651,10 +651,16 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda, lucroProduto) {
       );
 
       //Pegando o Valor actual
-      onValue(dbRef, (snapshot) => {
-        var data = snapshot.val();
-        valorActual = data.valorTotal;
-      });
+      onValue(
+        dbRef,
+        (snapshot) => {
+          var data = snapshot.val();
+          valorActual = data.valorTotal;
+        },
+        {
+          onlyOnce: false,
+        }
+      );
 
       valorSomado = parseInt(valorProduto) + parseInt(valorActual);
 
@@ -667,6 +673,9 @@ function addProdutosMesa(nomeProd, precVenda, tipoMoeda, lucroProduto) {
         ),
         {
           valorTotal: valorSomado,
+        },
+        {
+          onlyOnce: true,
         }
       );
     }
@@ -843,11 +852,17 @@ btnFecharContaMesa.addEventListener("click", () => {
     "estabelecimentos/" + usuarioEstabelecimento + "/mesas/selecProdutosValor"
   );
 
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
+  onValue(
+    dbRef,
+    (snapshot) => {
+      const data = snapshot.val();
 
-    valorTotal = data.valorTotal;
-  });
+      valorTotal = data.valorTotal;
+    },
+    {
+      onlyOnce: false,
+    }
+  );
 
   spanTotalVenda.innerHTML = valorTotal + " " + TipoMoeda;
 
@@ -915,11 +930,17 @@ const dbRefValorTtlProd = ref(
   "estabelecimentos/" + usuarioEstabelecimento + "/mesas/selecProdutosValor"
 );
 
-onValue(dbRefValorTtlProd, (snapshot) => {
-  const data = snapshot.val();
+onValue(
+  dbRefValorTtlProd,
+  (snapshot) => {
+    const data = snapshot.val();
 
-  valorTotalProdutos = data.valorTotal;
-});
+    valorTotalProdutos = data.valorTotal;
+  },
+  {
+    onlyOnce: false,
+  }
+);
 
 onValue(
   dbRefSaldo,
@@ -1097,11 +1118,11 @@ btnRegVendaMesa.addEventListener("click", () => {
       precoTotalPorProduto.forEach((val) => {
         precoTotalVenda = precoTotalVenda + val;
       });
-    },
-    {
-      onlyOnce: false,
     }
-  );
+  ),
+  {
+    onlyOnce: true,
+  };
 
   quantidadeProduto.forEach((val) => {
     reduzirQuantProduto(val.nomeProduto, val.quantidadeProd);
@@ -1118,13 +1139,15 @@ btnRegVendaMesa.addEventListener("click", () => {
   });
 
   var valorTotalProdutoss = parseInt(valorTotalProdutos);
-  saldoFinal = parseInt(saldoIniciall) + valorTotalProdutoss;
+  saldoFinal = parseInt(saldoIniciall) + (valorTotalProdutoss / 2);
 
   nrMovimentacoes = parseInt(nrMovimentacoess) + 1;
 
   chaveVendas = parseInt(chaveVendasString) + 1;
 
   let prodEscolhidoLocalStorage = window.localStorage.getItem("prodEscolhido");
+      
+  let valorTotalProdutosLocal =  window.localStorage.getItem("valorTotalProdutos")
 
   if (prodEscolhidoLocalStorage == "true") {
     try {
@@ -1152,11 +1175,11 @@ btnRegVendaMesa.addEventListener("click", () => {
           precoTotalPorProduto.forEach((val) => {
             precoTotalVenda = precoTotalVenda + val;
           });
-        },
-        {
-          onlyOnce: false,
         }
-      );
+      ),
+      {
+        onlyOnce: true,
+      };
 
       set(
         ref(
@@ -1184,7 +1207,7 @@ btnRegVendaMesa.addEventListener("click", () => {
             now.getFullYear(),
           metodoPagamento: metodoSelecionando,
           produtosMesa: produtosSelecionadosMesas,
-          precoTotalVenda: precoTotalVenda / 2,
+          precoTotalVenda: parseInt(valorTotalProdutosLocal),
           lucroVenda: {
             lucroVenda: lucroInicialPorVenda / 2,
           },
@@ -1195,10 +1218,13 @@ btnRegVendaMesa.addEventListener("click", () => {
       set(
         ref(db, "estabelecimentos/" + usuarioEstabelecimento + "/saldo/saldo"),
         {
-          saldo: parseInt(saldoIniciall) + valorTotalProdutoss,
+          saldo: parseInt(saldoIniciall) + parseInt(valorTotalProdutosLocal),
           totalMovimentacoes: nrMovimentacoes,
         }
-      );
+      ),
+      {
+        onlyOnce: true,
+      };
 
       set(
         ref(
@@ -1266,4 +1292,6 @@ btnRegVendaMesa.addEventListener("click", () => {
     //alert('Adicione um produto antes')
     AlertaInfo("Adicione um produto antes");
   }
+  
+  btnCancelarMesa.click();
 });
