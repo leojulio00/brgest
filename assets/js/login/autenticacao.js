@@ -1,4 +1,4 @@
-console.log("sucesso")
+//console.log("sucesso")
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 var inputEmail = document.querySelector(".inputEmail")
@@ -8,7 +8,7 @@ const auth = getAuth();
 
 
 btnEntrar.addEventListener("click", ()=>{
-  console.log("sucesso")
+  //console.log("sucesso")
   /*if(inputEmail.value == "leonildojuliojulio@gmail.com" && inputPass.value == "123456"){
     alert("sucesso")
   }

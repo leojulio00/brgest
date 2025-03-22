@@ -105,7 +105,7 @@ btnEntrar.addEventListener("click", ()=>{
       nomeUsuario = data.nomeColab
       window.localStorage.setItem('usuarioEstabelecimento', usuarioEstabelecimento)
       window.localStorage.setItem("nomeUser", nomeUsuario)
-      console.log(usuarioMail + " " + usuarioMail + " " + usuarioNome + " " + usuarioTel + " " + usuarioEnder + " " + usuarioCargo + " " + usuarioEstabelecimento)
+      //console.log(usuarioMail + " " + usuarioMail + " " + usuarioNome + " " + usuarioTel + " " + usuarioEnder + " " + usuarioCargo + " " + usuarioEstabelecimento)
       
 
       //alert("login feito com sucesso")

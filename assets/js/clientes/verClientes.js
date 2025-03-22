@@ -26,6 +26,12 @@ var frequenciaComprasClienteCredito = document.querySelector(
   ".frequenciaComprasClienteCredito"
 );
 
+// Adicionar atributos para abrir o modal
+btnVercomprasCliente.setAttribute("data-bs-toggle", "modal");
+btnVercomprasCliente.setAttribute("data-bs-target", "#modalComprasCliente");
+btnVerComprasCreditoCliente.setAttribute("data-bs-toggle", "modal");
+btnVerComprasCreditoCliente.setAttribute("data-bs-target", "#modalComprasCliente");
+
 // Função para adicionar cliente na lista
 function addClienteNaLista(nomeCliente, endereco, telefone, email) {
   let divCol = document.createElement("div");
@@ -87,6 +93,33 @@ function addDetalhesClienteModal(cliente) {
   /*cliente.historicoCompras.forEach((e)=>{
     console.log(e)
   })*/
+
+  
+  const clientesReff = ref(
+    db,
+    "estabelecimentos/" + usuarioEstabelecimento + "/" + cliente.nomeCliente
+  );
+
+  try {
+    onValue(clientesReff, (snapshot) => {
+      //bodyClientes.innerHTML = ""; // Limpar lista atual
+  
+      snapshot.forEach((childSnapshot) => {
+        const cliente = childSnapshot.val();
+        
+        btnVercomprasCliente.addEventListener("click", ()=>{
+          console.log("botao clicado")
+          console.log(cliente)
+          
+        })
+      });
+    })
+  } catch (error) {
+    console.log(error)
+  }
+
+
+  
 }
 
 // Função para carregar detalhes do cliente do Firebase
