@@ -196,9 +196,6 @@ function addDetalhesClienteModal(cliente) {
           row1Row3.appendChild(subTitleCol4Row3)
           
           clietesProdutosArray.forEach((prod)=>{
-            console.log(prod.nomeProduto)
-
-            
             let row2Row3 = document.createElement("div")
             let txt1Row3 = document.createElement("p")
             let txt2Row3 = document.createElement("p")
@@ -249,9 +246,6 @@ function addDetalhesClienteModal(cliente) {
             divCompradoCliente.appendChild(divCard)
 
           }
-
-          console.log(cliente)
-          
         })
       });
 
@@ -274,16 +268,11 @@ function addDetalhesClienteModal(cliente) {
       const clientes = snapshot.val()
       const historicoCompras = clientes.historicoComprasCredito
       const historicoArray = historicoCompras ? Object.values(historicoCompras) : [];
-      /*historicoArray.forEach((eloar) => {
-        console.log(eloar)
-      })*/
       
       historicoArray.forEach((childSnapshot) => {
         const cliente = childSnapshot;
-        //console.log(cliente)
         
         btnVerComprasCreditoCliente.addEventListener("click", ()=>{
-          divCompradoCliente.innerHTML = ""; // Limpar lista atual
 
           let divCol = document.createElement("div");
           let divCard = document.createElement("div");
@@ -361,9 +350,6 @@ function addDetalhesClienteModal(cliente) {
           row1Row3.appendChild(subTitleCol4Row3)
           
           clietesProdutosArray.forEach((prod)=>{
-            console.log(prod.nomeProduto)
-
-            
             let row2Row3 = document.createElement("div")
             let txt1Row3 = document.createElement("p")
             let txt2Row3 = document.createElement("p")
@@ -414,8 +400,6 @@ function addDetalhesClienteModal(cliente) {
             divCompradoCliente.appendChild(divCard)
 
           }
-
-          console.log(cliente)
           
         })
       });
