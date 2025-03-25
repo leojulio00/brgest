@@ -1793,22 +1793,34 @@ btnRegVenda.addEventListener("click", () => {
 
         if (metodoCreditoEscolhido == "true") {
           set(dbRefHistoricoCreditoCliente, {
-            produtos: produtosSelecionados,
-            valorCompraCredito: precoTotalVenda / 2,
-            lucroVendaCredito: lucroInicialPorVenda / 2,
-            horaActual:
-              now.getHours() +
-              ":" +
-              now.getMinutes() +
-              ":" +
-              now.getSeconds() +
-              " - " +
-              now.getDate() +
-              "/" +
-              (now.getMonth() + 1) +
-              "/" +
-              now.getFullYear(),
-            recibo: recibo,
+            codigoMesa: codMesaEscolhido,
+              produtos: produtosSelecionados,
+              tipo: "Credito",
+              codigoVenda: chaveVendas,
+              metodoPagamento: metodoSelecionando,
+              //produtosMesa: produtosSelecionadosMesas,
+              horaActual:
+                now.getHours() +
+                ":" +
+                now.getMinutes() +
+                ":" +
+                now.getSeconds() +
+                " - " +
+                now.getDate() +
+                "/" +
+                (now.getMonth() + 1) +
+                "/" +
+                now.getFullYear(),
+              precoTotalVenda: precoTotalVenda / 2,
+              LucroVenda: lucroInicialPorVenda / 2,
+              lucroVenda: {
+                lucroVenda: lucroInicialPorVenda / 2,
+              },
+              responsavel: nomeUsuario,
+              troco: valorTrocoGlobal.toFixed(2),
+              timestamp: new Date().toISOString(),
+              cliente: nomeCliente,
+              recibo: recibo,
           });
 
           
@@ -1866,9 +1878,11 @@ btnRegVenda.addEventListener("click", () => {
           );
         } else {
           set(dbRefHistoricoCliente, {
+            codigoMesa: codMesaEscolhido,
             produtos: produtosSelecionados,
-            valorCompra: precoTotalVenda / 2,
-            lucroVenda: lucroInicialPorVenda / 2,
+            codigoVenda: chaveVendas,
+            metodoPagamento: metodoSelecionando,
+            //produtosMesa: produtosSelecionadosMesas,
             horaActual:
               now.getHours() +
               ":" +
@@ -1881,6 +1895,15 @@ btnRegVenda.addEventListener("click", () => {
               (now.getMonth() + 1) +
               "/" +
               now.getFullYear(),
+            precoTotalVenda: precoTotalVenda / 2,
+            LucroVenda: lucroInicialPorVenda / 2,
+            lucroVenda: {
+              lucroVenda: lucroInicialPorVenda / 2,
+            },
+            responsavel: nomeUsuario,
+            troco: valorTrocoGlobal.toFixed(2),
+            timestamp: new Date().toISOString(),
+            cliente: nomeCliente,
             recibo: recibo,
           });
 
